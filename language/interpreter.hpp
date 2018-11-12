@@ -9,15 +9,18 @@
 class Interpreter;
 
 #include "expr.hpp"
+#include "value.hpp"
 
 class Interpreter : public ExprVisitor
 {
+  Value value; // used to return things
+
   std::shared_ptr<Environment> environment;
   std::shared_ptr<Environment> globals;
   std::unordered_map<std::shared_ptr<const Expr>, int> locals;
 
   Value Evaluate(std::shared_ptr<const Expr>);
-  Value LookUpVariable(Token, std::shared_ptr<const Expr>);
+  vector<Value> ExecuteBlock(std::vector<std::shared_ptr<const Expr>>, std::shared_ptr<Environment>);
 
   RuntimeError Error(Token, std::string);
 
@@ -32,8 +35,6 @@ public:
   void Interpret(const std::vector<std::shared_ptr<const Expr>> &);
   void Resolve(std::shared_ptr<const Expr>, int);
   void Execute(std::shared_ptr<const Expr>);
-  void ExecuteBlock(std::vector<std::shared_ptr<const Expr>>,
-                    std::shared_ptr<Environment>);
 };
 
 #endif // INTERPRETER_H

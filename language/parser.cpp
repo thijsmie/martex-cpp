@@ -170,7 +170,7 @@ std::shared_ptr<const Expr> Parser::Command()
     return make_shared<CommandExpr>(command, arguments);
 }
 
-std::shared_ptr<const Expr> Environment()
+std::shared_ptr<const Expr> Parser::Environment()
 {
     Token begin = Advance();
 
