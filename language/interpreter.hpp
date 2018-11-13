@@ -17,9 +17,8 @@ class Interpreter : public ExprVisitor
 
   std::shared_ptr<Environment> environment;
   std::shared_ptr<Environment> globals;
-  std::unordered_map<std::shared_ptr<const Expr>, int> locals;
+  Implementation implementation;
 
-  Value Evaluate(std::shared_ptr<const Expr>);
   vector<Value> ExecuteBlock(std::vector<std::shared_ptr<const Expr>>, std::shared_ptr<Environment>);
 
   RuntimeError Error(Token, std::string);
@@ -31,10 +30,8 @@ class Interpreter : public ExprVisitor
   void VisitEnvironmentExpr(std::shared_ptr<const EnvironmentExpr>);
 
 public:
-  Interpreter();
-  void Interpret(const std::vector<std::shared_ptr<const Expr>> &);
-  void Resolve(std::shared_ptr<const Expr>, int);
-  void Execute(std::shared_ptr<const Expr>);
+  Interpreter(Implementation);
+  Value Evaluate(std::shared_ptr<const Expr>);
 };
 
 #endif // INTERPRETER_H

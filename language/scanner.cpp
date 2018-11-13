@@ -58,7 +58,7 @@ void Scanner::ScanCommandOrSpecial()
             AddToken(BEGIN_ENV);
         else if (lexeme == "end")
             AddToken(END_ENV);
-        else
+        else /// implement other keywords like 'if', 'else', 'foreach' etc here
             AddToken(COMMAND, lexeme);
         if (!Match('\\'))
             EatWS();
