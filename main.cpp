@@ -1,5 +1,5 @@
 #include <phpcpp.h>
-#include "martex.h"
+#include "martex.hpp"
 
 /**
  *  Php modules need to expose a pure-C function get_module

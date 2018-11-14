@@ -11,8 +11,6 @@ class Environment
     std::unordered_map<std::string, Value> values;
     std::shared_ptr<Environment> enclosing;
 
-    virtual bool HasCommand(std::string) = 0;
-    virtual Value RunCommandHere(std::shared_ptr<Environment>, std::string, std::vector<Value>) = 0;
     
 
   public:
@@ -24,6 +22,8 @@ class Environment
     Value RunCommand(Token, std::vector<Value>);
     Value RunCommand(Environment, Token, std::vector<Value>);
     
+    virtual bool HasCommand(std::string) = 0;
+    virtual Value RunCommandHere(std::shared_ptr<Environment>, std::string, std::vector<Value>) = 0;
     virtual void StartEnvironment(Value, std::vector<Value>) = 0;
     virtual void EndEnvironment(Value) = 0;
 };
