@@ -8,9 +8,9 @@ enum TokenType {
   
   // Actionables
   QUOT, DUQUOT, TICK, HAT, TILT, DOT, DASH,
-  LESS, GREATER,
+  ESCAPE,
 
-  // Passables
+  // Literals
   WORD, WHITESPACE, LINE,
   AMPERSAND, NEWLINE, 
 

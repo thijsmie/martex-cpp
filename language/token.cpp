@@ -6,13 +6,13 @@ string tokenTypes[] = {
   // Single-character tokens.
   "LEFT_BRACKET", "RIGHT_BRACKET", "LEFT_BRACE", "RIGHT_BRACE",
   
-  
-  // Character mods
+  // Actionables
   "QUOT", "DUQUOT", "TICK", "HAT", "TILT", "DOT", "DASH",
+  "ESCAPE",
 
   // Literals.
-  "WORD", "WHITESPACE",
-  "AMPERSAND", "NEWLINE", "LESS", "GREATER", 
+  "WORD", "WHITESPACE", "LINE",
+  "AMPERSAND", "NEWLINE",
 
   // Specials
   "BEGIN_ENV", "END_ENV", "COMMAND", 

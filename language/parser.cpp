@@ -108,13 +108,13 @@ ParseError Parser::Error(Token token, string message)
 }
 
 vector<shared_ptr<const Expr>> Parser::Block() {
-  vector<shared_ptr<const Expr>> expressions;
+    vector<shared_ptr<const Expr>> expressions;
 
-  while (!Check(RIGHT_BRACE) && !Check(RIGHT_BRACKET) && !Check(END_ENV) && !IsAtEnd()) {
-    expressions.push_back(Expression());
-  }
+    while (!Check(RIGHT_BRACE) && !Check(RIGHT_BRACKET) && !Check(END_ENV) && !IsAtEnd()) {
+        expressions.push_back(Expression());
+    }
 
-  return expressions;
+    return expressions;
 }
 
 shared_ptr<const Expr> Parser::BlockExpression() {
@@ -127,7 +127,7 @@ std::shared_ptr<const Expr> Parser::Expression()
     {
         return Literal();
     }
-    else if (Match({QUOT, DUQUOT, TICK, HAT, TILT, DOT, DASH, LESS, GREATER}))
+    else if (Match({QUOT, DUQUOT, TICK, HAT, TILT, DOT, DASH, ESCAPE}))
     {
         return Actionable();
     }
@@ -186,7 +186,9 @@ std::shared_ptr<const Expr> Parser::Environment()
     // We dont use Braced here since dynamically named envs are not allowed
     Ignore({WHITESPACE});
     Consume(LEFT_BRACE, "No environment specified with begin.");
+    Ignore({WHITESPACE});
     Token b_envname = Consume(WORD, "No environment specified with begin.");
+    Ignore({WHITESPACE});
     Consume(RIGHT_BRACE, "Missing close brace after environment name.");
 
     while (CheckIgnore({WHITESPACE}, {LEFT_BRACE}))

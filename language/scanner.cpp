@@ -135,19 +135,19 @@ void Scanner::ScanCommandOrSpecial()
     }
     else if (Match('%'))
     {
-        AddToken(WORD, "%");
+        AddToken(ESCAPE, "%");
     }
     else if (Match('{'))
     {
-        AddToken(WORD, "{");
+        AddToken(ESCAPE, "{");
     }
     else if (Match('}'))
     {
-        AddToken(WORD, "}");
+        AddToken(ESCAPE, "}");
     }
     else if (Match('&'))
     {
-        AddToken(WORD, "&");
+        AddToken(ESCAPE, "&");
     }
     else if (Match('\\'))
     {
@@ -155,21 +155,27 @@ void Scanner::ScanCommandOrSpecial()
     }
     else if (Match('<'))
     {
-        AddToken(LESS);
+        AddToken(ESCAPE, "<");
     }
     else if (Match('>'))
     {
-        AddToken(GREATER);
+        AddToken(ESCAPE, ">");
     }
 }
 
 bool is_valid_char(char c)
 {
-    if (c < 32)
+    if (c < 33)
         return false;
     if (c > 126)
         return false;
-    return (c != '<' && c != '>' && c != '[' && c != ']' && c != ' ' && c != '\t' && 
+
+    /// The range defined above includes chars:
+    /// !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    /// [\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+
+    /// In future: filter $ too
+    return (c != '<' && c != '>' && c != '[' && c != ']' && 
             c != '{' && c != '}' && c != '%' && c != '\\' && c != '&');
 }
 
@@ -180,18 +186,14 @@ void Scanner::ScanToken()
     {
     case '[':
         AddToken(LEFT_BRACKET);
-        EatWS();
         break;
     case ']':
-        DropWS();
         AddToken(RIGHT_BRACKET);
         break;
     case '{':
         AddToken(LEFT_BRACE);
-        EatWS();
         break;
     case '}':
-        DropWS();
         AddToken(RIGHT_BRACE);
         break;
     case '&':
@@ -212,7 +214,9 @@ void Scanner::ScanToken()
             literal += Advance();
 
         AddToken(WHITESPACE, literal);
+        break;
     case '\r':
+        /// Windows line endings? We don't give a damn, skip!
         break;
     case '\n':
         line++;
@@ -226,6 +230,7 @@ void Scanner::ScanToken()
             Advance();
         }
         AddToken(WORD, literal);
+        break;
     }
 }
 
