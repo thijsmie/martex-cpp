@@ -7,13 +7,14 @@
 #include <iostream>
 
 
-enum ValueType
+enum ValueType : int
 {
-    t_null,
-    t_string,
-    t_ampersand,
-    t_break,
-    t_multi
+    t_any = -1,
+    t_null = 0,
+    t_string = 1,
+    t_ampersand = 2,
+    t_break = 3,
+    t_multi = 4
 };
 
 class Value

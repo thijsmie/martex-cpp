@@ -56,13 +56,11 @@ public:
 class EnvironmentExpr : public Expr, public Visitable<EnvironmentExpr>
 {
 public:
-  EnvironmentExpr(Token, std::shared_ptr<const Expr>, std::shared_ptr<std::vector<const Expr>>,
-                  std::shared_ptr<std::vector<const Expr>>);
+  EnvironmentExpr(Token, std::shared_ptr<const Expr>, std::shared_ptr<std::vector<const Expr>>);
   /*virtual*/ void Accept(ExprVisitor *) const;
 
   Token environment;
   std::shared_ptr<const Expr> bracket_argument;
-  std::shared_ptr<std::vector<const Expr>> arguments;
   std::shared_ptr<std::vector<const Expr>> block;
 };
 

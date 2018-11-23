@@ -87,13 +87,7 @@ void Interpreter::VisitEnvironmentExpr(shared_ptr<const EnvironmentExpr> env)
         if (env->bracket_argument != nullptr)
             bracket_argument = Evaluate(env->bracket_argument);
 
-        vector<Value> arguments();
-        arguments.reserve(command->arguments.size());
-
-        for (auto argument : command->arguments)
-            arguments.push_back(Evaluate(argument));
-
-        environment->StartEnvironment(bracket_argument, arguments);
+        environment->StartEnvironment(bracket_argument);
 
         Value v = ExecuteBlock(env->block);
 

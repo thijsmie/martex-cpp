@@ -34,10 +34,8 @@ void CommandExpr::Accept(ExprVisitor *visitor) const
 }
 
 EnvironmentExpr::EnvironmentExpr(Token environment, std::shared_ptr<const Expr> bracket_argument,
-                                 std::shared_ptr<std::vector<const Expr>> arguments,
                                  std::shared_ptr<std::vector<const Expr>> block) : environment(environment),
                                                                                    bracket_argument(bracket_argument),
-                                                                                   arguments(arguments),
                                                                                    block(block){};
 
 void EnvironmentExpr::Accept(ExprVisitor *visitor) const

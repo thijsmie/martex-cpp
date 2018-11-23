@@ -175,13 +175,6 @@ std::shared_ptr<const Expr> Parser::Environment()
     Token begin = Advance();
 
     shared_ptr<const Expr> bracket_arg = nullptr;
-    shared_ptr<vector<const Expr>> arguments;
-
-    if (CheckIgnore({WHITESPACE}, {LEFT_BRACKET}))
-    {
-        Ignore({WHITESPACE});
-        bracket_arg = Bracketed();
-    }
 
     // We dont use Braced here since dynamically named envs are not allowed
     Ignore({WHITESPACE});
@@ -191,10 +184,10 @@ std::shared_ptr<const Expr> Parser::Environment()
     Ignore({WHITESPACE});
     Consume(RIGHT_BRACE, "Missing close brace after environment name.");
 
-    while (CheckIgnore({WHITESPACE}, {LEFT_BRACE}))
+    if (CheckIgnore({WHITESPACE}, {LEFT_BRACKET}))
     {
         Ignore({WHITESPACE});
-        arguments.push_back(Braced());
+        bracket_arg = Bracketed();
     }
 
     // Environment contents
@@ -208,7 +201,7 @@ std::shared_ptr<const Expr> Parser::Environment()
     if (b_envname.GetLexeme() != e_envname.GetLexeme())
         Error(e_envname, "End tag for " + e_envname.GetLexeme() + " but expected " + b_envname + "(" + std::string(begin.GetLine()) + ")");
 
-    return make_shared<EnvironmentExpr>(b_envname, bracket_arg, arguments, block);
+    return make_shared<EnvironmentExpr>(b_envname, bracket_arg, block);
 }
 
 std::shared_ptr<const Expr> Parser::Bracketed()
