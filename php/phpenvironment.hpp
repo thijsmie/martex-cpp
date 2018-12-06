@@ -19,5 +19,5 @@ class PhpEnvironment : public Environment
     bool HasCommand(std::string);
     Value RunCommandHere(std::shared_ptr<Environment>, std::string, std::vector<Value>);
     void StartEnvironment(Value);
-    void EndEnvironment(Value);
+    Value EndEnvironment(Value);
 };

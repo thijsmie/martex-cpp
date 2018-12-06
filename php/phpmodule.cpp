@@ -21,16 +21,16 @@ PhpModule::PhpModule(std::string php_module_name) : myModule(php_module_name),
     }
 }
 
-std::vector<std::string> GetGlobals() { return myGlobals; }
-std::vector<std::string> GetEnvs() { return myEnvironmentNames; };
+std::vector<std::string> PhpModule::GetGlobals() { return myGlobals; }
+std::vector<std::string> PhpModule::GetEnvs() { return myEnvironmentNames; };
 
-std::shared_ptr<Environment> MakeEnv(std::string name, std::shared_ptr<Environment> parent)
+std::shared_ptr<Environment> PhpModule::MakeEnv(std::string name, std::shared_ptr<Environment> parent)
 {
-    return make_shared(PhpEnvironment(myEnvironments[name], myModule));
+    return std::make_shared<Environment>(PhpEnvironment(myEnvironments[name], myModule));
 }
 
-Value RunGlobal(std::shared_ptr<Environment> env, std::string name, std::vector<Value> args)
+Value PhpModule::RunGlobal(std::shared_ptr<Environment> env, std::string name, std::vector<Value> args)
 {
     std::shared_ptr<PhpEnvironment> phpenv = std::dynamic_pointer_cast<PhpEnvironment>(env);
-    return PhpToCpp(myModule.call(name, phpenv->myEnvironment, CppToPhp(args)));
+    return PhpToCpp(myModule.call(name, (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
 }

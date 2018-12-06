@@ -37,7 +37,7 @@ bool Scanner::Match(char c)
 
 void Scanner::EatWS()
 {
-    while (Peek() == " " || Peek() == "\t" || Peek() == "\r")
+    while (Peek() == ' ' || Peek() == '\t' || Peek() == '\r')
         Advance();
 }
 
@@ -49,7 +49,8 @@ void Scanner::DropWS()
 
 void Scanner::ScanCommandOrSpecial()
 {
-    if (isalnum(Peek()) {
+    if (isalnum(Peek()))
+    {
         /// Commands are alphanum
         while (isalnum(Peek()) || Peek() == '_')
             Advance();
@@ -71,7 +72,7 @@ void Scanner::ScanCommandOrSpecial()
             Advance();
         }
         else
-            AddToken(QUOT, string(Advance()));
+            AddToken(QUOT, string(1, Advance()));
     }
     else if (Match('"'))
     {
@@ -81,7 +82,7 @@ void Scanner::ScanCommandOrSpecial()
             Advance();
         }
         else
-            AddToken(DUQUOT, string(Advance()));
+            AddToken(DUQUOT, string(1, Advance()));
     }
     else if (Match('`'))
     {
@@ -91,7 +92,7 @@ void Scanner::ScanCommandOrSpecial()
             Advance();
         }
         else
-            AddToken(TICK, string(Advance()));
+            AddToken(TICK, string(1, Advance()));
     }
     else if (Match('^'))
     {
@@ -101,7 +102,7 @@ void Scanner::ScanCommandOrSpecial()
             Advance();
         }
         else
-            AddToken(HAT, string(Advance()));
+            AddToken(HAT, string(1, Advance()));
     }
     else if (Match('~'))
     {
@@ -111,7 +112,7 @@ void Scanner::ScanCommandOrSpecial()
             Advance();
         }
         else
-            AddToken(TILT, string(Advance()));
+            AddToken(TILT, string(1, Advance()));
     }
     else if (Match('.'))
     {
@@ -121,7 +122,7 @@ void Scanner::ScanCommandOrSpecial()
             Advance();
         }
         else
-            AddToken(DOT, string(Advance()));
+            AddToken(DOT, string(1, Advance()));
     }
     else if (Match('-'))
     {
@@ -131,7 +132,7 @@ void Scanner::ScanCommandOrSpecial()
             Advance();
         }
         else
-            AddToken(DASH, string(Advance()));
+            AddToken(DASH, string(1, Advance()));
     }
     else if (Match('%'))
     {
@@ -175,13 +176,14 @@ bool is_valid_char(char c)
     /// [\]^_`abcdefghijklmnopqrstuvwxyz{|}~
 
     /// In future: filter $ too
-    return (c != '<' && c != '>' && c != '[' && c != ']' && 
+    return (c != '<' && c != '>' && c != '[' && c != ']' &&
             c != '{' && c != '}' && c != '%' && c != '\\' && c != '&');
 }
 
 void Scanner::ScanToken()
 {
     char c = Advance();
+    string literal(1, c);
     switch (c)
     {
     case '[':
@@ -208,8 +210,6 @@ void Scanner::ScanToken()
         break;
     case ' ':
     case '\t':
-        string literal(c);
-
         while (Peek() == ' ' || Peek() == '\t')
             literal += Advance();
 
@@ -220,10 +220,9 @@ void Scanner::ScanToken()
         break;
     case '\n':
         line++;
-        AddToken(LINE, c);
+        AddToken(LINE, literal);
         break;
     default:
-        string literal(c);
         while (!IsAtEnd() && is_valid_char(Peek()))
         {
             literal.push_back(Peek());
@@ -234,8 +233,8 @@ void Scanner::ScanToken()
     }
 }
 
-Scanner::Scanner(string source)
-    : source(source) {}
+Scanner::Scanner(string source, ErrorReporter& error_reporter)
+    : source(source), error_reporter(error_reporter) {}
 
 vector<Token> Scanner::ScanTokens()
 {

@@ -14,6 +14,8 @@ class ErrorReporter
     void Error(Token token, std::string message);
     void ResetErrorFlag();
 
+    std::string Output();
+
   private:
     bool hadErrorFlag;
     bool hadFatalError;

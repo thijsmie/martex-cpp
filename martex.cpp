@@ -31,8 +31,9 @@ void MarTeX::Parse(Php::Parameters &params)
     // Security by design! Wow!
     std::vector<std::shared_ptr<Module>> module_inst;
     module_inst.reserve(modules.size());
-    for (auto m : modules)
-        module_inst.push_back(std::make_shared<Module>(PhpModule(m)));
+    for (auto m : modules) {;
+        module_inst.push_back(std::make_shared<PhpModule>(m));
+    }
 
     // Instanciate an implementation, transfer access to the modules
     Implementation implementation(module_inst);
@@ -52,7 +53,7 @@ void MarTeX::Parse(Php::Parameters &params)
     
     // Parse tokens
     Parser parser(tokens, error_reporter);
-    vector<shared_ptr<const Expr>> ast = parser.Parse();
+    shared_ptr<const Expr> ast = parser.Parse();
 
     // Fatal error escape
     if (error_reporter.IsFatal()) {
@@ -72,7 +73,7 @@ void MarTeX::Parse(Php::Parameters &params)
 
     // No return but value set (with force to string)
     // Discourages use without error check
-    result = output.GetContent();
+    last_result = output.GetContent();
 
     process_errors(error_reporter);
 }
@@ -83,5 +84,5 @@ void MarTeX::process_errors(ErrorReporter &reporter)
     // Included for future additions
     // Maybe source error highlighting info?
 
-    error_log = reporter.elog();
+    error_log = reporter.Output();
 }

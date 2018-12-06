@@ -17,7 +17,7 @@ extern "C"
     PHPCPP_EXPORT void *get_module()
     {
         // The extension will stay in memory for the duration of the php process
-        static Php::Extension extension("martex", "0.1");
+        static Php::Extension extension("martex", "0.1");/*
 
         // Create MarTeX namespace
         Php::Namespace texspace("MarTeX");
@@ -50,7 +50,7 @@ extern "C"
 
         // Add namespace MarTeX to extension
         extension.add(std::move(texspace));
-
+        */
         return extension;
     }
 }

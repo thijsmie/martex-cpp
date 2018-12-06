@@ -22,7 +22,7 @@ class Parser
   public:
     Parser(std::vector<Token> &tokens, ErrorReporter &error_reporter);
 
-    std::vector<std::shared_ptr<const Expr>> Parse();
+    std::shared_ptr<const Expr> Parse();
 
   private:
     ErrorReporter &error_reporter;
@@ -43,7 +43,7 @@ class Parser
     Token Consume(TokenType type, std::string message);
     ParseError Error(Token token, std::string message);
 
-    std::shared_ptr<std::vector<const Expr>> Block();
+    std::vector<std::shared_ptr<const Expr>> Block();
 
     std::shared_ptr<const Expr> BlockExpression();
     std::shared_ptr<const Expr> Expression();

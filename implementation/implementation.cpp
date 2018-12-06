@@ -4,7 +4,7 @@ Implementation::Implementation(std::vector<std::shared_ptr<Module>> modules) : m
 
 std::shared_ptr<Environment> Implementation::Global()
 {
-    return std::make_shared<Environment>(GlobalEnv(modules));
+    return std::make_shared<GlobalEnv>(modules);
 }
 
 std::string Implementation::LineBreak() const
@@ -20,54 +20,57 @@ std::string Implementation::Ampersand() const
 std::string Implementation::Escaped(TokenType escapetype, char escapee)
 {
     std::string temp;
-    switch(escapetype)
+    switch (escapetype)
     {
-        case TokenType::QUOT:
-            temp = "& acute;";
-            temp.insert(1, 1, escapee);
-            return temp;
-        case TokenType::DUQUOT:
-            temp = "& uml;";
-            temp.insert(1, 1, escapee);
-            return temp;
-        case TokenType::TICK:
-            temp = "& grave;";
-            temp.insert(1, 1, escapee);
-            return temp;
-        case TokenType::TILT:
-            temp = "& tilde;";
-            temp.insert(1, 1, escapee);
-            return temp;
-        case TokenType::HAT:
-            temp = "& circ;";
-            temp.insert(1, 1, escapee);
-            return temp;
-        case TokenType::DASH:
-            temp = "& uml;";
-            temp.insert(1, 1, escapee);
-            return temp;
-        case TokenType::DOT:
-            temp = "& ring;";
-            temp.insert(1, 1, escapee);
-            return temp;
-        case TokenType::ESCAPE:
-            switch (escapee)
-            {
-                case '%':
-                    return "%";
-                case '{':
-                    return "&#123;";
-                case '}':
-                    return "&#125;";
-                case '<':
-                    return "&lt;";
-                case '>':
-                    return "&gt;";
-                case '&':
-                    return "&amp;";
-            }
+    case TokenType::QUOT:
+        temp = "& acute;";
+        temp.insert(1, 1, escapee);
+        return temp;
+    case TokenType::DUQUOT:
+        temp = "& uml;";
+        temp.insert(1, 1, escapee);
+        return temp;
+    case TokenType::TICK:
+        temp = "& grave;";
+        temp.insert(1, 1, escapee);
+        return temp;
+    case TokenType::TILT:
+        temp = "& tilde;";
+        temp.insert(1, 1, escapee);
+        return temp;
+    case TokenType::HAT:
+        temp = "& circ;";
+        temp.insert(1, 1, escapee);
+        return temp;
+    case TokenType::DASH:
+        temp = "& uml;";
+        temp.insert(1, 1, escapee);
+        return temp;
+    case TokenType::DOT:
+        temp = "& ring;";
+        temp.insert(1, 1, escapee);
+        return temp;
+    case TokenType::ESCAPE:
+        switch (escapee)
+        {
+        case '%':
+            return "%";
+        case '{':
+            return "&#123;";
+        case '}':
+            return "&#125;";
+        case '<':
+            return "&lt;";
+        case '>':
+            return "&gt;";
+        case '&':
+            return "&amp;";
+        default:
+            return "";
+        }
+    default:
+        return "";
     }
-    return "";
 }
 
 std::shared_ptr<Environment> Implementation::Create(Token name, std::shared_ptr<Environment> parent)
@@ -78,7 +81,7 @@ std::shared_ptr<Environment> Implementation::Create(Token name, std::shared_ptr<
         for (std::string e : m.get()->GetEnvs())
             if (e == cname)
                 return m.get()->MakeEnv(cname, parent);
-    
+
     throw new RuntimeError(name, "No such environment.");
 }
 

@@ -10,16 +10,18 @@ class Interpreter;
 #include "expr.hpp"
 #include "value.hpp"
 #include "environment.hpp"
+#include "error_reporter.hpp"
+#include "runtime_error.hpp"
 #include "implementation/implementation.hpp"
 
 class Interpreter : public ExprVisitor
 {
-    ErrorReporter &error_reporter;
     Value value; // used to return things
 
     std::shared_ptr<Environment> environment;
     std::shared_ptr<Environment> globals;
     std::shared_ptr<Implementation> implementation;
+    ErrorReporter &error_reporter;
 
     Value ExecuteBlock(std::vector<std::shared_ptr<const Expr>>);
 

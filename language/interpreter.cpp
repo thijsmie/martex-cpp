@@ -7,7 +7,7 @@ using std::static_pointer_cast;
 using std::string;
 using std::vector;
 
-Interpreter::Interpreter(shared_ptr<Implementation> i) : implementation(i)
+Interpreter::Interpreter(shared_ptr<Implementation> i, ErrorReporter &reporter) : implementation(i), error_reporter(reporter)
 {
     environment = implementation->Global();
     globals = environment;
@@ -29,9 +29,9 @@ Value Interpreter::ExecuteBlock(vector<shared_ptr<const Expr>> expressions)
     return Value(result);
 }
 
-RuntimeError Interpreter::Error(Token token, string message)
+void Interpreter::Error(Token token, string message)
 {
-    return RuntimeError(token, message);
+    error_reporter.Error(token, message);
 }
 
 void Interpreter::VisitBlockExpr(shared_ptr<const BlockExpr> block)
@@ -55,6 +55,8 @@ void Interpreter::VisitLiteralExpr(shared_ptr<const LiteralExpr> literal)
     case TokenType::AMPERSAND:
         value = Value(t_ampersand, implementation->Ampersand());
         break;
+    default:
+        value = Value();
     }
 }
 
@@ -73,7 +75,7 @@ void Interpreter::VisitCommandExpr(shared_ptr<const CommandExpr> command)
         arguments.push_back(Evaluate(argument));
 
     // return
-    value = environment->RunCommand(command->command, arguments);
+    value = environment->RunCommand(environment, command->command, arguments);
 }
 
 void Interpreter::VisitEnvironmentExpr(shared_ptr<const EnvironmentExpr> env)
@@ -89,9 +91,9 @@ void Interpreter::VisitEnvironmentExpr(shared_ptr<const EnvironmentExpr> env)
 
         environment->StartEnvironment(bracket_argument);
 
-        Value v = ExecuteBlock(env.get()->block);
+        Value v = Evaluate(env.get()->block);
 
-        environment->EndEnvironment(v);
+        value = environment->EndEnvironment(v);
     }
     catch (RuntimeError e)
     {

@@ -107,23 +107,26 @@ ParseError Parser::Error(Token token, string message)
     return ParseError();
 }
 
-vector<shared_ptr<const Expr>> Parser::Block() {
+vector<shared_ptr<const Expr>> Parser::Block()
+{
     vector<shared_ptr<const Expr>> expressions;
 
-    while (!Check(RIGHT_BRACE) && !Check(RIGHT_BRACKET) && !Check(END_ENV) && !IsAtEnd()) {
+    while (!Check(RIGHT_BRACE) && !Check(RIGHT_BRACKET) && !Check(END_ENV) && !IsAtEnd())
+    {
         expressions.push_back(Expression());
     }
 
     return expressions;
 }
 
-shared_ptr<const Expr> Parser::BlockExpression() {
-  return make_shared<BlockExpr>(Block());
+shared_ptr<const Expr> Parser::BlockExpression()
+{
+    return make_shared<BlockExpr>(Block());
 }
 
 std::shared_ptr<const Expr> Parser::Expression()
 {
-    if (Match({WORD, WHITESPACE, LINE, AMPERSAND, NEWLINE})
+    if (Match({WORD, WHITESPACE, LINE, AMPERSAND, NEWLINE}))
     {
         return Literal();
     }
@@ -193,13 +196,13 @@ std::shared_ptr<const Expr> Parser::Environment()
     // Environment contents
     shared_ptr<const Expr> block = BlockExpression();
 
-    Consume(END_ENV, "No matching end tag for environment " + b_envname.GetLexeme() + "(" + std::string(begin.GetLine()) + ")");
+    Consume(END_ENV, "No matching end tag for environment " + b_envname.GetLexeme() + "(" + std::to_string(begin.GetLine()) + ")");
     Consume(LEFT_BRACE, "No environment specified with end.");
     Token e_envname = Consume(WORD, "No environment specified with end.");
     Consume(RIGHT_BRACE, "Missing close brace after environment name.");
 
     if (b_envname.GetLexeme() != e_envname.GetLexeme())
-        Error(e_envname, "End tag for " + e_envname.GetLexeme() + " but expected " + b_envname + "(" + std::string(begin.GetLine()) + ")");
+        Error(e_envname, "End tag for " + e_envname.GetLexeme() + " but expected " + b_envname.GetLexeme() + "(" + std::to_string(begin.GetLine()) + ")");
 
     return make_shared<EnvironmentExpr>(b_envname, bracket_arg, block);
 }
@@ -220,14 +223,12 @@ std::shared_ptr<const Expr> Parser::Braced()
     return argument;
 }
 
-vector<shared_ptr<const Stmt>> Parser::Parse()
+shared_ptr<const Expr> Parser::Parse()
 {
-    vector<shared_ptr<const Stmt>> statements;
-    while (!IsAtEnd())
-    {
-        statements.push_back(Declaration());
-    }
-    return statements;
+    shared_ptr<const Expr> content = BlockExpression();
+    if (!IsAtEnd())
+        Error(Advance(), "Expected end of document.");
+    return content;
 }
 
 Parser::Parser(vector<Token> &tokens, ErrorReporter &error_reporter) : tokens(tokens), error_reporter(error_reporter) {}
