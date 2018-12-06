@@ -26,6 +26,8 @@ class Value
     std::string GetContent() const;
     std::vector<Value> GetValues() const;
     ValueType GetType() const;
+
+    Value Flattened();
   private:
     ValueType type;
     std::string content;

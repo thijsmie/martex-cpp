@@ -38,5 +38,5 @@ class MarTeX : public Php::Base
 
     Php::Value HasError();
     Php::Value GetErrors();
-    Php::Value GetResults();
+    Php::Value GetResult();
 };

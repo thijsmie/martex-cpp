@@ -26,11 +26,11 @@ std::vector<std::string> PhpModule::GetEnvs() { return myEnvironmentNames; };
 
 std::shared_ptr<Environment> PhpModule::MakeEnv(std::string name, std::shared_ptr<Environment> parent)
 {
-    return std::make_shared<Environment>(PhpEnvironment(myEnvironments[name], myModule));
+    return std::make_shared<PhpEnvironment>(myEnvironments[name], myModule);
 }
 
 Value PhpModule::RunGlobal(std::shared_ptr<Environment> env, std::string name, std::vector<Value> args)
 {
     std::shared_ptr<PhpEnvironment> phpenv = std::dynamic_pointer_cast<PhpEnvironment>(env);
-    return PhpToCpp(myModule.call(name, (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
+    return PhpToCpp(myModule.call(name.c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
 }

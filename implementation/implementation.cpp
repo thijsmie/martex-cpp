@@ -103,4 +103,4 @@ Value GlobalEnv::RunCommandHere(std::shared_ptr<Environment> runenv, std::string
 }
 
 void GlobalEnv::StartEnvironment(Value) {}
-void GlobalEnv::EndEnvironment(Value) {}
+Value GlobalEnv::EndEnvironment(Value s) { return s; }

@@ -17,16 +17,15 @@ bool PhpEnvironment::HasCommand(std::string c)
 Value PhpEnvironment::RunCommandHere(std::shared_ptr<Environment> env, std::string name, std::vector<Value> args)
 {
     std::shared_ptr<PhpEnvironment> phpenv = std::dynamic_pointer_cast<PhpEnvironment>(env);
-    return PhpToCpp(myEnvironment.call(name, (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
+    return PhpToCpp(myEnvironment.call(name.c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
 }
 
-void PhpEnvironment::StartEnvironment(Value)
+void PhpEnvironment::StartEnvironment(Value arg)
 {
-    myEnvironment.call("begin", myEnvironment, CppToPhp(args));
+    myEnvironment.call("begin", myEnvironment, CppToPhp(arg));
 }
 
-void PhpEnvironment::EndEnvironment(Value)
+Value PhpEnvironment::EndEnvironment(Value content)
 {
-    std::shared_ptr<PhpEnvironment> phpenv = std::dynamic_pointer_cast<PhpEnvironment>(env);
-    return PhpToCpp(myModule.call("end", myEnvironment, CppToPhp(args)));
+    return PhpToCpp(myEnvironment.call("end", CppToPhp(content)));
 }
