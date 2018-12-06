@@ -12,11 +12,11 @@ void Environment::Set(std::string name, Value value)
 
 Value Environment::Get(Token name)
 {
-    if (!values.contains(name->GetContent()))
+    if (!values.contains(name.ToString()))
     {
         if (enclosing == nullptr)
         {
-            throw RuntimeError(name, "Undefined variable " + name.GetContent() + ".");
+            throw RuntimeError(name, "Undefined variable " + name.ToString() + ".");
         }
         else
         {

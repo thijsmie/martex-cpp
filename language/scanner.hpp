@@ -1,10 +1,10 @@
-#ifndef SCANNER_H_
-#define SCANNER_H_
+#pragma once
 
 #include <string>
 #include <vector>
 
 #include "token.hpp"
+#include "runtime_error.hpp"
 #include "error_reporter.hpp"
 
 class Scanner {
@@ -35,5 +35,3 @@ class Scanner {
   void Error(std::string error);
 };
 
-
-#endif  // SCANNER_H_

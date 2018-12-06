@@ -1,10 +1,9 @@
-#ifndef VALUE_H
-#define VALUE_H
+#pragma once
 
 #include <string>
 #include <memory>
-#include <variant>
 #include <iostream>
+#include <vector>
 
 
 enum ValueType : int
@@ -32,5 +31,3 @@ class Value
     std::string content;
     std::vector<Value> multicontent;
 };
-
-#endif //VALUE_H

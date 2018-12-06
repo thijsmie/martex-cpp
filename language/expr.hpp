@@ -19,10 +19,10 @@ public:
 class BlockExpr : public Expr, public Visitable<BlockExpr>
 {
 public:
-  BlockExpr(std::shared_ptr<std::vector<const Expr>>);
+  BlockExpr(std::vector<std::shared_ptr<const Expr>>);
   /*virtual*/ void Accept(ExprVisitor *) const;
 
-  std::shared_ptr<std::vector<const Expr>> expressions;
+  std::vector<std::shared_ptr<const Expr>> expressions;
 };
 
 class LiteralExpr : public Expr, public Visitable<LiteralExpr>
@@ -46,22 +46,22 @@ public:
 class CommandExpr : public Expr, public Visitable<CommandExpr>
 {
 public:
-  CommandExpr(Token, std::shared_ptr<std::vector<const Expr>>);
+  CommandExpr(Token, std::vector<std::shared_ptr<const Expr>>);
   /*virtual*/ void Accept(ExprVisitor *) const;
 
   Token command;
-  std::shared_ptr<std::vector<const Expr>> arguments;
+  std::vector<std::shared_ptr<const Expr>> arguments;
 };
 
 class EnvironmentExpr : public Expr, public Visitable<EnvironmentExpr>
 {
 public:
-  EnvironmentExpr(Token, std::shared_ptr<const Expr>, std::shared_ptr<std::vector<const Expr>>);
+  EnvironmentExpr(Token, std::shared_ptr<const Expr>, std::vector<std::shared_ptr<const Expr>>);
   /*virtual*/ void Accept(ExprVisitor *) const;
 
   Token environment;
   std::shared_ptr<const Expr> bracket_argument;
-  std::shared_ptr<std::vector<const Expr>> block;
+  std::vector<std::shared_ptr<const Expr>> block;
 };
 
 class ExprVisitor

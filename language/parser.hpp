@@ -1,5 +1,4 @@
-#ifndef PARSER_H_
-#define PARSER_H_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -8,49 +7,50 @@
 
 #include "token.hpp"
 #include "expr.hpp"
-#include "stmt.hpp"
+#include "error_reporter.hpp"
 
-
-class ParseError : public std::exception {
-  const char * what () const throw () {
-    return "Parser error";
-  }
+class ParseError : public std::exception
+{
+    const char *what() const throw()
+    {
+        return "Parser error";
+    }
 };
 
-class Parser {
- public:
-  Parser(std::vector<Token>& tokens);
+class Parser
+{
+  public:
+    Parser(std::vector<Token> &tokens, ErrorReporter &error_reporter);
 
-  std::vector<std::shared_ptr<const Expr>> Parse();
+    std::vector<std::shared_ptr<const Expr>> Parse();
 
- private:
-  std::vector<Token> tokens;
+  private:
+    ErrorReporter &error_reporter;
+    std::vector<Token> tokens;
 
-  int current = 0; // current token
+    int current = 0; // current token
 
-  bool IsAtEnd(const int &offset=1);
-  Token Peek();
-  Token Previous();
-  Token Advance();
-  bool Check(const TokenType& tokenType);
-  bool CheckAhead(const TokenType& tokenTypez, const int &offset=1);
-  bool Match(const std::vector<TokenType>& tokenTypes);
-  void Ignore(const std::vector<TokenType>& tokenTypes);
-  bool CheckIgnore(const std::vector<TokenType>& ignoreTypes, const std::vector<TokenType>& matchTypes);
+    bool IsAtEnd(const int &offset = 1);
+    Token Peek();
+    Token Previous();
+    Token Advance();
+    bool Check(const TokenType &tokenType);
+    bool CheckAhead(const TokenType &tokenTypez, const int &offset = 1);
+    bool Match(const std::vector<TokenType> &tokenTypes);
+    void Ignore(const std::vector<TokenType> &tokenTypes);
+    bool CheckIgnore(const std::vector<TokenType> &ignoreTypes, const std::vector<TokenType> &matchTypes);
 
-  Token Consume(TokenType type, std::string message);
-  ParseError Error(Token token, std::string message);
+    Token Consume(TokenType type, std::string message);
+    ParseError Error(Token token, std::string message);
 
-  std::shared_ptr<std::vector<const Expr>> Block();
+    std::shared_ptr<std::vector<const Expr>> Block();
 
-  std::shared_ptr<const Expr> BlockExpression();
-  std::shared_ptr<const Expr> Expression();
-  std::shared_ptr<const Expr> Literal();
-  std::shared_ptr<const Expr> Actionable();
-  std::shared_ptr<const Expr> Command();
-  std::shared_ptr<const Expr> Environment();
-  std::shared_ptr<const Expr> Bracketed();
-  std::shared_ptr<const Expr> Braced();
+    std::shared_ptr<const Expr> BlockExpression();
+    std::shared_ptr<const Expr> Expression();
+    std::shared_ptr<const Expr> Literal();
+    std::shared_ptr<const Expr> Actionable();
+    std::shared_ptr<const Expr> Command();
+    std::shared_ptr<const Expr> Environment();
+    std::shared_ptr<const Expr> Bracketed();
+    std::shared_ptr<const Expr> Braced();
 };
-
-#endif  // PARSER_H_

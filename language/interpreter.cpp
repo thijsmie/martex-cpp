@@ -7,9 +7,9 @@ using std::static_pointer_cast;
 using std::string;
 using std::vector;
 
-Interpreter::Interpreter(Implementation i) : implementation(i)
+Interpreter::Interpreter(shared_ptr<Implementation> i) : implementation(i)
 {
-    environment = implementation.Global();
+    environment = implementation->Global();
     globals = environment;
 }
 
@@ -42,12 +42,12 @@ void Interpreter::VisitBlockExpr(shared_ptr<const BlockExpr> block)
 
 void Interpreter::VisitLiteralExpr(shared_ptr<const LiteralExpr> literal)
 {
-    switch (literal->value->GetType())
+    switch (literal->value.GetType())
     {
     case TokenType::WORD:
     case TokenType::LINE:
     case TokenType::WHITESPACE:
-        value = Value(t_string, literal->value->GetContent());
+        value = Value(t_string, literal->value.ToString());
         break;
     case TokenType::NEWLINE:
         value = Value(t_break, implementation->LineBreak());
@@ -61,12 +61,12 @@ void Interpreter::VisitLiteralExpr(shared_ptr<const LiteralExpr> literal)
 void Interpreter::VisitActionableExpr(shared_ptr<const ActionableExpr> actionable)
 {
     // return
-    value = Value(t_string, implementation->Escaped(actionable->value->GetType(), actionable->value->GetContent()[0]));
+    value = Value(t_string, implementation->Escaped(actionable->value.GetType(), actionable->value.ToString()[0]));
 }
 
 void Interpreter::VisitCommandExpr(shared_ptr<const CommandExpr> command)
 {
-    vector<Value> arguments();
+    vector<Value> arguments;
     arguments.reserve(command->arguments.size());
 
     for (auto argument : command->arguments)
@@ -81,15 +81,15 @@ void Interpreter::VisitEnvironmentExpr(shared_ptr<const EnvironmentExpr> env)
     shared_ptr<Environment> current = environment;
     try
     {
-        environment = implementation->Create(env->environment, environment);
-        Value bracket_argument();
+        environment = implementation->Create(env.get()->environment, environment);
+        Value bracket_argument;
 
-        if (env->bracket_argument != nullptr)
-            bracket_argument = Evaluate(env->bracket_argument);
+        if (env.get()->bracket_argument != nullptr)
+            bracket_argument = Evaluate(env.get()->bracket_argument);
 
         environment->StartEnvironment(bracket_argument);
 
-        Value v = ExecuteBlock(env->block);
+        Value v = ExecuteBlock(env.get()->block);
 
         environment->EndEnvironment(v);
     }
@@ -99,3 +99,4 @@ void Interpreter::VisitEnvironmentExpr(shared_ptr<const EnvironmentExpr> env)
         throw e;
     }
     environment = current;
+};

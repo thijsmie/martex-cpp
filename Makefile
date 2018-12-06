@@ -85,9 +85,9 @@ LINKER				=	g++
 #	with a list of all flags that should be passed to the linker.
 #
 
-COMPILER_FLAGS		=	-Wall -c -O2 -std=c++11 -fpic -o
+COMPILER_FLAGS		=	-Wall -c -O2 -std=c++11 -fpic -I. -o
 LINKER_FLAGS		=	-shared
-LINKER_DEPENDENCIES	=	-lphpcpp
+LINKER_DEPENDENCIES	=	-lphpcpp -I.
 
 
 #
@@ -110,8 +110,8 @@ MKDIR				=	mkdir -p
 #	file, with the .cpp extension being replaced by .o.
 #
 
-SOURCES				=	$(wildcard *.cpp) $(wildcard language/*.cpp)
-OBJECTS				=	$(SOURCES:%.cpp=%.o)
+SOURCES =	$(wildcard *.cpp) $(wildcard language/*.cpp) $(wildcard implementation/*.cpp) $(wildcard php/*.cpp)
+OBJECTS =	$(SOURCES:%.cpp=%.o)
 
 
 #
