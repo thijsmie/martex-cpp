@@ -24,7 +24,7 @@ Value Environment::Get(Token name)
 Value Environment::RunCommand(std::shared_ptr<Environment> env, Token name, std::vector<Value> arguments)
 {
     if (HasCommand(name.ToString()))
-        return RunCommandHere(env, name.ToString(), arguments);
+        return RunCommandHere(env, name, arguments);
     if (is_root)
         throw RuntimeError(name, "Unknown command " + name.ToString() + ".");
     return enclosing->RunCommand(env, name, arguments);

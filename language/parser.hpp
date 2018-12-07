@@ -25,8 +25,8 @@ class Parser
     std::shared_ptr<const Expr> Parse();
 
   private:
-    ErrorReporter &error_reporter;
     std::vector<Token> tokens;
+    ErrorReporter &error_reporter;
 
     int current = 0; // current token
 

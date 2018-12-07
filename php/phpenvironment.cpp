@@ -14,18 +14,39 @@ bool PhpEnvironment::HasCommand(std::string c)
     return (std::find(commands.begin(), commands.end(), c) != commands.end());
 }
 
-Value PhpEnvironment::RunCommandHere(std::shared_ptr<Environment> env, std::string name, std::vector<Value> args)
+Value PhpEnvironment::RunCommandHere(std::shared_ptr<Environment> env, Token name, std::vector<Value> args)
 {
     std::shared_ptr<PhpEnvironment> phpenv = std::dynamic_pointer_cast<PhpEnvironment>(env);
-    return PhpToCpp(myEnvironment.call(name.c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
+    try
+    {
+        return PhpToCpp(myEnvironment.call(name.ToString().c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
+    }
+    catch(Php::Exception &e)
+    {
+        throw RuntimeError(name, e.message());
+    }
 }
 
-void PhpEnvironment::StartEnvironment(Value arg)
+void PhpEnvironment::StartEnvironment(Token begin, Value arg)
 {
-    myEnvironment.call("begin", myEnvironment, CppToPhp(arg));
+    try
+    {
+        myEnvironment.call("begin", myEnvironment, CppToPhp(arg));
+    }
+    catch(Php::Exception &e)
+    {
+        throw RuntimeError(begin, e.message());
+    }
 }
 
-Value PhpEnvironment::EndEnvironment(Value content)
+Value PhpEnvironment::EndEnvironment(Token end, Value content)
 {
+    try
+    {
     return PhpToCpp(myEnvironment.call("end", CppToPhp(content)));
+    }
+    catch(Php::Exception &e)
+    {
+        throw RuntimeError(end, e.message());
+    }
 }

@@ -9,7 +9,7 @@ using std::vector;
 using std::shared_ptr;
 
 
-MarTeX::MarTeX() {}
+MarTeX::MarTeX() : has_error(false), last_result(""), error_log("") {}
 
 void MarTeX::RegisterModule(Php::Parameters &params)
 {
@@ -44,32 +44,14 @@ void MarTeX::Parse(Php::Parameters &params)
     // Token scan
     Scanner scanner(text, error_reporter);
     vector<Token> tokens = scanner.ScanTokens();
-
-    // Fatal error escape
-    if (error_reporter.IsFatal()) {
-        process_errors(error_reporter);
-        return;
-    }
     
     // Parse tokens
     Parser parser(tokens, error_reporter);
     shared_ptr<const Expr> ast = parser.Parse();
 
-    // Fatal error escape
-    if (error_reporter.IsFatal()) {
-        process_errors(error_reporter);
-        return;
-    }
-
     // Create the interpreter
     Interpreter interpreter(std::make_shared<Implementation>(implementation), error_reporter);
     Value output = interpreter.Evaluate(ast);
-
-    // Fatal error escape
-    if (error_reporter.IsFatal()) {
-        process_errors(error_reporter);
-        return;
-    }
 
     // No return but value set (with force to string)
     // Discourages use without error check
@@ -85,4 +67,21 @@ void MarTeX::process_errors(ErrorReporter &reporter)
     // Maybe source error highlighting info?
 
     error_log = reporter.Output();
+    has_error = reporter.HadError();
+    reporter.ResetErrorFlag();
+}
+
+Php::Value MarTeX::HasError()
+{
+    return has_error;
+}
+
+Php::Value MarTeX::GetErrors()
+{
+    return error_log;
+}
+
+Php::Value MarTeX::GetResult()
+{
+    return last_result;
 }

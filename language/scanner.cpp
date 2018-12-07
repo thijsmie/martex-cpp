@@ -246,3 +246,8 @@ vector<Token> Scanner::ScanTokens()
     tokens.push_back(Token(EOTF, "", line));
     return tokens;
 }
+
+void Scanner::Error(string message)
+{
+    error_reporter.Report(line, std::string(1, Peek()), message);
+}

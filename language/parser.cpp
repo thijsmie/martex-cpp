@@ -11,7 +11,7 @@ using std::vector;
 
 bool Parser::IsAtEnd(const int &offset)
 {
-    return tokens.size() - 1 <= current + offset;
+    return ((int)tokens.size()) - 1 <= current + offset;
 }
 
 Token Parser::Peek()
@@ -113,7 +113,14 @@ vector<shared_ptr<const Expr>> Parser::Block()
 
     while (!Check(RIGHT_BRACE) && !Check(RIGHT_BRACKET) && !Check(END_ENV) && !IsAtEnd())
     {
-        expressions.push_back(Expression());
+        try
+        {
+            expressions.push_back(Expression());
+        }
+        catch (ParseError e)
+        {
+            error_reporter.Log(Peek(), "Trying to recover from here.");
+        }
     }
 
     return expressions;
@@ -202,9 +209,9 @@ std::shared_ptr<const Expr> Parser::Environment()
     Consume(RIGHT_BRACE, "Missing close brace after environment name.");
 
     if (b_envname.GetLexeme() != e_envname.GetLexeme())
-        Error(e_envname, "End tag for " + e_envname.GetLexeme() + " but expected " + b_envname.GetLexeme() + "(" + std::to_string(begin.GetLine()) + ")");
+        throw Error(e_envname, "End tag for " + e_envname.GetLexeme() + " but expected " + b_envname.GetLexeme() + "(" + std::to_string(begin.GetLine()) + ")");
 
-    return make_shared<EnvironmentExpr>(b_envname, bracket_arg, block);
+    return make_shared<EnvironmentExpr>(b_envname, e_envname, bracket_arg, block);
 }
 
 std::shared_ptr<const Expr> Parser::Bracketed()

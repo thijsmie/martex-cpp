@@ -1,0 +1,45 @@
+#include "error_reporter.hpp"
+
+ErrorReporter::ErrorReporter() : hadErrorFlag(false), myLog() {}
+
+bool ErrorReporter::HadError()
+{
+    return hadErrorFlag;
+}
+
+void ErrorReporter::Report(int line, std::string where, std::string message)
+{
+    myLog << "Error on line " << std::setw(2) << line << " at '" << where << "', " << message << "." << std::endl;
+}
+
+void ErrorReporter::Error(int line, std::string message)
+{
+    myLog << "Error on line " << std::setw(2) << line << ", " << message << "." << std::endl;
+}
+
+void ErrorReporter::Error(Token token, std::string message)
+{
+    Report(token.GetLine(), token.GetLexeme(), message);
+}
+
+void ErrorReporter::Log(std::string message)
+{
+    myLog << message << std::endl;
+}
+
+void ErrorReporter::Log(Token token, std::string message)
+{
+    myLog << "Error on line " << std::setw(2) << token.GetLine() << " at '" << token.GetLexeme() << "', " << message << "." << std::endl;
+}
+
+void ErrorReporter::ResetErrorFlag()
+{
+    hadErrorFlag = false;
+    myLog.clear();
+}
+
+
+std::string ErrorReporter::Output()
+{
+    return myLog.str();
+}

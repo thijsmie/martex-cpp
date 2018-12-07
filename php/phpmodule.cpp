@@ -29,8 +29,16 @@ std::shared_ptr<Environment> PhpModule::MakeEnv(std::string name, std::shared_pt
     return std::make_shared<PhpEnvironment>(myEnvironments[name], myModule);
 }
 
-Value PhpModule::RunGlobal(std::shared_ptr<Environment> env, std::string name, std::vector<Value> args)
+Value PhpModule::RunGlobal(std::shared_ptr<Environment> env, Token name, std::vector<Value> args)
 {
     std::shared_ptr<PhpEnvironment> phpenv = std::dynamic_pointer_cast<PhpEnvironment>(env);
-    return PhpToCpp(myModule.call(name.c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
+
+    try
+    {
+        return PhpToCpp(myModule.call(name.ToString().c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
+    }
+    catch (Php::Exception &exception)
+    {
+        throw RuntimeError(name, exception.message());
+    }
 }

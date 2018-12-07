@@ -25,7 +25,7 @@ class Interpreter : public ExprVisitor
 
     Value ExecuteBlock(std::vector<std::shared_ptr<const Expr>>);
 
-    void Error(Token, std::string);
+    RuntimeError Error(Token, std::string);
 
     void VisitBlockExpr(std::shared_ptr<const BlockExpr>);
     void VisitLiteralExpr(std::shared_ptr<const LiteralExpr>);

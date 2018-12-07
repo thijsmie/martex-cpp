@@ -26,6 +26,7 @@ class PhpEnvironmentBase : public Php::Base
 class MarTeX : public Php::Base
 {
   private:
+    bool has_error;
     std::string last_result;
     std::string error_log;
     std::vector<std::string> modules;

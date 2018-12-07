@@ -97,10 +97,10 @@ bool GlobalEnv::HasCommand(std::string c)
     return (commands.find(c) == commands.end());
 }
 
-Value GlobalEnv::RunCommandHere(std::shared_ptr<Environment> runenv, std::string c, std::vector<Value> arguments)
+Value GlobalEnv::RunCommandHere(std::shared_ptr<Environment> runenv, Token c, std::vector<Value> arguments)
 {
-    return commands[c].get()->RunGlobal(runenv, c, arguments);
+    return commands[c.ToString()].get()->RunGlobal(runenv, c, arguments);
 }
 
-void GlobalEnv::StartEnvironment(Value) {}
-Value GlobalEnv::EndEnvironment(Value s) { return s; }
+void GlobalEnv::StartEnvironment(Token, Value) {}
+Value GlobalEnv::EndEnvironment(Token, Value s) { return s; }

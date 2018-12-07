@@ -24,14 +24,22 @@ Value Interpreter::ExecuteBlock(vector<shared_ptr<const Expr>> expressions)
     vector<Value> result;
     for (shared_ptr<const Expr> expr : expressions)
     {
-        result.push_back(Evaluate(expr));
+        try 
+        {
+            result.push_back(Evaluate(expr));
+        }
+        catch(RuntimeError e)
+        {
+            // test
+            error_reporter.Error(e.token, e.message);
+        }
     }
     return Value(result);
 }
 
-void Interpreter::Error(Token token, string message)
+RuntimeError Interpreter::Error(Token token, string message)
 {
-    error_reporter.Error(token, message);
+    return RuntimeError(token, message);
 }
 
 void Interpreter::VisitBlockExpr(shared_ptr<const BlockExpr> block)
@@ -83,17 +91,17 @@ void Interpreter::VisitEnvironmentExpr(shared_ptr<const EnvironmentExpr> env)
     shared_ptr<Environment> current = environment;
     try
     {
-        environment = implementation->Create(env.get()->environment, environment);
+        environment = implementation->Create(env->begin, environment);
         Value bracket_argument;
 
-        if (env.get()->bracket_argument != nullptr)
-            bracket_argument = Evaluate(env.get()->bracket_argument);
+        if (env->bracket_argument != nullptr)
+            bracket_argument = Evaluate(env->bracket_argument);
 
-        environment->StartEnvironment(bracket_argument);
+        environment->StartEnvironment(env->begin, bracket_argument);
 
-        Value v = Evaluate(env.get()->block);
+        Value v = Evaluate(env->block);
 
-        value = environment->EndEnvironment(v);
+        value = environment->EndEnvironment(env->end, v);
     }
     catch (RuntimeError e)
     {

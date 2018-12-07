@@ -56,10 +56,11 @@ class CommandExpr : public Expr, public Visitable<CommandExpr>
 class EnvironmentExpr : public Expr, public Visitable<EnvironmentExpr>
 {
   public:
-    EnvironmentExpr(Token, std::shared_ptr<const Expr>, std::shared_ptr<const Expr>);
+    EnvironmentExpr(Token, Token, std::shared_ptr<const Expr>, std::shared_ptr<const Expr>);
     /*virtual*/ void Accept(ExprVisitor *) const;
 
-    Token environment;
+    Token begin;
+    Token end;
     std::shared_ptr<const Expr> bracket_argument;
     std::shared_ptr<const Expr> block;
 };

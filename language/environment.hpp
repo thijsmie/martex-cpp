@@ -18,7 +18,7 @@ class Environment
     Value RunCommand(std::shared_ptr<Environment>, Token, std::vector<Value>);
 
     virtual bool HasCommand(std::string) = 0;
-    virtual Value RunCommandHere(std::shared_ptr<Environment>, std::string, std::vector<Value>) = 0;
-    virtual void StartEnvironment(Value) = 0;
-    virtual Value EndEnvironment(Value) = 0;
+    virtual Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>) = 0;
+    virtual void StartEnvironment(Token, Value) = 0;
+    virtual Value EndEnvironment(Token, Value) = 0;
 };

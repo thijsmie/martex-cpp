@@ -33,8 +33,8 @@ void CommandExpr::Accept(ExprVisitor *visitor) const
     visitor->VisitCommandExpr(shared_from_this());
 }
 
-EnvironmentExpr::EnvironmentExpr(Token environment, std::shared_ptr<const Expr> bracket_argument,
-                                 std::shared_ptr<const Expr> block) : environment(environment),
+EnvironmentExpr::EnvironmentExpr(Token begin, Token end, std::shared_ptr<const Expr> bracket_argument,
+                                 std::shared_ptr<const Expr> block) : begin(begin), end(end),
                                                                       bracket_argument(bracket_argument),
                                                                       block(block){};
 
