@@ -9,16 +9,19 @@ bool ErrorReporter::HadError()
 
 void ErrorReporter::Report(int line, std::string where, std::string message)
 {
+    hadErrorFlag = true;
     myLog << "Error on line " << std::setw(2) << line << " at '" << where << "', " << message << "." << std::endl;
 }
 
 void ErrorReporter::Error(int line, std::string message)
 {
+    hadErrorFlag = true;
     myLog << "Error on line " << std::setw(2) << line << ", " << message << "." << std::endl;
 }
 
 void ErrorReporter::Error(Token token, std::string message)
 {
+    hadErrorFlag = true;
     Report(token.GetLine(), token.GetLexeme(), message);
 }
 

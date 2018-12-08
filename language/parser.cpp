@@ -11,7 +11,7 @@ using std::vector;
 
 bool Parser::IsAtEnd(const int &offset)
 {
-    return ((int)tokens.size()) - 1 <= current + offset;
+    return ((int)tokens.size()) - 1 < current + offset;
 }
 
 Token Parser::Peek()
