@@ -23,32 +23,32 @@ std::string Implementation::Escaped(TokenType escapetype, char escapee)
     switch (escapetype)
     {
     case TokenType::QUOT:
-        temp = "& acute;";
-        temp.insert(1, 1, escapee);
+        temp = "&acute;";
+        temp = temp.insert(1, 1, escapee);
         return temp;
     case TokenType::DUQUOT:
-        temp = "& uml;";
-        temp.insert(1, 1, escapee);
+        temp = "&uml;";
+        temp = temp.insert(1, 1, escapee);
         return temp;
     case TokenType::TICK:
-        temp = "& grave;";
-        temp.insert(1, 1, escapee);
+        temp = "&grave;";
+        temp = temp.insert(1, 1, escapee);
         return temp;
     case TokenType::TILT:
-        temp = "& tilde;";
-        temp.insert(1, 1, escapee);
+        temp = "&tilde;";
+        temp = temp.insert(1, 1, escapee);
         return temp;
     case TokenType::HAT:
-        temp = "& circ;";
-        temp.insert(1, 1, escapee);
+        temp = "&circ;";
+        temp = temp.insert(1, 1, escapee);
         return temp;
     case TokenType::DASH:
-        temp = "& uml;";
-        temp.insert(1, 1, escapee);
+        temp = "&uml;";
+        temp = temp.insert(1, 1, escapee);
         return temp;
     case TokenType::DOT:
-        temp = "& ring;";
-        temp.insert(1, 1, escapee);
+        temp = "&ring;";
+        temp = temp.insert(1, 1, escapee);
         return temp;
     case TokenType::ESCAPE:
         switch (escapee)
@@ -66,7 +66,7 @@ std::string Implementation::Escaped(TokenType escapetype, char escapee)
         case '&':
             return "&amp;";
         default:
-            return "";
+            return "zzzzzz";
         }
     default:
         return "";
@@ -75,7 +75,7 @@ std::string Implementation::Escaped(TokenType escapetype, char escapee)
 
 std::shared_ptr<Environment> Implementation::Create(Token name, std::shared_ptr<Environment> parent)
 {
-    std::string cname = name.ToString();
+    std::string cname = name.GetLexeme();
 
     for (auto m : modules)
         for (std::string e : m.get()->GetEnvs())
@@ -87,6 +87,7 @@ std::shared_ptr<Environment> Implementation::Create(Token name, std::shared_ptr<
 
 GlobalEnv::GlobalEnv(std::vector<std::shared_ptr<Module>> modules) : commands()
 {
+    is_root = true;
     for (auto m : modules)
         for (auto c : m.get()->GetGlobals())
             commands[c] = m;
@@ -94,12 +95,12 @@ GlobalEnv::GlobalEnv(std::vector<std::shared_ptr<Module>> modules) : commands()
 
 bool GlobalEnv::HasCommand(std::string c)
 {
-    return (commands.find(c) == commands.end());
+    return (commands.find(c) != commands.end());
 }
 
 Value GlobalEnv::RunCommandHere(std::shared_ptr<Environment> runenv, Token c, std::vector<Value> arguments)
 {
-    return commands[c.ToString()].get()->RunGlobal(runenv, c, arguments);
+    return commands[c.GetLexeme()].get()->RunGlobal(runenv, c, arguments);
 }
 
 void GlobalEnv::StartEnvironment(Token, Value) {}

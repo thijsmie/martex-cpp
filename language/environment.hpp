@@ -8,6 +8,7 @@
 
 class Environment
 {
+  protected:
     bool is_root;
     std::map<std::string, Value> values;
     std::shared_ptr<Environment> enclosing;

@@ -54,7 +54,7 @@ void Scanner::ScanCommandOrSpecial()
         /// Commands are alphanum
         while (isalnum(Peek()) || Peek() == '_')
             Advance();
-        string lexeme = source.substr(start, current - start);
+        string lexeme = source.substr(start+1, current - start - 1);
         if (lexeme == "begin")
             AddToken(BEGIN_ENV);
         else if (lexeme == "end")

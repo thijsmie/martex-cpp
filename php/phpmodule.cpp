@@ -32,10 +32,12 @@ std::shared_ptr<Environment> PhpModule::MakeEnv(std::string name, std::shared_pt
 Value PhpModule::RunGlobal(std::shared_ptr<Environment> env, Token name, std::vector<Value> args)
 {
     std::shared_ptr<PhpEnvironment> phpenv = std::dynamic_pointer_cast<PhpEnvironment>(env);
-
     try
     {
-        return PhpToCpp(myModule.call(name.ToString().c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
+        if (phpenv != nullptr)
+            return PhpToCpp(myModule.call(name.GetLexeme().c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
+        else
+            return PhpToCpp(myModule.call(name.GetLexeme().c_str(), Php::Value(NULL), CppToPhp(args)));
     }
     catch (Php::Exception &exception)
     {

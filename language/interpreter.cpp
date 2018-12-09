@@ -7,6 +7,7 @@ using std::static_pointer_cast;
 using std::string;
 using std::vector;
 
+
 Interpreter::Interpreter(shared_ptr<Implementation> i, ErrorReporter &reporter) : implementation(i), error_reporter(reporter)
 {
     environment = implementation->Global();
@@ -32,6 +33,7 @@ Value Interpreter::ExecuteBlock(vector<shared_ptr<const Expr>> expressions)
         {
             // test
             error_reporter.Error(e.token, e.message);
+            error_reporter.Log("Ignoring and moving on.");
         }
     }
     return Value(result);
@@ -55,7 +57,7 @@ void Interpreter::VisitLiteralExpr(shared_ptr<const LiteralExpr> literal)
     case TokenType::WORD:
     case TokenType::LINE:
     case TokenType::WHITESPACE:
-        value = Value(t_string, literal->value.ToString());
+        value = Value(t_string, literal->value.GetLexeme());
         break;
     case TokenType::NEWLINE:
         value = Value(t_break, implementation->LineBreak());
@@ -71,7 +73,7 @@ void Interpreter::VisitLiteralExpr(shared_ptr<const LiteralExpr> literal)
 void Interpreter::VisitActionableExpr(shared_ptr<const ActionableExpr> actionable)
 {
     // return
-    value = Value(t_string, implementation->Escaped(actionable->value.GetType(), actionable->value.ToString()[0]));
+    value = Value(t_string, implementation->Escaped(actionable->value.GetType(), actionable->value.GetLexeme().at(0)));
 }
 
 void Interpreter::VisitCommandExpr(shared_ptr<const CommandExpr> command)

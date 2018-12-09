@@ -1,4 +1,7 @@
 #include "phpvaluecasts.hpp"
+#include "language/runtime_error.hpp"
+#include "language/token.hpp"
+
 
 Php::Value CppToPhpSingle(Value v)
 {
@@ -11,16 +14,25 @@ Php::Value CppToPhpSingle(Value v)
 
 Value PhpToCpp(Php::Value values)
 {
-    std::vector<Value> ret;
-    for (auto &v : values)
+    try 
     {
-        const char *buffer = v.second[1];
-        size_t size = v.second[1].size();
-        std::string content(buffer, size);
-        ret.push_back(Value((ValueType)((int)v.second[0]), content));
+        std::vector<Value> ret;
+        for (auto &v : values)
+        {
+            const char *buffer = v.second[1];
+            size_t size = v.second[1].size();
+            std::string content(buffer, size);
+            ret.push_back(Value((ValueType)((int)v.second[0]), content));
+        }
+
+        return ret;
+    }
+    catch(...)
+    {
+        throw RuntimeError(Token(COMMAND, "output", -1), "Invalid data returned from command.");
     }
 
-    return ret;
+    return Value();
 }
 
 Php::Value CppToPhp(Value v)

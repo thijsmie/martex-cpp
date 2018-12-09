@@ -26,15 +26,14 @@ extern "C"
         Php::Class<MarTeX> martex("MarTeX");
         
         martex.method<&MarTeX::Parse>("parse", {Php::ByVal("text", Php::Type::String)});
-        martex.method<&MarTeX::RegisterModule>("registerModule", {Php::ByRef("module", Php::Type::Object)});
+        martex.method<&MarTeX::RegisterModule>("registerModule", {Php::ByVal("module", Php::Type::String)});
         martex.method<&MarTeX::HasError>("hasError");
         martex.method<&MarTeX::GetErrors>("getError");
         martex.method<&MarTeX::GetResult>("getResult");
 
         Php::Class<PhpEnvironmentBase> base("Environment");
         base.method<&PhpEnvironmentBase::__construct>("__construct", {
-            Php::ByRef("tex", Php::Type::Object), 
-            Php::ByRef("module", Php::Type::Object)
+            Php::ByVal("module", Php::Type::Object)
         });
 
         // Add classes to namespace

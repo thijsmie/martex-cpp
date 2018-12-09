@@ -45,17 +45,12 @@ void MarTeX::Parse(Php::Parameters &params)
     Scanner scanner(text, error_reporter);
     vector<Token> tokens = scanner.ScanTokens();
 
-    for (Token t : tokens)
-    {
-        Php::out << t.GetLine() << ": [" << (int)t.GetType() << "] " << t.GetLexeme() << std::endl;
-    }
-    
+    for (auto t : tokens)
+        Php::out << t.ToString() << std::endl;
+    Php::out.flush();
     // Parse tokens
     Parser parser(tokens, error_reporter);
     shared_ptr<const Expr> ast = parser.Parse();
-
-    ast->Print(Php::out);
-    Php::out.flush();
 
     // Create the interpreter
     Interpreter interpreter(std::make_shared<Implementation>(implementation), error_reporter);

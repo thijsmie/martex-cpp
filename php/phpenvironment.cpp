@@ -2,11 +2,12 @@
 #include <algorithm>
 #include "phpvaluecasts.hpp"
 
-PhpEnvironment::PhpEnvironment(std::string phpEnvName, Php::Object myModule): myEnvironment(phpEnvName.c_str(), myModule)
+PhpEnvironment::PhpEnvironment(std::string phpEnvName, Php::Object myModule) : myEnvironment(phpEnvName.c_str(), myModule)
 {
-    Php::Value funcs = myModule.call("locals");
+    Php::Value funcs = myEnvironment.call("locals");
     /// Cast, fingers crossed
     commands = funcs;
+    is_root = false;
 }
 
 bool PhpEnvironment::HasCommand(std::string c)
@@ -19,9 +20,9 @@ Value PhpEnvironment::RunCommandHere(std::shared_ptr<Environment> env, Token nam
     std::shared_ptr<PhpEnvironment> phpenv = std::dynamic_pointer_cast<PhpEnvironment>(env);
     try
     {
-        return PhpToCpp(myEnvironment.call(name.ToString().c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
+        return PhpToCpp(myEnvironment.call(name.GetLexeme().c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
     }
-    catch(Php::Exception &e)
+    catch (Php::Exception &e)
     {
         throw RuntimeError(name, e.message());
     }
@@ -33,7 +34,7 @@ void PhpEnvironment::StartEnvironment(Token begin, Value arg)
     {
         myEnvironment.call("begin", myEnvironment, CppToPhp(arg));
     }
-    catch(Php::Exception &e)
+    catch (Php::Exception &e)
     {
         throw RuntimeError(begin, e.message());
     }
@@ -43,9 +44,9 @@ Value PhpEnvironment::EndEnvironment(Token end, Value content)
 {
     try
     {
-    return PhpToCpp(myEnvironment.call("end", CppToPhp(content)));
+        return PhpToCpp(myEnvironment.call("end", CppToPhp(content)));
     }
-    catch(Php::Exception &e)
+    catch (Php::Exception &e)
     {
         throw RuntimeError(end, e.message());
     }

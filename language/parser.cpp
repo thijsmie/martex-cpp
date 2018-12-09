@@ -111,7 +111,7 @@ vector<shared_ptr<const Expr>> Parser::Block()
 {
     vector<shared_ptr<const Expr>> expressions;
 
-    while (!Check(RIGHT_BRACE) && !Check(RIGHT_BRACKET) && !Check(END_ENV) && !IsAtEnd())
+    while ((!Check(RIGHT_BRACE)) && (!Check(RIGHT_BRACKET)) && (!Check(END_ENV)) && (!IsAtEnd()))
     {
         try
         {
@@ -224,9 +224,9 @@ std::shared_ptr<const Expr> Parser::Bracketed()
 
 std::shared_ptr<const Expr> Parser::Braced()
 {
-    Consume(LEFT_BRACKET, "Expected [");
+    Consume(LEFT_BRACE, "Expected }");
     shared_ptr<const Expr> argument = BlockExpression();
-    Consume(RIGHT_BRACKET, "Expected ]");
+    Consume(RIGHT_BRACE, "Expected }");
     return argument;
 }
 
