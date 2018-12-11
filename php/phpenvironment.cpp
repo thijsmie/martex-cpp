@@ -2,12 +2,13 @@
 #include <algorithm>
 #include "phpvaluecasts.hpp"
 
-PhpEnvironment::PhpEnvironment(std::string phpEnvName, Php::Object myModule) : myEnvironment(phpEnvName.c_str(), myModule)
+PhpEnvironment::PhpEnvironment(std::string phpEnvName, Php::Object myModule, std::shared_ptr<Environment> parent) : myEnvironment(phpEnvName.c_str(), myModule)
 {
     Php::Value funcs = myEnvironment.call("locals");
     /// Cast, fingers crossed
     commands = funcs;
     is_root = false;
+    enclosing = parent;
 }
 
 bool PhpEnvironment::HasCommand(std::string c)

@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <memory>
 
 class PhpEnvironment : public Environment
 {
@@ -15,7 +16,7 @@ class PhpEnvironment : public Environment
   public:
     Php::Object myEnvironment;
 
-    PhpEnvironment(std::string, Php::Object);
+    PhpEnvironment(std::string, Php::Object, std::shared_ptr<Environment>);
     bool HasCommand(std::string);
     Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>);
     void StartEnvironment(Token, Value);

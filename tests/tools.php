@@ -25,12 +25,13 @@ function runtest($name, $tx, $exp)
     }
 }
 
-function runmtest($name, $mod, $tx, $exp)
+function runmtest($name, $mods, $tx, $exp)
 {
     echo "Running $name, ";
     $start = microtime(true);
     $a = new \MarTeX\MarTeX();
-    $a->RegisterModule($mod);
+    foreach($mods as $mod)
+        $a->RegisterModule($mod);
     $a->parse($tx);
     $finish = microtime(true);
 

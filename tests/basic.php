@@ -32,8 +32,8 @@ class test extends \MarTeX\Environment
     public function end($d) { return $d;}
 }
 
-runmtest("E.1", "testmodule", "\\begin{test}test\\end{test}", "test");
-runmtest("E.2", "testmodule", "\\yay{1} \\begin{test}\\yay{2}\\end{test}", "1 yay 2yay");
+runmtest("E.1", array("testmodule"), "\\begin{test}test\\end{test}", "test");
+runmtest("E.2", array("testmodule"), "\\yay{1} \\begin{test}\\yay{2}\\end{test}", "1 yay 2yay");
 
 // STDLib
 

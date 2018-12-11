@@ -1,10 +1,11 @@
 #include "phpmodule.hpp"
 #include "phpvaluecasts.hpp"
 
-PhpModule::PhpModule(std::string php_module_name) : myModule(php_module_name),
-                                                    myEnvironmentNames(),
-                                                    myEnvironments(),
-                                                    myGlobals()
+PhpModule::PhpModule(std::string php_module_name, Php::Object globalEnv) : GlobalEnv(globalEnv),
+                                                                           myModule(php_module_name),
+                                                                           myEnvironmentNames(),
+                                                                           myEnvironments(),
+                                                                           myGlobals()
 {
     Php::Value global_funcs = myModule.call("globals");
     /// Cast, fingers crossed
@@ -26,7 +27,7 @@ std::vector<std::string> PhpModule::GetEnvs() { return myEnvironmentNames; };
 
 std::shared_ptr<Environment> PhpModule::MakeEnv(std::string name, std::shared_ptr<Environment> parent)
 {
-    return std::make_shared<PhpEnvironment>(myEnvironments[name], myModule);
+    return std::make_shared<PhpEnvironment>(myEnvironments[name], myModule, parent);
 }
 
 Value PhpModule::RunGlobal(std::shared_ptr<Environment> env, Token name, std::vector<Value> args)
@@ -37,7 +38,7 @@ Value PhpModule::RunGlobal(std::shared_ptr<Environment> env, Token name, std::ve
         if (phpenv != nullptr)
             return PhpToCpp(myModule.call(name.GetLexeme().c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
         else
-            return PhpToCpp(myModule.call(name.GetLexeme().c_str(), Php::Value(nullptr), CppToPhp(args)));
+            return PhpToCpp(myModule.call(name.GetLexeme().c_str(), (Php::Value)GlobalEnv, CppToPhp(args)));
     }
     catch (Php::Exception &exception)
     {

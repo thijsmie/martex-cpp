@@ -35,11 +35,13 @@ void MarTeX::Parse(Php::Parameters &params)
     // Add the stdlib
     module_inst.push_back(std::make_shared<StdLib>());
 
+    // Create an empty global environment
+    Php::Object GlobalEnv("stdClass");
+
     // Add php modules
     for (auto m : modules)
     {
-        ;
-        module_inst.push_back(std::make_shared<PhpModule>(m));
+        module_inst.push_back(std::make_shared<PhpModule>(m, GlobalEnv));
     }
 
     // Instanciate an implementation, transfer access to the modules
