@@ -29,7 +29,7 @@ NAME				=	martex
 #	one for each extension. Use this variable to specify this directory.
 #
 
-INI_DIR				=	/etc/php/7.0/mods-available
+INI_DIR				=	/etc/php/7.2/mods-available
 
 
 #
@@ -110,7 +110,7 @@ MKDIR				=	mkdir -p
 #	file, with the .cpp extension being replaced by .o.
 #
 
-SOURCES =	$(wildcard *.cpp) $(wildcard language/*.cpp) $(wildcard implementation/*.cpp) $(wildcard php/*.cpp) $(wildcard cpp/*.cpp)
+SOURCES =	$(wildcard language/*.cpp) $(wildcard implementation/*.cpp) $(wildcard php/*.cpp)
 OBJECTS =	$(SOURCES:%.cpp=%.o)
 
 

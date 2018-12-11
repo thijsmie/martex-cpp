@@ -3,44 +3,37 @@
 require __DIR__ . "/tools.php";
 
 // module
-class testmodule1
+class testmodule1 extends MarTeX\Module
 {
     public function globals() {return array("yays1");}
-    public function environments(){return array();}
     public function yays1($env, $args){
         $env->data = array(MarTeX\TypeString, "hello, ");
     }
 }
 
-class testmodule2
+class testmodule2 extends MarTeX\Module
 {
     public function globals() {return array("yays2");}
-    public function environments(){return array();}
     public function yays2($env, $args){
         $env->data = array(MarTeX\TypeString, "world!");
     }
 }
 
-class testmodule3
+class testmodule3 extends MarTeX\Module
 {
     public function globals() {return array("yayp");}
-    public function environments(){return array();}
     public function yayp($env, $args){
         return array($env->data);
     }
 }
 
-class testmodule4
+class testmodule4 extends MarTeX\Module
 {
-    public function globals() {return array();}
     public function environments(){return array("t" => "testenv1");}
-}
+}   
 
 class testenv1 extends MarTeX\Environment
 {
-    public function locals() {return array();}
-    public function begin($b, $c) {}
-    public function end($d) { return $d;}
 }
 
 /// Storing variables on environments.

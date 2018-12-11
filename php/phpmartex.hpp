@@ -12,6 +12,21 @@
 #include <memory>
 #include <string>
 
+/// Base class for php modules to inherit
+class PhpModuleBase : public Php::Base
+{
+  public:
+    Php::Value globals()
+    {
+      return Php::Array();
+    }
+
+    Php::Value environments()
+    {
+      return Php::Array();
+    }
+};
+
 /// Base class for php environments to inherit
 class PhpEnvironmentBase : public Php::Base
 {
@@ -20,6 +35,19 @@ class PhpEnvironmentBase : public Php::Base
     {
         Php::Value self(this);
         self["module"] = params[0];
+    }
+
+    Php::Value locals()
+    {
+      return Php::Array();
+    }
+
+    void begin(Php::Parameters &params)
+    {}
+
+    Php::Value end(Php::Parameters &params)
+    {
+      return params[0];
     }
 };
 

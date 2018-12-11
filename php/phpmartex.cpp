@@ -1,9 +1,9 @@
-#include "martex.hpp"
+#include "phpmartex.hpp"
 
 #include "php/phpmodule.hpp"
 #include "language/scanner.hpp"
 #include "language/parser.hpp"
-#include "cpp/stdlib.hpp"
+#include "implementation/stdlib.hpp"
 
 using std::shared_ptr;
 using std::string;

@@ -28,7 +28,7 @@ class test extends \MarTeX\Environment
         array_push($args[0], array(MarTeX\TypeString, "yay"));
         return $args[0];
     }
-    public function begin($b, $c) {}
+    public function begin($b) {}
     public function end($d) { return $d;}
 }
 
@@ -49,6 +49,14 @@ runtest("esc.2", "<", "");
 runtest("esc.3", "\{", "&#123;");
 runtest("esc.4", "\<", "&lt;");
 runtest("esc.5", "\\\"", "");
-runtest("esc.4", "\\\"e", "&euml;");
+runtest("esc.6", "\\\"e", "&euml;");
+runtest("esc.7", "\\hline", "<hr>");
+
+// Whitespace
+
+runtest("ws.1", "\\euro a", "&euro;a");
+runtest("ws.2", "\\euro\ a", "&euro; a");
+runtest("ws.3", "\\euro\\euro\\ a", "&euro;&euro; a");
+runtest("ws.4", "\\'ea", "&eacute;a");
 
 finish();

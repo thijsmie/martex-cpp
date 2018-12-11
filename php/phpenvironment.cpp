@@ -33,7 +33,7 @@ void PhpEnvironment::StartEnvironment(Token begin, Value arg)
 {
     try
     {
-        myEnvironment.call("begin", myEnvironment, CppToPhp(arg));
+        myEnvironment.call("begin", CppToPhp(arg));
     }
     catch (Php::Exception &e)
     {
