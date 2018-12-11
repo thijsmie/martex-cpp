@@ -82,7 +82,7 @@ std::shared_ptr<Environment> Implementation::Create(Token name, std::shared_ptr<
             if (e == cname)
                 return m.get()->MakeEnv(cname, parent);
 
-    throw new RuntimeError(name, "No such environment.");
+    throw RuntimeError(name, "No such environment.");
 }
 
 GlobalEnv::GlobalEnv(std::vector<std::shared_ptr<Module>> modules) : commands()

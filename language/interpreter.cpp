@@ -7,7 +7,6 @@ using std::static_pointer_cast;
 using std::string;
 using std::vector;
 
-
 Interpreter::Interpreter(shared_ptr<Implementation> i, ErrorReporter &reporter) : implementation(i), error_reporter(reporter)
 {
     environment = implementation->Global();
@@ -25,11 +24,11 @@ Value Interpreter::ExecuteBlock(vector<shared_ptr<const Expr>> expressions)
     vector<Value> result;
     for (shared_ptr<const Expr> expr : expressions)
     {
-        try 
+        try
         {
             result.push_back(Evaluate(expr));
         }
-        catch(RuntimeError e)
+        catch (RuntimeError e)
         {
             // test
             error_reporter.Error(e.token, e.message);

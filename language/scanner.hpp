@@ -7,6 +7,14 @@
 #include "runtime_error.hpp"
 #include "error_reporter.hpp"
 
+class ScanError : public std::exception
+{
+    const char *what() const throw()
+    {
+        return "Parser error";
+    }
+};
+
 class Scanner {
  public:
   Scanner(std::string source, ErrorReporter& error_reporter);
@@ -32,6 +40,6 @@ class Scanner {
   bool Match(char c);
   void ScanCommandOrSpecial();
   void ScanToken();
-  void Error(std::string error);
+  ScanError Error(std::string error);
 };
 

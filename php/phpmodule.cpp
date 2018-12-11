@@ -37,7 +37,7 @@ Value PhpModule::RunGlobal(std::shared_ptr<Environment> env, Token name, std::ve
         if (phpenv != nullptr)
             return PhpToCpp(myModule.call(name.GetLexeme().c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
         else
-            return PhpToCpp(myModule.call(name.GetLexeme().c_str(), Php::Value(NULL), CppToPhp(args)));
+            return PhpToCpp(myModule.call(name.GetLexeme().c_str(), Php::Value(nullptr), CppToPhp(args)));
     }
     catch (Php::Exception &exception)
     {

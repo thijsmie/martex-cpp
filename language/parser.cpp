@@ -149,8 +149,7 @@ std::shared_ptr<const Expr> Parser::Expression()
     {
         return Environment();
     }
-    Error(Advance(), "Invalid syntax detected, attempting to recover...");
-    return Expression();
+    throw Error(Advance(), "Invalid syntax detected, attempting to recover...");
 }
 
 std::shared_ptr<const Expr> Parser::Literal()

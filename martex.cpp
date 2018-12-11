@@ -3,11 +3,11 @@
 #include "php/phpmodule.hpp"
 #include "language/scanner.hpp"
 #include "language/parser.hpp"
+#include "cpp/stdlib.hpp"
 
+using std::shared_ptr;
 using std::string;
 using std::vector;
-using std::shared_ptr;
-
 
 MarTeX::MarTeX() : has_error(false), last_result(""), error_log("") {}
 
@@ -30,8 +30,15 @@ void MarTeX::Parse(Php::Parameters &params)
     // Makes sure we don't leak anything between parses
     // Security by design! Wow!
     std::vector<std::shared_ptr<Module>> module_inst;
-    module_inst.reserve(modules.size());
-    for (auto m : modules) {;
+    module_inst.reserve(modules.size() + 1);
+
+    // Add the stdlib
+    module_inst.push_back(std::make_shared<StdLib>());
+
+    // Add php modules
+    for (auto m : modules)
+    {
+        ;
         module_inst.push_back(std::make_shared<PhpModule>(m));
     }
 
@@ -45,9 +52,6 @@ void MarTeX::Parse(Php::Parameters &params)
     Scanner scanner(text, error_reporter);
     vector<Token> tokens = scanner.ScanTokens();
 
-    for (auto t : tokens)
-        Php::out << t.ToString() << std::endl;
-    Php::out.flush();
     // Parse tokens
     Parser parser(tokens, error_reporter);
     shared_ptr<const Expr> ast = parser.Parse();
@@ -63,7 +67,7 @@ void MarTeX::Parse(Php::Parameters &params)
     process_errors(error_reporter);
 }
 
-void MarTeX::process_errors(ErrorReporter &reporter) 
+void MarTeX::process_errors(ErrorReporter &reporter)
 {
     // Get's called once per parse
     // Included for future additions

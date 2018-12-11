@@ -61,15 +61,17 @@ void Scanner::ScanCommandOrSpecial()
             AddToken(END_ENV);
         else /// implement other keywords like 'if', 'else', 'foreach' etc here
             AddToken(COMMAND, lexeme);
-        if (!Match('\\'))
+            
+        if (Peek() == '\\' && PeekNext() == ' ')
+            Match('\\');
+        else
             EatWS();
     }
     else if (Match('\''))
     {
         if (!isalnum(Peek()))
         {
-            Error("Illegal single quote escape.");
-            Advance();
+            throw Error("Illegal single quote escape.");
         }
         else
             AddToken(QUOT, string(1, Advance()));
@@ -78,8 +80,7 @@ void Scanner::ScanCommandOrSpecial()
     {
         if (!isalnum(Peek()))
         {
-            Error("Illegal doubgle quote escape.");
-            Advance();
+            throw Error("Illegal doubgle quote escape.");
         }
         else
             AddToken(DUQUOT, string(1, Advance()));
@@ -88,8 +89,7 @@ void Scanner::ScanCommandOrSpecial()
     {
         if (!isalnum(Peek()))
         {
-            Error("Illegal tick escape.");
-            Advance();
+            throw Error("Illegal tick escape.");
         }
         else
             AddToken(TICK, string(1, Advance()));
@@ -98,8 +98,7 @@ void Scanner::ScanCommandOrSpecial()
     {
         if (!isalnum(Peek()))
         {
-            Error("Illegal hat escape.");
-            Advance();
+            throw Error("Illegal hat escape.");
         }
         else
             AddToken(HAT, string(1, Advance()));
@@ -108,8 +107,7 @@ void Scanner::ScanCommandOrSpecial()
     {
         if (!isalnum(Peek()))
         {
-            Error("Illegal tilde escape.");
-            Advance();
+            throw Error("Illegal tilde escape.");
         }
         else
             AddToken(TILT, string(1, Advance()));
@@ -118,8 +116,7 @@ void Scanner::ScanCommandOrSpecial()
     {
         if (!isalnum(Peek()))
         {
-            Error("Illegal dot escape.");
-            Advance();
+            throw Error("Illegal dot escape.");
         }
         else
             AddToken(DOT, string(1, Advance()));
@@ -128,8 +125,7 @@ void Scanner::ScanCommandOrSpecial()
     {
         if (!isalnum(Peek()))
         {
-            Error("Illegal dash escape.");
-            Advance();
+            throw Error("Illegal dash escape.");
         }
         else
             AddToken(DASH, string(1, Advance()));
@@ -223,10 +219,13 @@ void Scanner::ScanToken()
         AddToken(LINE, literal);
         break;
     default:
+        if (!is_valid_char(c)) {
+            current--;
+            throw Error("Invalid character in input.");
+        }
         while (!IsAtEnd() && is_valid_char(Peek()))
         {
-            literal.push_back(Peek());
-            Advance();
+            literal.push_back(Advance());;
         }
         AddToken(WORD, literal);
         break;
@@ -241,13 +240,22 @@ vector<Token> Scanner::ScanTokens()
     while (!IsAtEnd())
     {
         start = current;
-        ScanToken();
+        try
+        {
+            ScanToken();
+        }
+        catch(ScanError e)
+        {
+            // Meh
+            Advance();
+        }
     }
     tokens.push_back(Token(EOTF, "", line));
     return tokens;
 }
 
-void Scanner::Error(string message)
+ScanError Scanner::Error(string message)
 {
     error_reporter.Report(line, std::string(1, Peek()), message);
+    return ScanError();
 }

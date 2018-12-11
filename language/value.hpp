@@ -21,6 +21,7 @@ class Value
   public:
     Value(ValueType, std::string);
     Value(std::vector<Value>);
+    Value(std::initializer_list<Value>);
     Value();
 
     std::string GetContent() const;

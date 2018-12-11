@@ -32,7 +32,7 @@ void ErrorReporter::Log(std::string message)
 
 void ErrorReporter::Log(Token token, std::string message)
 {
-    myLog << "Error on line " << std::setw(2) << token.GetLine() << " at '" << token.GetLexeme() << "', " << message << "." << std::endl;
+    myLog << "FYI at '" << token.GetLexeme() << "' on line " << std::setw(2) << token.GetLine() << ",  " << message << "." << std::endl;
 }
 
 void ErrorReporter::ResetErrorFlag()
