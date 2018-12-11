@@ -53,6 +53,8 @@ extern "C"
         texspace.add(Php::Constant("TypeAmpersand", ValueType::t_ampersand));
         texspace.add(Php::Constant("TypeBreak", ValueType::t_break));
         texspace.add(Php::Constant("TypeMulti", ValueType::t_multi));
+        texspace.add(Php::Constant("TypeHtml", ValueType::t_html));
+        texspace.add(Php::Constant("TypeAttr", ValueType::t_attr));
 
         // Add namespace MarTeX to extension
         extension.add(std::move(texspace));

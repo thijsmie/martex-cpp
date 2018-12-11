@@ -81,22 +81,21 @@ Value StdLib::RunGlobal(std::shared_ptr<Environment>, Token cmd, std::vector<Val
     switch ((int)std::distance(functs.begin(), std::find(functs.begin(), functs.end(), command)))
     {
     case 0: // section
-        return Value({Value(t_string, "<h3>"), args[0], Value(t_string, "</h3>")});
+        return Value("h3", args);
     case 1: // subsection
-        return Value({Value(t_string, "<h4>"), args[0], Value(t_string, "</h4>")});
+        return Value("h4", args);
     case 2: // subsubsection
-        return Value({Value(t_string, "<h5>"), args[0], Value(t_string, "</h5>")});
+        return Value("h5", args);
     case 3: // textbf
-        return Value({Value(t_string, "<b>"), args[0], Value(t_string, "</b>")});
+        return Value("b", args);
     case 4: // textit
-        return Value({Value(t_string, "<i>"), args[0], Value(t_string, "</i>")});
+        return Value("i", args);
     case 5: // underline
-        return Value({Value(t_string, "<u>"), args[0], Value(t_string, "</u>")});
+        return Value("u", args);
     case 6: // smallcaps
-        return Value({Value(t_string, "<span style='font-variant: small-caps;'>"),
-                      args[0], Value(t_string, "</span>")});
+        return Value("span", {Value("style", "font-variant: small-caps;"), args[0]});
     case 7: // title
-        return Value({Value(t_string, "<u>"), args[0], Value(t_string, "</u>")});
+        return Value("h2", args);
     }
     return Value();
 }

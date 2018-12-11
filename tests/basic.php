@@ -1,6 +1,7 @@
 <?php
+namespace TEST_BASIC;
 
-require __DIR__ . "/tools.php";
+require_once __DIR__ . "/tools.php";
 
 // input=output
 runtest("io.1", "a", "a");
@@ -12,12 +13,12 @@ runtest("&.1", "\&", "&amp;");
 runtest("&.2", "\&\&", "&amp;&amp;");
 
 // module
-class testmodule
+class testmodule extends \MarTeX\Module
 {
     public function globals() {return array("yay");}
-    public function environments(){return array("test"=>"test");}
+    public function environments(){return array("test"=>"\\TEST_BASIC\\test");}
     public function yay($env, $args){
-        array_push($args[0], array(MarTeX\TypeString, " yay"));
+        array_push($args[0], array(\MarTeX\TypeString, " yay"));
         return $args[0];
     }
 }
@@ -25,15 +26,15 @@ class test extends \MarTeX\Environment
 {
     public function locals() {return array("yay");}
     public function yay($env, $args){
-        array_push($args[0], array(MarTeX\TypeString, "yay"));
+        array_push($args[0], array(\MarTeX\TypeString, "yay"));
         return $args[0];
     }
     public function begin($b) {}
     public function end($d) { return $d;}
 }
 
-runmtest("E.1", array("testmodule"), "\\begin{test}test\\end{test}", "test");
-runmtest("E.2", array("testmodule"), "\\yay{1} \\begin{test}\\yay{2}\\end{test}", "1 yay 2yay");
+runmtest("E.1", array("\\TEST_BASIC\\testmodule"), "\\begin{test}test\\end{test}", "test");
+runmtest("E.2", array("\\TEST_BASIC\\testmodule"), "\\yay{1} \\begin{test}\\yay{2}\\end{test}", "1 yay 2yay");
 
 // STDLib
 
