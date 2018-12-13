@@ -1,15 +1,17 @@
 <?php
-namespace TEST_HTML;
 require_once __DIR__ . "/tools.php";
+
+use function \MarTeX\html as html;
+use function \MarTeX\attr as attr;
 
 class testmodule extends \MarTeX\Module
 {
     public function globals() {return array("href");}
     public function href($env, $args){
-        return array(array("a", array(array("href", "http://www.google.com"), array(\MarTeX\TypeString, "google"))));
+        return html("a", attr("href", "http://www.google.com"), "google");
     }
 }
 
-runmtest("html.1", array("\\TEST_HTML\\testmodule"), "\href", "<a href=\"http://www.google.com\">google</a>");
+runmtest("html.1", array("testmodule"), "\href", "<a href=\"http://www.google.com\">google</a>");
 
 finish();

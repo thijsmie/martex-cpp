@@ -85,7 +85,7 @@ LINKER				=	g++
 #	with a list of all flags that should be passed to the linker.
 #
 
-COMPILER_FLAGS		=	-Wall -c -O2 -std=c++11 -fpic -I. -o
+COMPILER_FLAGS		=	-Wall -O2 -std=c++11 -fpic -I.
 LINKER_FLAGS		=	-shared
 LINKER_DEPENDENCIES	=	-lphpcpp -I.
 
@@ -112,6 +112,7 @@ MKDIR				=	mkdir -p
 
 SOURCES =	$(wildcard language/*.cpp) $(wildcard implementation/*.cpp) $(wildcard php/*.cpp)
 OBJECTS =	$(SOURCES:%.cpp=%.o)
+HEADERS =   $(wildcard **/*.hpp)
 
 
 #
@@ -123,8 +124,8 @@ all:					${OBJECTS} ${EXTENSION}
 ${EXTENSION}:			${OBJECTS}
 						${LINKER} ${LINKER_FLAGS} -o $@ ${OBJECTS} ${LINKER_DEPENDENCIES}
 
-${OBJECTS}:
-						${COMPILER} ${COMPILER_FLAGS} $@ ${@:%.o=%.cpp}
+$(OBJECTS) : %.o : %.cpp	${HEADERS}
+	${COMPILER}	-c ${COMPILER_FLAGS} -o $@ $<
 
 install:		
 						${CP} ${EXTENSION} ${EXTENSION_DIR}

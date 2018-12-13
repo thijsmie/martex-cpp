@@ -7,7 +7,7 @@
 #include <phpcpp.h>
 
 #include <map>
-#include <unordered_set>
+#include <set>
 #include <vector>
 #include <memory>
 #include <string>

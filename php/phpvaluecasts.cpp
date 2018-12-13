@@ -1,38 +1,8 @@
 #include "phpvaluecasts.hpp"
 #include "language/runtime_error.hpp"
 #include "language/token.hpp"
-#include "phpvalue.hpp"
 
 
-Value PhpToCpp(Php::Value a)
-{
-    if (a.instanceOf("\\MarTeX\\Value"))
-        return ((PhpValue *) a.implementation())->val();
-    else if (a.instanceOf("\\MarTeX\\Batch"))
-        return ((PhpArray *) a.implementation())->val();
-    else if (a.instanceOf("\\MarTeX\\Html"))
-        return ((PhpHtml *) a.implementation())->val();
-    else
-        throw Php::Exception("invalid value returned from command.");
-}
-
-Php::Value CppToPhp(Value v)
-{
-    return cast_to_php(v);
-}
-
-Php::Value CppToPhp(std::vector<Value> vp)
-{
-    Php::Array a;
-
-    int index = 0;
-    for (auto v : vp)
-        a[index++] = cast_to_php(v);
-    
-    return a;
-}
-
-/*
 Php::Value CppToPhpSingle(Value v)
 {
     // v garuanteed no t_multi
@@ -53,35 +23,54 @@ Php::Value CppToPhpSingle(Value v)
 
 Value PhpToCpp(Php::Value values)
 {
+
+    if (!values.isArray())
+    {
+        // It's only a string
+        std::string tmp = values;
+        return Value(t_string, tmp);
+    }
+
+    Php::Value first = values[0];
+    if (first.isNumeric())
+    {
+        Php::Array a;
+        a[0] = values;
+        return PhpToCpp(a);
+    }
+
     try 
     {
         std::vector<Value> ret;
+
         for (auto &v : values)
         {
-            if (v.second[0].isNumeric() && v.second[1].isString())
+            if ((!v.second.isArray()) && v.second.isString())
             {
-                const char *buffer = v.second[1];
-                size_t size = v.second[1].size();
-                std::string content(buffer, size);
-                ret.push_back(Value((ValueType)((int)v.second[0]), content));
+                std::string content = v.second;
+                ret.push_back(Value(t_string, content));
+            }
+            else if (v.second[0].isNumeric() && v.second[1].isString())
+            {
+                if (v.second.size() == 3 && (int)v.second[0] == t_html)
+                {
+                    //html
+                    std::string tag = v.second[1];
+                    Value content = PhpToCpp(v.second[2]);
+                    ret.push_back(Value(tag, content.GetValues()));
+                }
+                else {
+                    std::string content = v.second[1];
+                    ret.push_back(Value((ValueType)((int)v.second[0]), content));
+                }
             }
             else if (v.second[0].isString() && v.second[1].isString())
             {
-                const char *buffer1 = v.second[0];
-                size_t size1 = v.second[0].size();
-                std::string content1(buffer1, size1);
-                const char *buffer2 = v.second[1];
-                size_t size2 = v.second[1].size();
-                std::string content2(buffer2, size2);
-                ret.push_back(Value(content1, content2));
+                std::string one = v.second[0];
+                std::string two = v.second[1];
+                ret.push_back(Value(one, two));
             }
-            else
-            {
-                const char *buffer = v.second[0];
-                size_t size = v.second[0].size();
-                std::string tag(buffer, size);
-                ret.push_back(Value(tag, PhpToCpp(v.second[1]).GetValues()));
-            }
+            
         }
 
         return ret;
@@ -119,4 +108,36 @@ Php::Value CppToPhp(std::vector<Value> values)
 
     return k;
 }
-*/
+
+Php::Value html(Php::Parameters &params)
+{
+    std::string tag = params[0];
+    Php::Array content = std::vector<Php::Value>(params.begin()+1, params.end());
+
+    Php::Array ret;
+    ret[0] = t_html;
+    ret[1] = tag;
+    ret[2] = content;
+
+    return ret;
+}
+
+Php::Value value(Php::Parameters &params)
+{
+    return std::vector<Php::Value>(params.begin(), params.end());
+}
+
+Php::Value batch(Php::Parameters &params)
+{
+    return std::vector<Php::Value>(params.begin(), params.end());
+}
+
+Php::Value ampersand(Php::Parameters &params)
+{
+    return Php::Array({t_ampersand, "&amp;"});
+}
+
+Php::Value newline(Php::Parameters &params)
+{
+    return Php::Array({t_ampersand, "<br/>"});
+}

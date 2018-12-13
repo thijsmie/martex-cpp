@@ -1,6 +1,6 @@
 #include <phpcpp.h>
 #include "phpmartex.hpp"
-#include "phpvalue.hpp"
+#include "phpvaluecasts.hpp"
 
 /**
  *  Php modules need to expose a pure-C function get_module
@@ -38,25 +38,13 @@ extern "C"
         Php::Class<PhpEnvironmentBase> base2("Environment");
         base2.method<&PhpEnvironmentBase::__construct>("__construct", {Php::ByVal("module", Php::Type::Object)});
         base2.method<&PhpEnvironmentBase::locals>("locals");
-        base2.method<&PhpEnvironmentBase::begin>("begin", {Php::ByVal("bracket_argument", Php::Type::Array)});
-        base2.method<&PhpEnvironmentBase::end>("end", {Php::ByVal("content", Php::Type::Array)});
-
-        Php::Class<PhpValue> b_value("Value");
-        b_value.method<&PhpValue::__construct>("__construct");
-
-        Php::Class<PhpArray> b_array("Batch");
-        b_array.method<&PhpArray::__construct>("__construct");
-
-        Php::Class<PhpHtml> b_html("Html");
-        b_html.method<&PhpHtml::__construct>("__construct");
+        base2.method<&PhpEnvironmentBase::begin>("begin", {Php::ByVal("bracket_argument", Php::Type::Resource)});
+        base2.method<&PhpEnvironmentBase::end>("end", {Php::ByVal("content", Php::Type::Resource)});
 
         // Add classes to namespace
         texspace.add(std::move(martex));
         texspace.add(std::move(base1));
         texspace.add(std::move(base2));
-        texspace.add(std::move(b_value));
-        texspace.add(std::move(b_array));
-        texspace.add(std::move(b_html));
 
         // Helpers
         texspace.add<html>("html");

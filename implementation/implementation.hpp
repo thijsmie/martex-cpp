@@ -2,7 +2,7 @@
 
 #include <string>
 #include <memory>
-#include <unordered_map>
+#include <map>
 #include <vector>
 
 #include "language/environment.hpp"
@@ -13,7 +13,7 @@
 class GlobalEnv : public Environment
 {
   private:
-    std::unordered_map<std::string, std::shared_ptr<Module>> commands;
+    std::map<std::string, std::shared_ptr<Module>> commands;
   public:
     GlobalEnv(std::vector<std::shared_ptr<Module>>);
     bool HasCommand(std::string);

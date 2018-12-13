@@ -19,8 +19,7 @@ class testmodule extends \MarTeX\Module
     public function environments(){return array("test"=>"\\TEST_BASIC\\test");}
     public function yay($env, $args){
         $one = $args[0];
-        var_dump($one);
-        $one[count($one)] = \MarTeX\value(" yay");
+        array_push($one, " yay");
         return $one;
     }
 }
@@ -29,8 +28,7 @@ class test extends \MarTeX\Environment
     public function locals() {return array("yay");}
     public function yay($env, $args){
         $one = $args[0];
-        var_dump($one);
-        $one[count($one)] = \MarTeX\value("yay");
+        array_push($one, "yay");
         return $one;
     }
 }
