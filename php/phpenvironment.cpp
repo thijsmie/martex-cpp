@@ -37,7 +37,7 @@ void PhpEnvironment::StartEnvironment(Token begin, Value arg)
     }
     catch (Php::Exception &e)
     {
-        throw RuntimeError(begin, e.message());
+        throw RuntimeError(Token(BEGIN_ENV, begin.GetLexeme(), begin.GetLine()), e.message());
     }
 }
 
@@ -45,10 +45,10 @@ Value PhpEnvironment::EndEnvironment(Token end, Value content)
 {
     try
     {
-        return PhpToCpp(myEnvironment.call("end", CppToPhp(content)));
+        return PhpToCpp(myEnvironment.call("end", CppToPhp(content.Flattened())));
     }
     catch (Php::Exception &e)
     {
-        throw RuntimeError(end, e.message());
+        throw RuntimeError(Token(END_ENV, end.GetLexeme(), end.GetLine()), e.message());
     }
 }

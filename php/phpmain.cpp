@@ -49,8 +49,8 @@ extern "C"
         // Helpers
         texspace.add<html>("html");
         texspace.add<value>("value");
-        texspace.add<value>("attribute");
-        texspace.add<value>("attr");
+        texspace.add<attr>("attribute");
+        texspace.add<attr>("attr");
         texspace.add<batch>("batch");
         texspace.add<ampersand>("ampersand");
         texspace.add<ampersand>("amp");

@@ -38,8 +38,10 @@ std::string Value::GetContent() const
     {
         r_content = "<" + tag;
 
+        std::vector<Value> toloop = Value(multicontent).Flattened().GetValues();
+
         bool hascontent = false;
-        for (Value v : multicontent)
+        for (Value v : toloop)
             if (v.GetType() == t_attr)
                 r_content += " " + v.GetContent();
             else
@@ -48,7 +50,7 @@ std::string Value::GetContent() const
         if (hascontent)
         {
             r_content += ">";
-            for (Value v : multicontent)
+            for (Value v : toloop)
                 if (v.GetType() != t_attr)
                     r_content += v.GetContent();
             r_content += "</" + tag + ">";

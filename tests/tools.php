@@ -2,7 +2,7 @@
 
 $success = true;
 
-function runtest($name, $tx, $exp)
+function runtest($name, $tx, $exp, $error_expected=false)
 {
     echo "Running $name, ";
     $start = microtime(true);
@@ -10,7 +10,7 @@ function runtest($name, $tx, $exp)
     $a->parse($tx);
     $finish = microtime(true);
 
-    if (strcmp($a->GetResult(), $exp) == 0) {
+    if (strcmp($a->GetResult(), $exp) == 0 && $a->HasError() == $error_expected) {
         echo "success, took " . round(($finish - $start) * 1000.0 * 1000.0) . "us\n";
     }
     else {
@@ -25,7 +25,7 @@ function runtest($name, $tx, $exp)
     }
 }
 
-function runmtest($name, $mods, $tx, $exp)
+function runmtest($name, $mods, $tx, $exp, $error_expected=false)
 {
     echo "Running $name, ";
     $start = microtime(true);
@@ -35,7 +35,7 @@ function runmtest($name, $mods, $tx, $exp)
     $a->parse($tx);
     $finish = microtime(true);
 
-    if (strcmp($a->GetResult(), $exp) == 0) {
+    if (strcmp($a->GetResult(), $exp) == 0 && $a->HasError() == $error_expected) {
         echo "success, took " . round(($finish - $start) * 1000.0 * 1000.0) . "us\n";
     }
     else {

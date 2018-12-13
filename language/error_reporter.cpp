@@ -22,7 +22,7 @@ void ErrorReporter::Error(int line, std::string message)
 void ErrorReporter::Error(Token token, std::string message)
 {
     hadErrorFlag = true;
-    Report(token.GetLine(), token.GetLexeme(), message);
+    Report(token.GetLine(), token.ToString(), message);
 }
 
 void ErrorReporter::Log(std::string message)
@@ -32,7 +32,7 @@ void ErrorReporter::Log(std::string message)
 
 void ErrorReporter::Log(Token token, std::string message)
 {
-    myLog << "FYI at '" << token.GetLexeme() << "' on line " << std::setw(2) << token.GetLine() << ",  " << message << "." << std::endl;
+    myLog << "FYI at '" << token.ToString() << "' on line " << std::setw(2) << token.GetLine() << ",  " << message << "." << std::endl;
 }
 
 void ErrorReporter::ResetErrorFlag()

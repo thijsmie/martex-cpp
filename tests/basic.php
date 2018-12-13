@@ -45,11 +45,11 @@ runtest("std.3", "\\euro\\euro\\euro a \\subsection{Eyyyy}", "&euro;&euro;&euro;
 
 // Special chars
 
-runtest("esc.1", "{", "");
-runtest("esc.2", "<", "");
+runtest("esc.1", "{", "", true);
+runtest("esc.2", "<", "", true);
 runtest("esc.3", "\{", "&#123;");
 runtest("esc.4", "\<", "&lt;");
-runtest("esc.5", "\\\"", "");
+runtest("esc.5", "\\\"", "", true);
 runtest("esc.6", "\\\"e", "&euml;");
 runtest("esc.7", "\\hline", "<hr>");
 
