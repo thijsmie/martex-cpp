@@ -29,7 +29,7 @@ NAME				=	martex
 #	one for each extension. Use this variable to specify this directory.
 #
 
-INI_DIR				=	/etc/php/7.2/mods-available
+INI_DIR				=	/etc/php/7.0/mods-available
 
 
 #

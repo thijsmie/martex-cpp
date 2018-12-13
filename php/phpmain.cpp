@@ -1,5 +1,6 @@
 #include <phpcpp.h>
 #include "phpmartex.hpp"
+#include "phpvalue.hpp"
 
 /**
  *  Php modules need to expose a pure-C function get_module
@@ -24,7 +25,6 @@ extern "C"
 
         // Register the MarTeX object and expose methods
         Php::Class<MarTeX> martex("MarTeX");
-
         martex.method<&MarTeX::Parse>("parse", {Php::ByVal("text", Php::Type::String)});
         martex.method<&MarTeX::RegisterModule>("registerModule", {Php::ByVal("module", Php::Type::String)});
         martex.method<&MarTeX::HasError>("hasError");
@@ -41,10 +41,32 @@ extern "C"
         base2.method<&PhpEnvironmentBase::begin>("begin", {Php::ByVal("bracket_argument", Php::Type::Array)});
         base2.method<&PhpEnvironmentBase::end>("end", {Php::ByVal("content", Php::Type::Array)});
 
+        Php::Class<PhpValue> b_value("Value");
+        b_value.method<&PhpValue::__construct>("__construct");
+
+        Php::Class<PhpArray> b_array("Batch");
+        b_array.method<&PhpArray::__construct>("__construct");
+
+        Php::Class<PhpHtml> b_html("Html");
+        b_html.method<&PhpHtml::__construct>("__construct");
+
         // Add classes to namespace
         texspace.add(std::move(martex));
         texspace.add(std::move(base1));
         texspace.add(std::move(base2));
+        texspace.add(std::move(b_value));
+        texspace.add(std::move(b_array));
+        texspace.add(std::move(b_html));
+
+        // Helpers
+        texspace.add<html>("html");
+        texspace.add<value>("value");
+        texspace.add<value>("attribute");
+        texspace.add<value>("attr");
+        texspace.add<batch>("batch");
+        texspace.add<ampersand>("ampersand");
+        texspace.add<ampersand>("amp");
+        texspace.add<newline>("newline");
 
         // Add constants to namespace
         texspace.add(Php::Constant("TypeAny", ValueType::t_any));

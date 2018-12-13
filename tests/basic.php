@@ -18,19 +18,21 @@ class testmodule extends \MarTeX\Module
     public function globals() {return array("yay");}
     public function environments(){return array("test"=>"\\TEST_BASIC\\test");}
     public function yay($env, $args){
-        array_push($args[0], array(\MarTeX\TypeString, " yay"));
-        return $args[0];
+        $one = $args[0];
+        var_dump($one);
+        $one[count($one)] = \MarTeX\value(" yay");
+        return $one;
     }
 }
 class test extends \MarTeX\Environment
 {
     public function locals() {return array("yay");}
     public function yay($env, $args){
-        array_push($args[0], array(\MarTeX\TypeString, "yay"));
-        return $args[0];
+        $one = $args[0];
+        var_dump($one);
+        $one[count($one)] = \MarTeX\value("yay");
+        return $one;
     }
-    public function begin($b) {}
-    public function end($d) { return $d;}
 }
 
 runmtest("E.1", array("\\TEST_BASIC\\testmodule"), "\\begin{test}test\\end{test}", "test");

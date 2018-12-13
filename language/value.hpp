@@ -38,12 +38,14 @@ class Value
     Value(std::string, std::string);
 
     std::string GetContent() const;
+    std::string GetTag() const;
     std::vector<Value> GetValues() const;
     ValueType GetType() const;
 
     Value Flattened();
   private:
     ValueType type;
+    std::string tag;
     std::string content;
     std::vector<Value> multicontent;
 };

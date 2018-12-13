@@ -15,37 +15,58 @@ Value::Value(std::initializer_list<Value> multicontent) : Value(std::vector<Valu
 Value::Value() : type(t_null), content("") {}
 
 //html
-Value::Value(std::string tag, std::vector<Value> multicontent) : type(t_html), multicontent(multicontent)
-{
-    content = "<" + tag;
-
-    bool hascontent = false;
-    for (Value v : multicontent)
-        if (v.GetType() == t_attr)
-            content += " " + v.GetContent();
-        else
-            hascontent = true;
-
-    if (hascontent)
-    {
-        content += ">";
-        for (Value v : multicontent)
-            if (v.GetType() != t_attr)
-                content += v.GetContent();
-        content += "</" + tag + ">";
-    }
-    else
-        content += "/>";
-}
+Value::Value(std::string tag, std::vector<Value> multicontent) : type(t_html), tag(tag), multicontent(multicontent) {}
 Value::Value(std::string tag, std::initializer_list<Value> content) : Value(tag, std::vector<Value>(content)){};
 
 //attr
-Value::Value(std::string name, std::string value) : type(t_attr)
+Value::Value(std::string name, std::string value) : type(t_attr), tag(name), content(value) {}
+
+std::string Value::GetContent() const
 {
-    content = name + "=\"" + value + "\"";
+    std::string r_content = "";
+    switch (type)
+    {
+    case t_string:
+    case t_ampersand:
+    case t_break:
+        return content;
+    case t_multi:
+        for (Value v : multicontent)
+            r_content += v.GetContent();
+        return r_content;
+    case t_html:
+    {
+        r_content = "<" + tag;
+
+        bool hascontent = false;
+        for (Value v : multicontent)
+            if (v.GetType() == t_attr)
+                r_content += " " + v.GetContent();
+            else
+                hascontent = true;
+
+        if (hascontent)
+        {
+            r_content += ">";
+            for (Value v : multicontent)
+                if (v.GetType() != t_attr)
+                    r_content += v.GetContent();
+            r_content += "</" + tag + ">";
+        }
+        else
+            r_content += "/>";
+        return r_content;
+    }
+    case t_attr:
+        r_content = tag + "=\"" + content + "\"";
+        return r_content;
+    default:
+        return "";
+    }
+    return r_content;
 }
 
-std::string Value::GetContent() const { return content; }
+std::string Value::GetTag() const { return tag; }
 
 ValueType Value::GetType() const { return type; }
 

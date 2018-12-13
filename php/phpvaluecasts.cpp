@@ -1,8 +1,38 @@
 #include "phpvaluecasts.hpp"
 #include "language/runtime_error.hpp"
 #include "language/token.hpp"
+#include "phpvalue.hpp"
 
 
+Value PhpToCpp(Php::Value a)
+{
+    if (a.instanceOf("\\MarTeX\\Value"))
+        return ((PhpValue *) a.implementation())->val();
+    else if (a.instanceOf("\\MarTeX\\Batch"))
+        return ((PhpArray *) a.implementation())->val();
+    else if (a.instanceOf("\\MarTeX\\Html"))
+        return ((PhpHtml *) a.implementation())->val();
+    else
+        throw Php::Exception("invalid value returned from command.");
+}
+
+Php::Value CppToPhp(Value v)
+{
+    return cast_to_php(v);
+}
+
+Php::Value CppToPhp(std::vector<Value> vp)
+{
+    Php::Array a;
+
+    int index = 0;
+    for (auto v : vp)
+        a[index++] = cast_to_php(v);
+    
+    return a;
+}
+
+/*
 Php::Value CppToPhpSingle(Value v)
 {
     // v garuanteed no t_multi
@@ -89,3 +119,4 @@ Php::Value CppToPhp(std::vector<Value> values)
 
     return k;
 }
+*/
