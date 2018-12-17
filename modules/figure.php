@@ -18,16 +18,16 @@ class FigureModule extends Module {
 
     public function figure_header($env, $args)
     {
-        if (count($args) != 1 || !is_string($args[0][0]))
+        if (count($args) != 1 || !is_string($args[0][0][1]))
             throw new \Exception("Invalid arguments");
-        $this->labelPrefix = $args[0][0];
+        $this->labelPrefix = $args[0][0][1];
     }
 
     public function figure_origin($env, $args)
     {
-        if (count($args) != 1 || !is_string($args[0][0]))
+        if (count($args) != 1 || !is_string($args[0][0][1]))
             throw new \Exception("Invalid arguments");
-        $this->origin = $args[0][0];
+        $this->origin = $args[0][0][1];
     }
 
     public function environments() {
@@ -61,37 +61,37 @@ class FigureEnvironment extends Environment
 
     public function width($env, $args)
     {
-        if (count($args) != 1 || !is_string($args[0][0]))
+        if (count($args) != 1 || !is_string($args[0][0][1]))
             throw new \Exception("Invalid arguments");
-        $this->_width = $args[0][0];
+        $this->_width = $args[0][0][1];
     }
 
     public function height($env, $args)
     {
-        if (count($args) != 1 || !is_string($args[0][0]))
+        if (count($args) != 1 || !is_string($args[0][0][1]))
             throw new \Exception("Invalid arguments");
-        $this->_height = $args[0][0];
+        $this->_height = $args[0][0][1];
     }
 
     public function caption($env, $args)
     {
-        if (count($args) != 1 || !is_string($args[0][0]))
+        if (count($args) != 1 || !is_string($args[0][0][1]))
             throw new \Exception("Invalid arguments");
-        $this->_caption = $args[0][0];
+        $this->_caption = $args[0][0][1];
     }
 
     public function includegraphics($env, $args)
     {
-        if (count($args) != 1 || !is_string($args[0][0]))
+        if (count($args) != 1 || !is_string($args[0][0][1]))
             throw new \Exception("Invalid arguments");
-        $this->_image = $this->module->getOrigin() . $args[0][0];
+        $this->_image = $this->module->getOrigin() . $args[0][0][1];
     }
 
     public function alttext($env, $args)
     {
-        if (count($args) != 1 || !is_string($args[0][0]))
+        if (count($args) != 1 || !is_string($args[0][0][1]))
             throw new \Exception("Invalid arguments");
-        $this->_alttext = $args[0][0];
+        $this->_alttext = $args[0][0][1];
     }
 
     public function end($content) {    

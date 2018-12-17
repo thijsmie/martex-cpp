@@ -69,7 +69,7 @@ std::string Value::GetContent() const
 }
 
 std::string Value::GetTag() const { return tag; }
-
+std::string Value::GetRawContent() const { return content; }
 ValueType Value::GetType() const { return type; }
 
 std::vector<Value> Value::GetValues() const { return multicontent; }
@@ -89,3 +89,4 @@ Value Value::Flattened()
 
     return Value(ret);
 }
+

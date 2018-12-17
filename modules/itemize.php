@@ -28,18 +28,18 @@ class ItemizeEnvironment extends Environment
 
     public function setmarker($env, $args)
     {
-        if ($env != this)
+        if ($env != $this)
             throw new \Exception("Cannot call setmarker in nested environment.");
 
-        if ($marker_set)
+        if ($this->marker_set)
             throw new \Exception("Only one setmarker per list.");
 
-        if (count($args) != 1 && !is_string($args[0][0]))
+        if (count($args) != 1 && !is_string($args[0][0][1]))
             throw new \Exception("Setmarker takes one string as argument.");
 
-        $marker_set = true;
+        $this->marker_set = true;
 
-        switch($args[0][0]) {
+        switch($args[0][0][1]) {
             case "square":
                 $this->html_tag = "ul";
                 return attr("list-style-type", "square");
@@ -68,22 +68,22 @@ class ItemizeEnvironment extends Environment
                 $this->html_tag = "ol";
                 return attr("type", "I");
             default:
-                throw new \Exception("Unknown marker ". $args[0][0]);
+                throw new \Exception("Unknown marker ". $args[0][0][1]);
         }
     }
 
     public function item($env, $args)
     {
-        if ($env != this)
+        if ($env != $this)
             throw new \Exception("Cannot call item in nested environment.");
 
         if (is_null($args))
             return ampersand();
 
-        if (count($args) != 1 && !is_string($args[0][0]))
+        if (count($args) != 1 || !is_string($args[0][0][1]))
             throw new \Exception("item takes one argument");
 
-        return html("li", batch($args[0][0]));
+        return html("li", $args[0][0][1]);
     }
 
     public function end($content)
@@ -107,7 +107,7 @@ class ItemizeEnvironment extends Environment
                     if ($in_item)
                         array_push($item, $p_item);
                 break;
-                case TypeAttribute:
+                case TypeAttr:
                     array_push($items, $p_item);
                 break;
                 case TypeHtml:
@@ -133,6 +133,7 @@ class ItemizeEnvironment extends Environment
         
         if ($in_item && count($item) > 0)
             array_push($items, html("li", batch($item)));
+
         return html($this->html_tag, batch($items));
     }
 }

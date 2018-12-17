@@ -50,6 +50,11 @@ function runmtest($name, $mods, $tx, $exp, $error_expected=false)
     }
 }
 
+function start($name)
+{
+    echo "Starting testsuite '$name'.\n";
+}
+
 function finish()
 {
     global $success;
@@ -63,5 +68,5 @@ function finish()
         echo "Failures occurred.\n";
     }
 
-    echo "Peak mem usage: " . (memory_get_peak_usage(false) / 1024) . "kb.\n";
+    echo "Peak mem usage: " . (memory_get_peak_usage(false) / 1024) . "kb.\n\n";
 }

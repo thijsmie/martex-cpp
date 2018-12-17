@@ -7,12 +7,17 @@ Php::Value CppToPhpSingle(Value v)
     // v garuanteed no t_multi
 
     Php::Value k;
-    if (v.GetType() == t_string)
-        k = v.GetContent();
-    else if (v.GetType() == t_html)
+    if (v.GetType() == t_html)
     {
-        k[0] = (int)v.GetType();
-        k[1] = CppToPhp(v.GetValues());
+        k[0] = t_html;
+        k[1] = v.GetTag();
+        k[2] = CppToPhp(v.GetValues());
+    }
+    else if (v.GetType() == t_attr)
+    {
+        k[0] = t_attr;
+        k[1] = v.GetTag();
+        k[2] = v.GetRawContent();
     }
     else
     {
@@ -63,6 +68,8 @@ Value PhpToCpp(Php::Value value)
 
             for(int i = 2; i < value.count(); i++)
                 a.push_back(PhpToCpp(value[i]));
+
+            a = Value(a).Flattened().GetValues();
             return Value(tag, a);
         }
         case t_multi:
@@ -83,7 +90,7 @@ Value PhpToCpp(Php::Value value)
 
 Php::Value CppToPhp(Value v)
 {
-    Php::Array k;
+    Php::Value k;
     int i = 0;
 
     for (Value h : v.Flattened().GetValues())
@@ -96,7 +103,7 @@ Php::Value CppToPhp(Value v)
 
 Php::Value CppToPhp(std::vector<Value> values)
 {
-    Php::Array k;
+    Php::Value k;
     int i = 0;
 
     for (Value h : values)
@@ -127,27 +134,41 @@ Php::Value value(Php::Parameters &params)
 
 Php::Value attr(Php::Parameters &params)
 {
-    return std::vector<Php::Value>({t_attr, params[0], params[1]});
+    Php::Array a;
+    a[0] = t_attr;
+    a[1] = params[0];
+    a[2] = params[1];
+    return a;
 }
 
 Php::Value batch(Php::Parameters &params)
 {
+    if (params.size() == 1 && params[0].size() == 0)
+    {
+        Php::Array a, b;
+        a[0] = t_multi;
+        a[1] = b;
+        return a;
+    }
+
     if (params.size() == 1 && params[0].isArray())
     {
-        Php::Array a = params[0];
-        Php::Array ret;
-        ret[0] = t_multi;
-        ret[1] = a;
-        return ret;
+        Php::Value v = params[0][0];
+
+        if (!v.isNumeric())
+        {
+            Php::Array a = params[0];
+            Php::Array ret;
+            ret[0] = t_multi;
+            ret[1] = a;
+            return ret;
+        }
     }
-    else
-    {
-        Php::Array a = std::vector<Php::Value>(params.begin(), params.end());
-        Php::Array ret;
-        ret[0] = t_multi;
-        ret[1] = a;
-        return ret;
-    }
+    Php::Array a = std::vector<Php::Value>(params.begin(), params.end());
+    Php::Array ret;
+    ret[0] = t_multi;
+    ret[1] = a;
+    return ret;
 }
 
 Php::Value ampersand(Php::Parameters &params)

@@ -6,6 +6,7 @@ require_once __DIR__ . "/../modules/figure.php";
 $mods = array("\\MarTeX\\FigureModule");
 
 
+start("Figure");
 runmtest("F.1", $mods, "\\figure_header{Figure}", "");
 runmtest("F.2", $mods, 
     "\\begin{figure}\\includegraphics{y}\\end{figure}", 

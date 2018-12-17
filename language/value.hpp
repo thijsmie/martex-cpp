@@ -39,8 +39,10 @@ class Value
 
     std::string GetContent() const;
     std::string GetTag() const;
+    std::string GetRawContent() const;
     std::vector<Value> GetValues() const;
     ValueType GetType() const;
+
 
     Value Flattened();
   private:

@@ -1,7 +1,8 @@
 <?php
-namespace TEST_BASIC;
 
 require_once __DIR__ . "/tools.php";
+
+start("Basic");
 
 // input=output
 runtest("io.1", "a", "a");
@@ -16,7 +17,7 @@ runtest("&.2", "\&\&", "&amp;&amp;");
 class testmodule extends \MarTeX\Module
 {
     public function globals() {return array("yay");}
-    public function environments(){return array("test"=>"\\TEST_BASIC\\test");}
+    public function environments(){return array("test"=>"test");}
     public function yay($env, $args){
         $one = $args[0];
         array_push($one, " yay");
@@ -33,8 +34,8 @@ class test extends \MarTeX\Environment
     }
 }
 
-runmtest("E.1", array("\\TEST_BASIC\\testmodule"), "\\begin{test}test\\end{test}", "test");
-runmtest("E.2", array("\\TEST_BASIC\\testmodule"), "\\yay{1} \\begin{test}\\yay{2}\\end{test}", "1 yay 2yay");
+runmtest("E.1", array("testmodule"), "\\begin{test}test\\end{test}", "test");
+runmtest("E.2", array("testmodule"), "\\yay{1} \\begin{test}\\yay{2}\\end{test}", "1 yay 2yay");
 
 // STDLib
 

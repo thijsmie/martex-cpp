@@ -23,6 +23,8 @@ class testmodule extends \MarTeX\Module
 
 }
 
+start("Html");
+
 runmtest("html.1", array("testmodule"), "\href1", "<a href=\"http://www.google.com\"/>");
 runmtest("html.2", array("testmodule"), "\href2", "<a href=\"http://www.google.com\">google</a>");
 runmtest("html.3", array("testmodule"), "\href3", "<a href=\"http://www.google.com\"/>");
