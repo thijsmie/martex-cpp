@@ -2,6 +2,19 @@
 
 $success = true;
 
+
+function runstest($name, $mods, $tx)
+{
+    echo "Running $name, ";
+    $start = microtime(true);
+    $a = new \MarTeX\MarTeX();
+    foreach($mods as $mod)
+        $a->RegisterModule($mod);
+    $a->parse($tx);
+    $finish = microtime(true);
+    echo "took " . round(($finish - $start) * 1000.0) . "ms\n";
+}
+
 function runtest($name, $tx, $exp, $error_expected=false)
 {
     echo "Running $name, ";

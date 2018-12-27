@@ -80,10 +80,10 @@ class ItemizeEnvironment extends Environment
         if (is_null($args))
             return ampersand();
 
-        if (count($args) != 1 || !is_string($args[0][0][1]))
+        if (count($args) != 1)
             throw new \Exception("item takes one argument");
 
-        return html("li", $args[0][0][1]);
+        return html("li", $args[0]);
     }
 
     public function end($content)
@@ -97,7 +97,6 @@ class ItemizeEnvironment extends Environment
             switch($p_item[0])
             {
                 case TypeNull:
-                case TypeAny:
                 case TypeBreak:
                 //ignore
                 break;
@@ -112,7 +111,15 @@ class ItemizeEnvironment extends Environment
                 break;
                 case TypeHtml:
                     if ($p_item[1] == "li")
+                    {
+                        if ($in_item)
+                        {
+                            array_push($items, html("li", batch($item)));
+                            $item = array();
+                            $in_item = false;
+                        }
                         array_push($items, $p_item);
+                    }
                     else if ($in_item)
                         array_push($item, $p_item);
                     else

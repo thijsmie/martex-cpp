@@ -1,0 +1,32 @@
+\begin{page}
+\begin{document}
+\title{MarTeX}
+	\hline
+		MarTeX is a versitale TeX to HTML interpreter. 
+		It comes with a few basic modules, but can easily be expanded upon. 
+		It was written by Thijs Miedema for use with marie-curie.nl.
+\section{Modules}
+\subsection{Module Document}
+The document module exposes the basic commands that are designed to mimick the LaTeX main environment.
+
+\subsubsection{Implemented commands}
+\begin{itemize}
+    \item \descriptor{global}{\command{title}{Title}}{Make a big fancy title.}
+    \item \descriptor{global}{\command{section}{Title}}{Make a section title.}
+    \item \descriptor{global}{\command{subsection}{Title}}{Make a subsection title.}
+    \item \descriptor{global}{\command{subsubsection}{Title}}{Make a subsubsection title.}
+    \item \descriptor{global}{\command{textbf}{Text}}{Render Text in \textbf{bold}.}
+    \item \descriptor{global}{\command{textit}{Text}}{Render Text in \textit{italics}.}
+    \item \descriptor{global}{\command{underline}{Text}}{Render Text \underline{underlined}.}
+    \item \descriptor{global}{\command{smallcaps}{Text}}{Render Text \smallcaps{smallcaps}.}
+    \item \descriptor{global}{\command{hline}}{Make a horizontal line.}
+    \item \descriptor{global}{\command{newline}}{Line break, equivalent to a double backslash.}
+    \item \descriptor{global}{\command{paragraph}{text}}{Render the text as a paragraph, normally not noticable, but might have implications if a stylesheet is loaded. Use for a single line of text without commands only, please use the environment \textit{paragraph} otherwise.}
+    \item \descriptor{global}{\command{ref}{label}}{Reference a label (from an image, for example). Works with both forward and backwards declaration (The label can be both above and below the ref command). Outputs a question mark when the label is undefined.}
+    \item \descriptor{global}{\command{define}{Variable}{Value}}{Set the global Variable to Value. Often used to change module behaviour.}
+    \item \descriptor{global}{\command{href}{URL}{Text}}{Make a hyperlink to URL with text Text}
+    \item \descriptor{global}{\command{colo(u)r}{type}{definition}{text}}{Change the colour of a piece of text. There are a few possibilities: \colour{rgb}{255,0,100}{\command{colour}{rgb}{255,0,100}{text}}, \colour{rgba}{255,100,255,0.7}{\command{colour}{rgba}{100,100,255,0.7}}, \colour{hsl}{200,50,50}{\command{colour}{hsl}{200,50,50}{text}}, \colour{hsla}{200,50,50,0.7}{\command{colour}{hsla}{200,50,50,0.7}{text}} and \colour{hex}{#ff00ff}{\command{colour}{hex}{#ff00ff}{text}}. Please note that hsl and hsla are not supported by all browsers (especially email clients).}
+    \item \descriptor{global}{\command{colo(u)r}{definition}{text}}{Same as above, but allow MarTeX to guess your colour type. Will always choose rgb over hsl.}
+\end{itemize}
+\end{document}
+\end{page}

@@ -44,7 +44,7 @@ std::string Value::GetContent() const
         for (Value v : toloop)
             if (v.GetType() == t_attr)
                 r_content += " " + v.GetContent();
-            else
+            else if (v.GetType() != t_null)
                 hascontent = true;
 
         if (hascontent)
@@ -68,13 +68,36 @@ std::string Value::GetContent() const
     return r_content;
 }
 
+bool Value::IsPlain() const
+{
+    switch (type)
+    {
+        case t_string:
+        case t_break:
+        case t_null:
+            return true;
+        case t_attr:
+        case t_ampersand:
+        case t_html:
+            return false;
+        case t_multi:
+        {
+            for (Value v : multicontent)
+                if (!v.IsPlain())
+                    return false;
+            return true;
+        }
+    }
+    return true;
+}
+
 std::string Value::GetTag() const { return tag; }
 std::string Value::GetRawContent() const { return content; }
 ValueType Value::GetType() const { return type; }
 
 std::vector<Value> Value::GetValues() const { return multicontent; }
 
-Value Value::Flattened()
+Value Value::Flattened() const
 {
     if (type != t_multi)
         return Value(std::vector<Value>({*this}));

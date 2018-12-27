@@ -51,7 +51,7 @@ class FigureEnvironment extends Environment
     public function locals() 
     {
         return array("caption", "includegraphics", "width", 
-                     "height", "alttext");
+                     "height", "alttext", "label");
     }
 
     public function begin($bracket)
@@ -92,6 +92,11 @@ class FigureEnvironment extends Environment
         if (count($args) != 1 || !is_string($args[0][0][1]))
             throw new \Exception("Invalid arguments");
         $this->_alttext = $args[0][0][1];
+    }
+
+    public function label($env, $args)
+    {
+        
     }
 
     public function end($content) {    

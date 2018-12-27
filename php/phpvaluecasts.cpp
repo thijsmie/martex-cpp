@@ -1,8 +1,9 @@
 #include "phpvaluecasts.hpp"
 #include "language/runtime_error.hpp"
 #include "language/token.hpp"
+#include <chrono>
 
-Php::Value CppToPhpSingle(Value v)
+Php::Value CppToPhpSingle(const Value &v)
 {
     // v garuanteed no t_multi
 
@@ -11,7 +12,7 @@ Php::Value CppToPhpSingle(Value v)
     {
         k[0] = t_html;
         k[1] = v.GetTag();
-        k[2] = CppToPhp(v.GetValues());
+        k[2] = CppToPhp(std::move(v.GetValues()));
     }
     else if (v.GetType() == t_attr)
     {
@@ -27,9 +28,10 @@ Php::Value CppToPhpSingle(Value v)
     return k;
 }
 
-Value PhpToCpp(Php::Value value)
+
+Value PhpToCppi(const Php::Value &value)
 {
-    if (value.isString()) 
+    if (value.isString())
     {
         std::string content = value;
         return Value(t_string, content);
@@ -39,56 +41,68 @@ Value PhpToCpp(Php::Value value)
         return Value();
     
     Php::Value first = value[0];
-    if(!first.isNumeric()) {
+    if (!first.isNumeric())
+    {
         std::vector<Value> a;
-        for(auto v : value)
-            a.push_back(PhpToCpp(v.second));
-        return Value(a);
+        for (auto v : value)
+            a.push_back(PhpToCppi(v.second));
+        return Value(std::move(a));
     }
 
-    switch((int)first)
+    switch ((int)first)
     {
-        case t_null:
-            return Value();
-        case t_string:
-        {
-            std::string content = value[1];
-            return Value(t_string, content);
-        }
-        case t_attr:
-        {
-            std::string name = value[1];
-            std::string content = value[2];
-            return Value(name, content);
-        }
-        case t_html:
-        {
-            std::string tag = value[1];
-            std::vector<Value> a;
+    case t_null:
+        return Value();
+    case t_string:
+    {
+        std::string content = value[1];
+        return Value(t_string, content);
+    }
+    case t_attr:
+    {
+        std::string name = value[1];
+        std::string content = value[2];
+        return Value(name, content);
+    }
+    case t_html:
+    {
+        std::string tag = value[1];
+        Value a = PhpToCpp(value[2]);
 
-            for(int i = 2; i < value.count(); i++)
-                a.push_back(PhpToCpp(value[i]));
-
-            a = Value(a).Flattened().GetValues();
-            return Value(tag, a);
-        }
-        case t_multi:
-        {
-            std::vector<Value> a;
-            Php::Value content = value[1];
-            for(int i = 0; i < content.count(); i++)
-                a.push_back(PhpToCpp(content[i]));
-            return Value(a);
-        }
-        case t_break:
-            return Value(t_break, "<br>");
-        case t_ampersand:
-            return Value(t_ampersand, "&amp;");
+        return Value(tag, a.GetValues());
+    }
+    case t_multi:
+    {
+        std::vector<Value> a;
+        Php::Value content = value[1];
+        a.reserve(content.count());
+        for (int i = 0; i < content.count(); i++)
+            a.push_back(PhpToCppi(content[i]));
+        return Value(std::move(a));
+    }
+    case t_break:
+        return Value(t_break, "<br>");
+    case t_ampersand:
+        return Value(t_ampersand, "&amp;");
     }
     return Value();
 }
 
-Php::Value CppToPhp(Value v)
+Value PhpToCpp(const Php::Value &value)
+{
+    std::chrono::high_resolution_clock::time_point a = std::chrono::high_resolution_clock::now();
+    Value v = PhpToCppi(value);
+    std::chrono::high_resolution_clock::time_point b = std::chrono::high_resolution_clock::now();
+    int d = (std::chrono::duration_cast<std::chrono::microseconds>(b-a)).count();
+    /*
+    if (value.count() > 2)
+        Php::out << value[0] << ' ' << d << std::endl;
+    else 
+        Php::out << "Array " << d << std::endl;*/
+    return v;
+}
+
+Php::Value CppToPhp(const Value &v)
 {
     Php::Value k;
     int i = 0;
@@ -101,7 +115,7 @@ Php::Value CppToPhp(Value v)
     return k;
 }
 
-Php::Value CppToPhp(std::vector<Value> values)
+Php::Value CppToPhp(const std::vector<Value> &values)
 {
     Php::Value k;
     int i = 0;
@@ -116,67 +130,67 @@ Php::Value CppToPhp(std::vector<Value> values)
 
 Php::Value html(Php::Parameters &params)
 {
-    std::string tag = params[0];
-    Php::Array content = std::vector<Php::Value>(params.begin() + 1, params.end());
+    //tag
+    const char* v1 = params[0];
+    const int s1 = params[0].size();
+    //content
+    const char* v2 = params[1];
+    const int s2 = params[1].size();
 
-    Php::Array ret;
-    ret[0] = t_html;
-    ret[1] = tag;
-    ret[2] = content;
+    Php::Value v;
+    char* b = v.reserve(s1 + s2 + 3);
 
-    return ret;
+    b[0] = t_html;
+    b[1] = s1;
+    memcpy(b+1, v1, s1);
+    b[s1+1] = s2;
+    memcpy(b+s1+2, v2, s2);
+    return v;
 }
 
-Php::Value value(Php::Parameters &params)
+Php::Value string(Php::Parameters &params)
 {
-    return std::vector<Php::Value>(params.begin(), params.end());
+    const char* v1 = params[0];
+    const int s1 = params[0].size();
+
+    Php::Value v; 
+    char* b = v.reserve(2+s1);
+    b[0] = t_ampersand;
+    b[1] = s1;
+    memcpy(b+2, v1, s1);
+    return v;
 }
 
 Php::Value attr(Php::Parameters &params)
 {
-    Php::Array a;
-    a[0] = t_attr;
-    a[1] = params[0];
-    a[2] = params[1];
-    return a;
-}
+    const char* v1 = params[0];
+    const int s1 = params[0].size();
+    const char* v2 = params[1];
+    const int s2 = params[1].size();
 
-Php::Value batch(Php::Parameters &params)
-{
-    if (params.size() == 1 && params[0].size() == 0)
-    {
-        Php::Array a, b;
-        a[0] = t_multi;
-        a[1] = b;
-        return a;
-    }
+    Php::Value v;
+    char* b = v.reserve(s1 + s2 + 3);
 
-    if (params.size() == 1 && params[0].isArray())
-    {
-        Php::Value v = params[0][0];
-
-        if (!v.isNumeric())
-        {
-            Php::Array a = params[0];
-            Php::Array ret;
-            ret[0] = t_multi;
-            ret[1] = a;
-            return ret;
-        }
-    }
-    Php::Array a = std::vector<Php::Value>(params.begin(), params.end());
-    Php::Array ret;
-    ret[0] = t_multi;
-    ret[1] = a;
-    return ret;
+    b[0] = t_attr;
+    b[1] = s1;
+    memcpy(b+1, v1, s1);
+    b[s1+1] = s2;
+    memcpy(b+s1+2, v2, s2);
+    return v;
 }
 
 Php::Value ampersand(Php::Parameters &params)
 {
-    return Php::Array({t_ampersand, "&amp;"});
+    Php::Value v; 
+    char* b = v.reserve(1);
+    b[0] = t_ampersand;
+    return v;
 }
 
 Php::Value newline(Php::Parameters &params)
 {
-    return Php::Array({t_ampersand, "<br/>"});
+    Php::Value v; 
+    char* b = v.reserve(1);
+    b[0] = t_break;
+    return v;
 }

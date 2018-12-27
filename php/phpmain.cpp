@@ -1,4 +1,6 @@
 #include <phpcpp.h>
+
+#include "phpglobal.hpp"
 #include "phpmartex.hpp"
 #include "phpvaluecasts.hpp"
 
@@ -18,7 +20,7 @@ extern "C"
     PHPCPP_EXPORT void *get_module()
     {
         // The extension will stay in memory for the duration of the php process
-        static Php::Extension extension("martex", "0.1");
+        static Php::Extension extension("martex", "0.2");
 
         // Create MarTeX namespace
         Php::Namespace texspace("MarTeX");
@@ -41,10 +43,13 @@ extern "C"
         base2.method<&PhpEnvironmentBase::begin>("begin", {Php::ByVal("bracket_argument", Php::Type::Resource)});
         base2.method<&PhpEnvironmentBase::end>("end", {Php::ByVal("content", Php::Type::Resource)});
 
+        Php::Class<PhpGlobalEnvironment> base3("GlobalEnv");
+
         // Add classes to namespace
         texspace.add(std::move(martex));
         texspace.add(std::move(base1));
         texspace.add(std::move(base2));
+        texspace.add(std::move(base3));
 
         // Helpers
         texspace.add<html>("html");
@@ -57,7 +62,6 @@ extern "C"
         texspace.add<newline>("newline");
 
         // Add constants to namespace
-        texspace.add(Php::Constant("TypeAny", ValueType::t_any));
         texspace.add(Php::Constant("TypeNull", ValueType::t_null));
         texspace.add(Php::Constant("TypeString", ValueType::t_string));
         texspace.add(Php::Constant("TypeAmpersand", ValueType::t_ampersand));

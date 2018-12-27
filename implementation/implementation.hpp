@@ -25,9 +25,10 @@ class GlobalEnv : public Environment
 class Implementation
 {
   private:
+    std::shared_ptr<Environment> global;
     std::vector<std::shared_ptr<Module>> modules;
   public:
-    Implementation(std::vector<std::shared_ptr<Module>>);
+    Implementation(std::shared_ptr<Environment>, std::vector<std::shared_ptr<Module>>);
     std::shared_ptr<Environment> Global();
     std::shared_ptr<Environment> Create(Token name, std::shared_ptr<Environment> parent);
     std::string Escaped(TokenType escapetype, char escapee);

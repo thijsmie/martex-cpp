@@ -3,6 +3,7 @@
 #include "language/error_reporter.hpp"
 #include "language/interpreter.hpp"
 #include "implementation/implementation.hpp"
+#include "phpenvironment.hpp"
 
 #include <phpcpp.h>
 
@@ -30,11 +31,15 @@ class PhpModuleBase : public Php::Base
 /// Base class for php environments to inherit
 class PhpEnvironmentBase : public Php::Base
 {
+  private:
+    std::shared_ptr<PhpEnvironment> RealMe;
+
   public:
     void __construct(Php::Parameters &params)
     {
         Php::Value self(this);
         self["module"] = params[0];
+        self["tex"] = params[1];
     }
 
     Php::Value locals()

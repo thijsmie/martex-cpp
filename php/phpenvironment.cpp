@@ -1,10 +1,12 @@
 #include "phpenvironment.hpp"
 #include <algorithm>
 #include "phpvaluecasts.hpp"
+#include "phpmartex.hpp"
 
-PhpEnvironment::PhpEnvironment(std::string phpEnvName, Php::Object myModule, std::shared_ptr<Environment> parent) : myEnvironment(phpEnvName.c_str(), myModule)
+PhpEnvironment::PhpEnvironment(std::string phpEnvName, Php::Object myModule, Php::Object GlobalEnv, std::shared_ptr<Environment> parent) : myEnvironment(phpEnvName.c_str(), myModule, GlobalEnv)
 {
     Php::Value funcs = myEnvironment.call("locals");
+
     /// Cast, fingers crossed
     commands = funcs;
     is_root = false;

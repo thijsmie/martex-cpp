@@ -1,5 +1,4 @@
-#ifndef EXPR_H_
-#define EXPR_H_
+#pragma once
 
 #include "token.hpp"
 #include <vector>
@@ -81,5 +80,3 @@ class ExprVisitor
     virtual void VisitCommandExpr(std::shared_ptr<const CommandExpr>) = 0;
     virtual void VisitEnvironmentExpr(std::shared_ptr<const EnvironmentExpr>) = 0;
 };
-
-#endif // EXPR_H_

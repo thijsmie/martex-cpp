@@ -1,10 +1,10 @@
 #include "implementation.hpp"
 
-Implementation::Implementation(std::vector<std::shared_ptr<Module>> modules) : modules(modules) {}
+Implementation::Implementation(std::shared_ptr<Environment> global, std::vector<std::shared_ptr<Module>> modules) : global(global), modules(modules) {}
 
 std::shared_ptr<Environment> Implementation::Global()
 {
-    return std::make_shared<GlobalEnv>(modules);
+    return global;
 }
 
 std::string Implementation::LineBreak() const

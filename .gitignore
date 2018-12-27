@@ -1,3 +1,7 @@
 .vscode/*
 *.o
 *.so
+annotated
+oprofile_data
+todo.txt
+log

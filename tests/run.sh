@@ -2,5 +2,5 @@
 cd "${0%/*}"
 
 for filename in ./*.php; do
-	php -d../martex.so $filename
+	php -dextension=../martex.so $filename
 done

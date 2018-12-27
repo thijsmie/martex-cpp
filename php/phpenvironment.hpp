@@ -16,7 +16,7 @@ class PhpEnvironment : public Environment
   public:
     Php::Object myEnvironment;
 
-    PhpEnvironment(std::string, Php::Object, std::shared_ptr<Environment>);
+    PhpEnvironment(std::string, Php::Object, Php::Object, std::shared_ptr<Environment>);
     bool HasCommand(std::string);
     Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>);
     void StartEnvironment(Token, Value);

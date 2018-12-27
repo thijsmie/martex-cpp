@@ -9,6 +9,9 @@
 
 class StdLib : public Module
 {
+  private:
+    int chapter, section, subsection, subsubsection;
+    bool labeling;
     
   public:
     StdLib();

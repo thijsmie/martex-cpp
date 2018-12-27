@@ -1,6 +1,7 @@
 #include "phpmartex.hpp"
 
 #include "php/phpmodule.hpp"
+#include "php/phpglobal.hpp"
 #include "language/scanner.hpp"
 #include "language/parser.hpp"
 #include "implementation/stdlib.hpp"
@@ -30,22 +31,28 @@ void MarTeX::Parse(Php::Parameters &params)
     // Makes sure we don't leak anything between parses
     // Security by design! Wow!
     std::vector<std::shared_ptr<Module>> module_inst;
+    std::vector<std::shared_ptr<PhpModule>> phpmod_inst;
     module_inst.reserve(modules.size() + 1);
+    phpmod_inst.reserve(modules.size());
 
     // Add the stdlib
     module_inst.push_back(std::make_shared<StdLib>());
 
-    // Create an empty global environment
-    Php::Object GlobalEnv("stdClass");
-
     // Add php modules
     for (auto m : modules)
     {
-        module_inst.push_back(std::make_shared<PhpModule>(m, GlobalEnv));
+        std::shared_ptr<PhpModule> a = std::make_shared<PhpModule>(m);
+        module_inst.push_back(a);
+        phpmod_inst.push_back(a);
     }
+    // Create Global Environment
+    std::shared_ptr<GlobalEnv> globalEnv = std::make_shared<GlobalEnv>(module_inst);
+
+    for (auto m : phpmod_inst)
+        m->SetGlobal(Php::Object("\\MarTeX\\GlobalEnv", new PhpGlobalEnvironment(globalEnv)));
 
     // Instanciate an implementation, transfer access to the modules
-    Implementation implementation(module_inst);
+    Implementation implementation(globalEnv, module_inst);
 
     // Go through the processing of the input string
     ErrorReporter error_reporter;

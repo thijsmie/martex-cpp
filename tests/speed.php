@@ -1,0 +1,25 @@
+<?php
+namespace MarTeX;
+require_once __DIR__ . "/tools.php";
+
+class TestSpeedModule extends Module
+{
+    public $c;
+    public function __construct() {
+        $this->c = json_decode(\file_get_contents(__DIR__ . "/test.json"));
+    }
+    public function globals() { return array("a"); }
+    public function a() { return $this->c; }
+    public function environments() { return array("a" => "\\MarTeX\\TestSpeedEnvironment"); }
+}
+
+class TestSpeedEnvironment extends Environment
+{
+    public function end($content) { return $this->module->c; }
+}
+
+start("Speed");
+//runstest("Spd.1", array("\\MarTeX\\TestSpeedModule"), "\\begin{a}\\end{a}");
+runstest("Spd.2", array("\\MarTeX\\TestSpeedModule"), "\\a");
+
+finish();

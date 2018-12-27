@@ -1,11 +1,10 @@
 #include "phpmodule.hpp"
 #include "phpvaluecasts.hpp"
 
-PhpModule::PhpModule(std::string php_module_name, Php::Object globalEnv) : GlobalEnv(globalEnv),
-                                                                           myModule(php_module_name),
-                                                                           myEnvironmentNames(),
-                                                                           myEnvironments(),
-                                                                           myGlobals()
+PhpModule::PhpModule(std::string php_module_name) : myModule(php_module_name),
+                                                    myEnvironmentNames(),
+                                                    myEnvironments(),
+                                                    myGlobals()
 {
     Php::Value global_funcs = myModule.call("globals");
     /// Cast, fingers crossed
@@ -22,12 +21,13 @@ PhpModule::PhpModule(std::string php_module_name, Php::Object globalEnv) : Globa
     }
 }
 
+void PhpModule::SetGlobal(Php::Object o) { GlobalEnv = o; }
 std::vector<std::string> PhpModule::GetGlobals() { return myGlobals; }
 std::vector<std::string> PhpModule::GetEnvs() { return myEnvironmentNames; };
 
 std::shared_ptr<Environment> PhpModule::MakeEnv(std::string name, std::shared_ptr<Environment> parent)
 {
-    return std::make_shared<PhpEnvironment>(myEnvironments[name], myModule, parent);
+    return std::make_shared<PhpEnvironment>(myEnvironments[name], myModule, GlobalEnv, parent);
 }
 
 Value PhpModule::RunGlobal(std::shared_ptr<Environment> env, Token name, std::vector<Value> args)

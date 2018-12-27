@@ -5,9 +5,9 @@
 #include <vector>
 
 
-Value PhpToCpp(Php::Value);
-Php::Value CppToPhp(Value);
-Php::Value CppToPhp(std::vector<Value>);
+Value PhpToCpp(const Php::Value&);
+Php::Value CppToPhp(const Value&);
+Php::Value CppToPhp(const std::vector<Value>&);
 
 Php::Value html(Php::Parameters&);
 Php::Value attr(Php::Parameters&);

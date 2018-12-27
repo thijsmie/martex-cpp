@@ -14,8 +14,12 @@ class Environment
     std::shared_ptr<Environment> enclosing;
 
   public:
+    bool IsRoot() { return is_root; }
+    std::shared_ptr<Environment> GetEnclosing() { return enclosing; }
     void Set(std::string, Value);
+    void SetGlobal(std::string, Value);
     Value Get(Token);
+    Value Get(std::string);
     Value RunCommand(std::shared_ptr<Environment>, Token, std::vector<Value>);
 
     virtual bool HasCommand(std::string) = 0;

@@ -162,7 +162,7 @@ void Scanner::ScanCommandOrSpecial()
 
 bool is_valid_char(char c)
 {
-    if (c < 33)
+    if (c < 32 && c != 9)
         return false;
     if (c > 126)
         return false;
@@ -203,13 +203,6 @@ void Scanner::ScanToken()
     case '%':
         while (!IsAtEnd() && Peek() != '\n')
             Advance();
-        break;
-    case ' ':
-    case '\t':
-        while (Peek() == ' ' || Peek() == '\t')
-            literal += Advance();
-
-        AddToken(WHITESPACE, literal);
         break;
     case '\r':
         /// Windows line endings? We don't give a damn, skip!

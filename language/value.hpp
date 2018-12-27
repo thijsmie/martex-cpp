@@ -8,7 +8,6 @@
 
 enum ValueType : int
 {
-    t_any = -1,
     t_null = 0,
     t_string = 1,
     t_ampersand = 2,
@@ -43,8 +42,9 @@ class Value
     std::vector<Value> GetValues() const;
     ValueType GetType() const;
 
+    bool IsPlain() const;
 
-    Value Flattened();
+    Value Flattened() const;
   private:
     ValueType type;
     std::string tag;

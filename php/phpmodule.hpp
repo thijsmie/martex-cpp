@@ -19,7 +19,9 @@ class PhpModule : public Module
     std::vector<std::string> myGlobals;
     
   public:
-    PhpModule(std::string, Php::Object);
+    PhpModule(std::string);
+
+    void SetGlobal(Php::Object);
 
     std::vector<std::string> GetGlobals();
     std::vector<std::string> GetEnvs();
