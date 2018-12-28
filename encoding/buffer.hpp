@@ -4,21 +4,31 @@
 #include <cstring>
 #include <string>
 
+void serialize_byte(unsigned char *buffer, int &pos, int value)
+{
+    buffer[pos++] = value + 32;
+}
+
+int deserialize_byte(const unsigned char *buffer, int &pos)
+{
+    return buffer[pos++] - 32;
+}
+
 void serialize_uint32_t(unsigned char *buffer, int &pos, uint32_t value)
 {
-    buffer[pos++] = value >> 24;
-    buffer[pos++] = value >> 16;
-    buffer[pos++] = value >> 8;
-    buffer[pos++] = value >> 0;
+    buffer[pos++] = (value >> 21) + 32;
+    buffer[pos++] = (value >> 14) + 32;
+    buffer[pos++] = (value >> 7) + 32;
+    buffer[pos++] = (value >> 0) + 32;
 }
 
 uint32_t deserialize_uint32_t(const unsigned char *buffer, int &pos)
 {
     uint32_t ret = 0;
-    ret |= buffer[pos++] << 24;
-    ret |= buffer[pos++] << 16;
-    ret |= buffer[pos++] << 8;
-    ret |= buffer[pos++];
+    ret |= (buffer[pos++] - 32) << 21;
+    ret |= (buffer[pos++] - 32) << 14;
+    ret |= (buffer[pos++] - 32) << 7;
+    ret |= (buffer[pos++] - 32);
     return ret;
 }
 

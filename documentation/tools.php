@@ -77,6 +77,8 @@ class PageEnvironment extends Environment
             )
         );
 
+        file_put_contents(__DIR__ . "/../tests/speed.bin", $a);
+
         return $a;
     }
 }
