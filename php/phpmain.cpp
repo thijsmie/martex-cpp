@@ -53,13 +53,13 @@ extern "C"
 
         // Helpers
         texspace.add<html>("html");
-        texspace.add<value>("value");
+        texspace.add<mstr>("mstr");
         texspace.add<attr>("attribute");
         texspace.add<attr>("attr");
-        texspace.add<batch>("batch");
         texspace.add<ampersand>("ampersand");
         texspace.add<ampersand>("amp");
         texspace.add<newline>("newline");
+        texspace.add<PhpAsBytes>("bytes");
 
         // Add constants to namespace
         texspace.add(Php::Constant("TypeNull", ValueType::t_null));

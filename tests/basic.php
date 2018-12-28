@@ -19,18 +19,14 @@ class testmodule extends \MarTeX\Module
     public function globals() {return array("yay");}
     public function environments(){return array("test"=>"test");}
     public function yay($env, $args){
-        $one = $args[0];
-        array_push($one, " yay");
-        return $one;
+        return \MarTeX\mstr($args[0][0][1] . " yay");
     }
 }
 class test extends \MarTeX\Environment
 {
     public function locals() {return array("yay");}
     public function yay($env, $args){
-        $one = $args[0];
-        array_push($one, "yay");
-        return $one;
+        return \MarTeX\mstr($args[0][0][1] . "yay");
     }
 }
 

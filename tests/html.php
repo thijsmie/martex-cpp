@@ -3,7 +3,7 @@ require_once __DIR__ . "/tools.php";
 
 use function \MarTeX\html as html;
 use function \MarTeX\attr as attr;
-use function \MarTeX\batch as batch;
+use function \MarTeX\mstr as mstr;
 
 class testmodule extends \MarTeX\Module
 {
@@ -12,13 +12,13 @@ class testmodule extends \MarTeX\Module
         return html("a", attr("href", "http://www.google.com"));
     }
     public function href2($env, $args){
-        return html("a", attr("href", "http://www.google.com"), "google");
+        return html("a", attr("href", "http://www.google.com") . mstr("google"));
     }
     public function href3($env, $args){
-        return html("a", batch(attr("href", "http://www.google.com")));
+        return html("a", attr("href", "http://www.google.com"));
     }
     public function href4($env, $args){
-        return html("a", batch(attr("href", "http://www.google.com"), "google"));
+        return html("a", attr("href", "http://www.google.com") . mstr("google"));
     }
 
 }

@@ -51,3 +51,5 @@ class Value
     std::string content;
     std::vector<Value> multicontent;
 };
+
+std::string ValueTypeName(ValueType v);

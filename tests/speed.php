@@ -6,7 +6,7 @@ class TestSpeedModule extends Module
 {
     public $c;
     public function __construct() {
-        $this->c = json_decode(\file_get_contents(__DIR__ . "/test.json"));
+        $this->c = \file_get_contents(__DIR__ . "/speed.bin");
     }
     public function globals() { return array("a"); }
     public function a() { return $this->c; }
@@ -19,7 +19,7 @@ class TestSpeedEnvironment extends Environment
 }
 
 start("Speed");
-//runstest("Spd.1", array("\\MarTeX\\TestSpeedModule"), "\\begin{a}\\end{a}");
+runstest("Spd.1", array("\\MarTeX\\TestSpeedModule"), "\\begin{a}\\end{a}");
 runstest("Spd.2", array("\\MarTeX\\TestSpeedModule"), "\\a");
 
 finish();

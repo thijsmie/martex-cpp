@@ -113,3 +113,17 @@ Value Value::Flattened() const
     return Value(ret);
 }
 
+std::string valueTypes[] = {
+    "t_null",
+    "t_string",
+    "t_ampersand",
+    "t_break",
+    "t_multi",
+    "t_html",
+    "t_attr"
+};
+
+std::string ValueTypeName(ValueType v)
+{
+    return valueTypes[v];
+}

@@ -10,7 +10,7 @@ class testmodule1 extends \MarTeX\Module
 class testenv1 extends \MarTeX\Environment
 {
     public function locals() { return array("a"); }
-    public function a($env, $args) { $this->tex->a = \MarTeX\value(\MarTeX\TypeString, "c"); }
+    public function a($env, $args) { $this->tex->a = \MarTeX\mstr("c"); }
 }
 
 class testenv2 extends \MarTeX\Environment

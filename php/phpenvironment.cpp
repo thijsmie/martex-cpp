@@ -47,7 +47,10 @@ Value PhpEnvironment::EndEnvironment(Token end, Value content)
 {
     try
     {
-        return PhpToCpp(myEnvironment.call("end", CppToPhp(content.Flattened())));
+        Php::Value res = myEnvironment.call("end", CppToPhp(content.Flattened()));
+        if (res.isNull())
+            return content;
+        return PhpToCpp(res);
     }
     catch (Php::Exception &e)
     {

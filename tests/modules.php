@@ -7,7 +7,7 @@ class testmodule1 extends \MarTeX\Module
 {
     public function globals() {return array("yays1");}
     public function yays1($env, $args){
-        $env->data = array(\MarTeX\TypeString, "hello, ");
+        $env->data = \MarTeX\mstr("hello, ");
     }
 }
 
@@ -15,7 +15,7 @@ class testmodule2 extends \MarTeX\Module
 {
     public function globals() {return array("yays2");}
     public function yays2($env, $args){
-        $env->data = array(\MarTeX\TypeString, "world!");
+        $env->data = \MarTeX\mstr("world!");
     }
 }
 
@@ -40,13 +40,13 @@ class testmodule5 extends \MarTeX\Module
     public function globals() {return array("yay");}
     public function environments(){return array("t" => "testenv2");}
     public function yay($env, $args){
-        return array(array(\MarTeX\TypeString, "Nothing good!"));
+        return \MarTeX\mstr("Nothing good!");
     }
 }
 
 class testenv2 extends \MarTeX\Environment
 {
-    public function end($d) { return array(array(\MarTeX\TypeString, "Can't override environments,"));}
+    public function end($d) { return \MarTeX\mstr("Can't override environments,");}
 }
 
 class testmodule6 extends \MarTeX\Module
@@ -54,7 +54,7 @@ class testmodule6 extends \MarTeX\Module
     public function globals() {return array("yay");}
     public function environments(){return array("t" => "testenv3");}
     public function yay($env, $args){
-        return array(array(\MarTeX\TypeString, "but you can override commands!"));
+        return \MarTeX\mstr("but you can override commands!");
     }
 }   
 

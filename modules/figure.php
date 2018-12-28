@@ -104,33 +104,33 @@ class FigureEnvironment extends Environment
             throw \Exception("Figure did not contain an image!");
 
         /// Attributes
-        $attributes = array();
+        $attributes = "";
         if (!isset($this->_width) && !isset($this->_height)) {
-            array_push($attributes, attr("width", "100%"));
+            $attributes .= attr("width", "100%");
         }
 
         if(isset($this->_width)) {
             if (ctype_digit($this->_width))
-                array_push($attributes, attr("width", $this->_width . "%"));
+                $attributes .=  attr("width", $this->_width . "%");
             else
-                array_push($attributes, attr("width", $this->_width));
+                $attributes .=  attr("width", $this->_width);
         }
 
         if(isset($this->_height)) {
             if (ctype_digit($this->_height))
-                array_push($attributes, attr("height", $this->_height . "%"));
+                $attributes .= attr("height", $this->_height . "%");
             else
-                array_push($attributes, attr("height", $this->_height));
+                $attributes .= attr("height", $this->_height);
         }
         
-        array_push($attributes, attr("alt", $this->_alttext));
-        array_push($attributes, attr("href", $this->_image));
+        $attributes .= attr("alt", $this->_alttext);
+        $attributes .= attr("href", $this->_image);
 
-        $image = html("img", batch($attributes));
+        $image = html("img", $attributes);
 
         // Figure env
         if (isset($this->_caption)) {
-            return html("figure", $image, html("figcaption", $this->_label . ": " . $this->_caption));
+            return html("figure", $image . html("figcaption", mstr($this->_label . ": " . $this->_caption)));
         }
         else {
             return $image;

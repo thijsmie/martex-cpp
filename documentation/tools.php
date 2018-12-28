@@ -17,13 +17,13 @@ class DocumentationModule extends Module
         if (count($args) !== 3)
             throw new \Exception("Descriptor takes 3 arguments.");
             
-        array_push($args[0], value(TypeString, ": "));
-        return batch(
-            html("i", $args[0]), 
-            html("b", $args[1]), 
-            value(TypeBreak, ""),
-            html("p", $args[2])
-        );
+        return 
+            html("i", bytes($args[0])) .
+            mstr(": ") .
+            html("b", bytes($args[1])) .
+            newline() .
+            html("p", bytes($args[2]))
+        ;
     }
 
     public function envdescriptor($env, $args) 
@@ -32,23 +32,23 @@ class DocumentationModule extends Module
             throw new \Exception("Envdescriptor takes 2 arguments.");
             
         return batch(
-            html("i", $args[0]),
-            html("br", value(TypeNull, "")), 
-            html("p", $args[1])
+            html("i", bytes($args[0])),
+            html("br"), 
+            html("p", bytes($args[1]))
         );
     }
 
     public function command($env, $args)
     {
-        $cmd = array(value(TypeString, "&#92;"), $args[0]);
+        $cmd = mstr("&#92;") . bytes($args[0]);
 
         if (count($args) == 1)
-            return batch($cmd);
+            return $cmd;
 
         for($i=1; $i<count($args); $i++)
-            array_push($cmd, batch(value(TypeString, "&#123;"), $args[$i], value(TypeString, "&#125;")));
+            $cmd .= mstr("&#123;") . bytes($args[$i]) . mstr("&#125;");
 
-        return batch($cmd);
+        return $cmd;
     }
 }
 
@@ -57,25 +57,26 @@ class PageEnvironment extends Environment
     public function end($content) 
     {
         $body = null;
-        $head = array();
+        $head = "";
 
         foreach($content as $item) {
             if ($item[0] == TypeHtml && $item[1] == "body") {
                 if ($body !== null)
                     throw new \Exception("Two bodies is not allowed!");
-                $body = $item;
+                $body = bytes($item);
             }
             else {
-                array_push($head, $item);
+                $head .= bytes($item);
             }
         }
 
         $a = html("!DOCTYPE html",
             html("html",
-                html("head", batch($head)),
+                html("head", $head) .
                 $body
             )
         );
+
         return $a;
     }
 }
@@ -84,6 +85,6 @@ class BodyEnvironment extends Environment
 {
     public function end($content) 
     {
-        return html("body", $content);
+        return html("body", bytes($content));
     }
 }
