@@ -77,7 +77,7 @@ class ItemizeEnvironment extends Environment
         if ($env != $this)
             throw new \Exception("Cannot call item in nested environment.");
 
-        if (is_null($args))
+        if (count($args) === 0)
             return ampersand();
 
         if (count($args) != 1)

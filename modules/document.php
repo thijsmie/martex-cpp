@@ -15,9 +15,10 @@ class DocumentModule extends Module {
         return array("paragraph" => "\\MarTeX\\ParagraphEnvironment");
     }
 
+    public $argsfor_href = array(PlainBytes, PlainBytes);
     public function href($env, $args)
     {
-        return html("a", attr("href", $args[0][0][1]), mstr($args[1][0][1]));
+        return html("a", attr("href", $args[0]), mstr($args[1]));
     }
 
     public function col($env, $args)
@@ -46,7 +47,7 @@ class DocumentModule extends Module {
 
         if (count($args) == 2) {
             $coldef = $args[0][0][1];
-            $txt = $args[1][0][1];
+            $txt = $args[1];
 
             if ($coldef[0] === "#") {
                 $coltype = "hex";
@@ -61,7 +62,7 @@ class DocumentModule extends Module {
         else if (count($args) === 3) {
             $coltype = $args[0][0][1];
             $coldef = $args[1][0][1];
-            $txt = $args[2][0][1];
+            $txt = $args[2];
         }
 
         $color = "";
@@ -115,7 +116,7 @@ class DocumentModule extends Module {
                 throw new \Exception("Unknown colouring");
         }
 
-        return html("span", attr("style", "color:".$color) . mstr($txt));
+        return html("span", attr("style", "color:".$color) . bytes($txt));
     }    
 }
 

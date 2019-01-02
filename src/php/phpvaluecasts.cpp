@@ -110,8 +110,8 @@ std::string PhpAsBytesI(Php::Value value)
         std::string content = value[1];
 
         unsigned char b[5];
-        int pos = 0;
-        serialize_byte(b, pos, t_string);
+        uint32_t pos = 0;
+        serialize_byte(b, pos, (uint8_t)t_string);
         serialize_uint32_t(b, pos, content.size());
 
         return std::string((char*)b, 5) + content;
@@ -122,8 +122,8 @@ std::string PhpAsBytesI(Php::Value value)
         std::string content = value[2];
 
         unsigned char b[9];
-        int pos = 0;
-        serialize_byte(b, pos, t_attr);
+        uint32_t pos = 0;
+        serialize_byte(b, pos, (uint8_t)t_attr);
         serialize_uint32_t(b, pos, name.size());
         serialize_uint32_t(b, pos, content.size());
 
@@ -135,8 +135,8 @@ std::string PhpAsBytesI(Php::Value value)
         std::string content = PhpAsBytesI(value[2]);
 
         unsigned char b[9];
-        int pos = 0;
-        serialize_byte(b, pos, t_html);
+        uint32_t pos = 0;
+        serialize_byte(b, pos, (uint8_t)t_html);
         serialize_uint32_t(b, pos, tag.size());
         serialize_uint32_t(b, pos, content.size());
 
@@ -159,9 +159,9 @@ Php::Value PhpAsBytes(Php::Parameters &params)
     return PhpAsBytesI(value);
 }
 
-Value PhpToCppSingle(const unsigned char *b, int &pos, const uint32_t end)
+Value PhpToCppSingle(const unsigned char *b, uint32_t &pos, const uint32_t end)
 {
-    const int type = deserialize_byte(b, pos);
+    const uint8_t type = deserialize_byte(b, pos);
 
     switch (type)
     {
@@ -197,13 +197,13 @@ Value PhpToCppSingle(const unsigned char *b, int &pos, const uint32_t end)
     }
 }
 
-std::vector<Value> PhpToCppMulti(const unsigned char *b, int &pos, const uint32_t end)
+std::vector<Value> PhpToCppMulti(const unsigned char *b, uint32_t &pos, const uint32_t end)
 {
     std::vector<Value> a;
 
     while (pos < end)
     {
-        a.push_back(PhpToCppSingle(b, pos, end));
+        a.push_back(Value(b, pos));
     }
 
     return a;
@@ -220,7 +220,7 @@ Value PhpToCpp(const Php::Value &value)
     const char *v1 = value;
     const uint32_t s1 = value.size();
 
-    int pos = 0;
+    uint32_t pos = 0;
     std::vector<Value> res = PhpToCppMulti((unsigned char*)v1, pos, s1);
 
     if (res.size() == 0)
@@ -257,6 +257,22 @@ Php::Value CppToPhp(const std::vector<Value> &values)
     return k;
 }
 
+Php::Value CppToPhpBytes(const Value &v)
+{
+    uint32_t size = v.ByteSize();
+
+    uint32_t pos = 0;
+    unsigned char *buffer = (unsigned char*)malloc(size);
+
+    v.WriteOut(buffer, pos);
+
+    Php::Value a((char*)buffer, size);
+
+    free(buffer);
+
+    return a;
+}
+
 Php::Value html(Php::Parameters &params)
 {
     if (params.size() == 1)
@@ -269,12 +285,12 @@ Php::Value html(Php::Parameters &params)
         const uint32_t totalsize = s1 + 1 + 1 + 2 * sizeof(uint32_t);
         unsigned char* b = (unsigned char*) malloc(totalsize);
 
-        int pos = 0;
+        uint32_t pos = 0;
 
-        serialize_byte(b, pos, t_html);
+        serialize_byte(b, pos, (uint8_t)t_html);
         serialize_sized_string(b, pos, v1, s1);
         serialize_uint32_t(b, pos, 1);
-        serialize_byte(b, pos, t_null);
+        serialize_byte(b, pos, (uint8_t)t_null);
 
         Php::Value ret((char*)b, pos);
 
@@ -293,9 +309,9 @@ Php::Value html(Php::Parameters &params)
     const uint32_t totalsize = s1 + s2 + 1 + 2 * sizeof(uint32_t);
     unsigned char* b = (unsigned char*) malloc(totalsize);
 
-    int pos = 0;
+    uint32_t pos = 0;
 
-    serialize_byte(b, pos, t_html);
+    serialize_byte(b, pos, (uint8_t)t_html);
     serialize_sized_string(b, pos, v1, s1);
     serialize_sized_string(b, pos, v2, s2);
 
@@ -316,9 +332,9 @@ Php::Value mstr(Php::Parameters &params)
     const uint32_t totalsize = s1 + 1 + sizeof(uint32_t);
     unsigned char* b = (unsigned char*) malloc(totalsize);
 
-    int pos = 0;
+    uint32_t pos = 0;
 
-    serialize_byte(b, pos, t_string);
+    serialize_byte(b, pos, (uint8_t)t_string);
     serialize_sized_string(b, pos, v1, s1);
 
     Php::Value ret((char*)b, pos);
@@ -342,9 +358,9 @@ Php::Value attr(Php::Parameters &params)
     const uint32_t totalsize = s1 + s2 + 1 + 2 * sizeof(uint32_t);
     unsigned char* b = (unsigned char*) malloc(totalsize);
 
-    int pos = 0;
+    uint32_t pos = 0;
 
-    serialize_byte(b, pos, t_attr);
+    serialize_byte(b, pos, (uint8_t)t_attr);
     serialize_sized_string(b, pos, v1, s1);
     serialize_sized_string(b, pos, v2, s2);
 
@@ -359,15 +375,15 @@ Php::Value attr(Php::Parameters &params)
 Php::Value ampersand(Php::Parameters &params)
 {
     unsigned char b[1];
-    int pos = 0;
-    serialize_byte(b, pos, t_ampersand);
+    uint32_t pos = 0;
+    serialize_byte(b, pos, (uint8_t)t_ampersand);
     return Php::Value((char*)b, pos);
 }
 
 Php::Value newline(Php::Parameters &params)
 {
     unsigned char b[1];
-    int pos = 0;
-    serialize_byte(b, pos, t_break);
+    uint32_t pos = 0;
+    serialize_byte(b, pos, (uint8_t)t_break);
     return Php::Value((char*)b, pos);
 }

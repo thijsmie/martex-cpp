@@ -9,6 +9,18 @@ PhpModule::PhpModule(std::string php_module_name) : myModule(php_module_name),
     Php::Value global_funcs = myModule.call("globals");
     /// Cast, fingers crossed
     myGlobals = global_funcs;
+    for (const std::string &cmd : myGlobals)
+    {
+        callsigns[cmd] = {MoreFull};
+        try
+        {
+            if (myModule.contains("argsfor_" + cmd))
+                callsigns[cmd] = ParseSignature(myModule["argsfor_" + cmd]);
+        }
+        catch (Php::Exception &e)
+        {
+        }
+    }
 
     Php::Value envs = myModule.call("environments");
     /// Cast, fingers crossed
@@ -35,10 +47,11 @@ Value PhpModule::RunGlobal(std::shared_ptr<Environment> env, Token name, std::ve
     std::shared_ptr<PhpEnvironment> phpenv = std::dynamic_pointer_cast<PhpEnvironment>(env);
     try
     {
+        Php::Value arguments = ValidateSignature(callsigns[name.GetLexeme()], args);
         if (phpenv != nullptr)
-            return PhpToCpp(myModule.call(name.GetLexeme().c_str(), (Php::Value)phpenv->myEnvironment, CppToPhp(args)));
+            return PhpToCpp(myModule.call(name.GetLexeme().c_str(), (Php::Value)phpenv->myEnvironment, arguments));
         else
-            return PhpToCpp(myModule.call(name.GetLexeme().c_str(), (Php::Value)GlobalEnv, CppToPhp(args)));
+            return PhpToCpp(myModule.call(name.GetLexeme().c_str(), (Php::Value)GlobalEnv, arguments));
     }
     catch (Php::Exception &exception)
     {

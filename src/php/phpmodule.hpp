@@ -17,6 +17,7 @@ class PhpModule : public Module
     std::vector<std::string> myEnvironmentNames;
     std::map<std::string, std::string> myEnvironments;
     std::vector<std::string> myGlobals;
+    std::map<std::string, std::vector<ArgType>> callsigns;
     
   public:
     PhpModule(std::string);

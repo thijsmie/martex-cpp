@@ -61,7 +61,7 @@ extern "C"
         texspace.add<newline>("newline");
         texspace.add<PhpAsBytes>("bytes");
 
-        // Add constants to namespace
+        // Add vartype constants to namespace
         texspace.add(Php::Constant("TypeNull", ValueType::t_null));
         texspace.add(Php::Constant("TypeString", ValueType::t_string));
         texspace.add(Php::Constant("TypeAmpersand", ValueType::t_ampersand));
@@ -69,6 +69,20 @@ extern "C"
         texspace.add(Php::Constant("TypeMulti", ValueType::t_multi));
         texspace.add(Php::Constant("TypeHtml", ValueType::t_html));
         texspace.add(Php::Constant("TypeAttr", ValueType::t_attr));
+
+        // Add argtype constants to namespace
+        texspace.add(Php::Constant("Full", ArgType::Full));
+        texspace.add(Php::Constant("Text", ArgType::Text));
+        texspace.add(Php::Constant("Bytes", ArgType::Bytes));
+        texspace.add(Php::Constant("PlainFull", ArgType::PlainFull));
+        texspace.add(Php::Constant("PlainText", ArgType::PlainText));
+        texspace.add(Php::Constant("PlainBytes", ArgType::PlainBytes));
+        texspace.add(Php::Constant("MoreFull", ArgType::MoreFull));
+        texspace.add(Php::Constant("MoreText", ArgType::MoreText));
+        texspace.add(Php::Constant("MoreBytes", ArgType::MoreBytes));
+        texspace.add(Php::Constant("MorePlainFull", ArgType::MorePlainFull));
+        texspace.add(Php::Constant("MorePlainText", ArgType::MorePlainText));
+        texspace.add(Php::Constant("MorePlainBytes", ArgType::MorePlainBytes));
 
         // Add namespace MarTeX to extension
         extension.add(std::move(texspace));

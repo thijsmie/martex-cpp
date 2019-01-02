@@ -4,6 +4,9 @@
 #include <memory>
 #include <iostream>
 #include <vector>
+#include <cstdint>
+
+#include "encoding/buffer.hpp"
 
 
 enum ValueType : int
@@ -36,6 +39,9 @@ class Value
     //attr
     Value(std::string, std::string);
 
+    //frombytes
+    Value(const unsigned char *b, uint32_t &pos);
+
     std::string GetContent() const;
     std::string GetTag() const;
     std::string GetRawContent() const;
@@ -45,6 +51,9 @@ class Value
     bool IsPlain() const;
 
     Value Flattened() const;
+
+    uint32_t ByteSize() const;
+    void WriteOut(unsigned char *b, uint32_t &pos) const;
   private:
     ValueType type;
     std::string tag;

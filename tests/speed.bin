@@ -1,30 +1,66 @@
-%   -!DOCTYPE html  Aâ%   $html  AÕ%   $head   ,!   !
-!   !
-%   $body  A¯!   !
-%   "h1   +!   &MarTeX!   !
-!   !	!   $<hr>!   !
-!   Q		MarTeX is a versitale TeX to HTML interpreter. !   !
-!   f		It comes with a few basic modules, but can easily be expanded upon. !   !
-!   ^		It was written by Thijs Miedema for use with marie-curie.nl.!   !
-%   "h3   ,!   'Modules!   !
-%   "h4   4!   /Module Document!   !
-!   †The document module exposes the basic commands that are designed to mimick the LaTeX main environment.!   !
-!   !
-%   "h5   9!   4Implemented commands!   !
-%   "ul  =®%   "li  !¯%   !i   +!   &global!   ": %   !b   T!   %&#92;!   %title!   &&#123;!   %Title!   &&#125;%   !p   <!   7Make a big fancy title.!   !
-!   $    %   "li  !¯%   !i   +!   &global!   ": %   !b   V!   %&#92;!   'section!   &&#123;!   %Title!   &&#125;%   !p   :!   5Make a section title.!   !
-!   $    %   "li  !µ%   !i   +!   &global!   ": %   !b   Y!   %&#92;!   *subsection!   &&#123;!   %Title!   &&#125;%   !p   =!   8Make a subsection title.!   !
-!   $    %   "li  !»%   !i   +!   &global!   ": %   !b   \!   %&#92;!   -subsubsection!   &&#123;!   %Title!   &&#125;%   !p   @!   ;Make a subsubsection title.!   !
-!   $    %   "li  !À%   !i   +!   &global!   ": %   !b   T!   %&#92;!   &textbf!   &&#123;!   $Text!   &&#125;%   !p   M!   /Render Text in %   !b   )!   $bold!   !.!   !
-!   $    %   "li  !Ã%   !i   +!   &global!   ": %   !b   T!   %&#92;!   &textit!   &&#123;!   $Text!   &&#125;%   !p   P!   /Render Text in %   !i   ,!   'italics!   !.!   !
-!   $    %   "li  !Æ%   !i   +!   &global!   ": %   !b   W!   %&#92;!   )underline!   &&#123;!   $Text!   &&#125;%   !p   P!   ,Render Text %   !u   /!   *underlined!   !.!   !
-!   $    %   "li  !ï%   !i   +!   &global!   ": %   !b   W!   %&#92;!   )smallcaps!   &&#123;!   $Text!   &&#125;%   !p   y!   ,Render Text %   $span   U&   %style   9font-variant: small-caps;!   )smallcaps!   !.!   !
-!   $    %   "li   %   !i   +!   &global!   ": %   !b   4!   %&#92;!   %hline%   !p   <!   7Make a horizontal line.!   !
-!   $    %   "li  !§%   !i   +!   &global!   ": %   !b   6!   %&#92;!   'newline%   !p   R!   MLine break, equivalent to a double backslash.!   !
-!   $    %   "li  "ƒ%   !i   +!   &global!   ": %   !b   W!   %&#92;!   )paragraph!   &&#123;!   $text!   &&#125;%   !p   ! !  !ßRender the text as a paragraph, normally not noticable, but might have implications if a stylesheet is loaded. Use for a single line of text without commands only, please use the environment %   !i   .!   )paragraph!   + otherwise.!   !
-!   $    %   "li  "e%   !i   +!   &global!   ": %   !b   R!   %&#92;!   #ref!   &&#123;!   %label!   &&#125;%   !p  !ô!  !ïReference a label (from an image, for example). Works with both forward and backwards declaration (The label can be both above and below the ref command). Outputs a question mark when the label is undefined.!   !
-!   $    %   "li   ! %   !i   +!   &global!   ": %   !b   x!   %&#92;!   &define!   &&#123;!   (Variable!   &&#125;!   &&#123;!   %Value!   &&#125;%   !p   m!   hSet the global Variable to Value. Often used to change module behaviour.!   !
-!   $    %   "li  !Ú%   !i   +!   &global!   ": %   !b   p!   %&#92;!   $href!   &&#123;!   #URL!   &&#125;!   &&#123;!   $Text!   &&#125;%   !p   K!   FMake a hyperlink to URL with text Text!   !
-!   $    %   "li  %É%   !i   +!   &global!   ": %   !b   š!   %&#92;!   (colo(u)r!   &&#123;!   $type!   &&#125;!   &&#123;!   *definition!   &&#125;!   &&#123;!   $text!   &&#125;%   !p   ! !   eChange the colour of a piece of text. There are a few possibilities: %   $span   L&   %style   4color:rgb(255,0,100)!   %&#92;!   ", %   $span   R&   %style   :color:rgba(255,100,255,07)!   %&#92;!   ", %   $span   N&   %style   6color:hsl(200,50%,50%)!   %&#92;!   ", %   $span   R&   %style   :color:hsla(200,50%,50%,07)!   %&#92;!   % and %   $span   E&   %style   -color:#ff00ff!   %&#92;!   }. Please note that hsl and hsla are not supported by all browsers (especially email clients).!   !
-!   $    %   "li   ! %   !i   +!   &global!   ": %   !b   {!   %&#92;!   (colo(u)r!   &&#123;!   *definition!   &&#125;!   &&#123;!   $text!   &&#125;%   !p   €!   {Same as above, but allow MarTeX to guess your colour type. Will always choose rgb over hsl.!   !
-!   !
+3+++B!DOCTYPE html+-xw3+++2html+-xj3+++2head+++A-+++-
+-+++-
+3+++2body+-x7-+++-
+3+++0h1+++9-+++4MarTeX-+++-
+-+++-	-+++2<hr>-+++-
+-+++l		MarTeX is a versitale TeX to HTML interpreter. -+++-
+-++-4		It comes with a few basic modules, but can easily be expanded upon. -+++-
+-+++y		It was written by Thijs Miedema for use with marie-curie.nl.-+++-
+3+++0h3+++A-+++5Modules-+++-
+3+++0h4+++I-+++DModule Document-+++-
+-++-aThe document module exposes the basic commands that are designed to mimick the LaTeX main environment.-+++-
+-+++-
+3+++0h5+++N-+++IImplemented commands-+++-
+3+++0ul+-1I3+++0li++0D3+++-i+++9-+++4global-+++0: 3+++-b+++o-+++3&#92;-+++3title-+++4&#123;-+++3Title-+++4&#125;3+++-p+++Q-+++LMake a big fancy title.-+++-
+-+++2    3+++0li++0D3+++-i+++9-+++4global-+++0: 3+++-b+++q-+++3&#92;-+++5section-+++4&#123;-+++3Title-+++4&#125;3+++-p+++O-+++JMake a section title.-+++-
+-+++2    3+++0li++0J3+++-i+++9-+++4global-+++0: 3+++-b+++t-+++3&#92;-+++8subsection-+++4&#123;-+++3Title-+++4&#125;3+++-p+++R-+++MMake a subsection title.-+++-
+-+++2    3+++0li++0P3+++-i+++9-+++4global-+++0: 3+++-b+++w-+++3&#92;-+++Bsubsubsection-+++4&#123;-+++3Title-+++4&#125;3+++-p+++U-+++PMake a subsubsection title.-+++-
+-+++2    3+++0li++0U3+++-i+++9-+++4global-+++0: 3+++-b+++o-+++3&#92;-+++4textbf-+++4&#123;-+++2Text-+++4&#125;3+++-p+++h-+++DRender Text in 3+++-b+++7-+++2bold-+++-.-+++-
+-+++2    3+++0li++0X3+++-i+++9-+++4global-+++0: 3+++-b+++o-+++3&#92;-+++4textit-+++4&#123;-+++2Text-+++4&#125;3+++-p+++k-+++DRender Text in 3+++-i+++A-+++5italics-+++-.-+++-
+-+++2    3+++0li++0a3+++-i+++9-+++4global-+++0: 3+++-b+++r-+++3&#92;-+++7underline-+++4&#123;-+++2Text-+++4&#125;3+++-p+++k-+++ARender Text 3+++-u+++D-+++8underlined-+++-.-+++-
+-+++2    3+++0li++1D3+++-i+++9-+++4global-+++0: 3+++-b+++r-+++3&#92;-+++7smallcaps-+++4&#123;-+++2Text-+++4&#125;3+++-p++-N-+++ARender Text 3+++2span+++p4+++3style+++Nfont-variant: small-caps;-+++7smallcaps-+++-.-+++-
+-+++2    3+++0li++-j3+++-i+++9-+++4global-+++0: 3+++-b+++I-+++3&#92;-+++3hline3+++-p+++Q-+++LMake a horizontal line.-+++-
+-+++2    3+++0li++053+++-i+++9-+++4global-+++0: 3+++-b+++K-+++3&#92;-+++5newline3+++-p+++m-+++hLine break, equivalent to a double backslash.-+++-
+-+++2    3+++0li++4Z3+++-i+++9-+++4global-+++0: 3+++-b+++r-+++3&#92;-+++7paragraph-+++4&#123;-+++2text-+++4&#125;3+++-p++2j-++-jRender the text as a paragraph, normally not noticable, but might have implications if a stylesheet is loaded. -+++-
+-++06                                                        Use for a single line of text without commands only, please use the environment 3+++-i+++C-+++7paragraph-+++9 otherwise.-+++-
+-+++2    3+++0li++333+++-i+++9-+++4global-+++0: 3+++-b+++m-+++3&#92;-+++1ref-+++4&#123;-+++3label-+++4&#125;3+++-p++1I-++1DReference a label (from an image, for example). Works with both forward and backwards declaration (The label can be both above and below the ref command). Outputs a question mark when the label is undefined.-+++-
+-+++2    3+++0li++1Y3+++-i+++9-+++4global-+++0: 3+++-b++-M-+++3&#92;-+++4define-+++4&#123;-+++6Variable-+++4&#125;-+++4&#123;-+++3Value-+++4&#125;3+++-p++-B-++-6Set the global Variable to Value. Often used to change module behaviour.-+++-
+-+++2    3+++0li++0u3+++-i+++9-+++4global-+++0: 3+++-b++-E-+++3&#92;-+++2href-+++4&#123;-+++1URL-+++4&#125;-+++4&#123;-+++2Text-+++4&#125;3+++-p+++f-+++aMake a hyperlink to URL with text Text-+++-
+-+++2    3+++0li++Gj3+++-i+++9-+++4global-+++0: 3+++-b++-u-+++3&#92;-+++6colo(u)r-+++4&#123;-+++2type-+++4&#125;-+++4&#123;-+++8definition-+++4&#125;-+++4&#123;-+++2text-+++4&#125;3+++-p++Dq-++-3Change the colour of a piece of text. There are a few possibilities: 3+++2span++0M4+++3style+++Icolor:rgb(255,0,100)-+++3&#92;-+++4colour-+++4&#123;-+++1rgb-+++4&#125;-+++4&#123;-+++7255,0,100-+++4&#125;-+++4&#123;-+++2text-+++4&#125;-+++0, 3+++2span++044+++3style+++Ocolor:rgba(255,100,255,07)-+++3&#92;-+++4colour-+++4&#123;-+++2rgba-+++4&#125;-+++4&#123;-+++D100,100,255,0.7-+++4&#125;-+++0, 3+++2span++0O4+++3style+++Kcolor:hsl(200,50%,50%)-+++3&#92;-+++4colour-+++4&#123;-+++1hsl-+++4&#125;-+++4&#123;-+++7200,50,50-+++4&#125;-+++4&#123;-+++2text-+++4&#125;-+++0, 3+++2span++0X4+++3style+++Ocolor:hsla(200,50%,50%,07)-+++3&#92;-+++4colour-+++4&#123;-+++2hsla-+++4&#125;-+++4&#123;-+++B200,50,50,0.7-+++4&#125;-+++4&#123;-+++2text-+++4&#125;-+++3 and 3+++2span++0D4+++3style+++Bcolor:#ff00ff-+++3&#92;-+++4colour-+++4&#123;-+++1hex-+++4&#125;-+++4&#123;-+++5#ff00ff-+++4&#125;-+++4&#123;-+++2text-+++4&#125;-++-R. Please note that hsl and hsla are not supported by all browsers (especially email clients).-+++-
+-+++2    3+++0li++1l3+++-i+++9-+++4global-+++0: 3+++-b++-P-+++3&#92;-+++6colo(u)r-+++4&#123;-+++8definition-+++4&#125;-+++4&#123;-+++2text-+++4&#125;3+++-p++-U-++-PSame as above, but allow MarTeX to guess your colour type. Will always choose rgb over hsl.-+++-
+-+++-
+-+++-
+3+++-p++33-+++-
+-++-q    The figure module exposes commands that are designed to mimick the LaTeX package graphicx, with a few exceptions. -+++-
+-++0n    Maybe the most notable exception is that most of these commands only work inside a figure environment, and will result in "command not found" errors if you use them elsewhere.-+++-
+-+++-
+-+++-
+3+++0h5+++N-+++IImplemented commands-+++-
+3+++0ul++JO3+++0li++0W3+++-i+++9-+++4figure-+++0: 3+++-b++-4-+++3&#92;-+++Dincludegraphics-+++4&#123;-+++Bpath/to/image-+++4&#125;3+++-p+++R-+++MUse to display an image.-+++-
+-+++2    3+++0li++0a3+++-i+++9-+++4figure-+++0: 3+++-b+++x-+++3&#92;-+++5caption-+++4&#123;-+++Acaption text-+++4&#125;3+++-p+++e-+++ZUse to display text under your image.-+++-
+-+++2    3+++0li++2p3+++-i+++9-+++4figure-+++0: 3+++-b+++t-+++3&#92;-+++3label-+++4&#123;-+++8label text-+++4&#125;3+++-p++0x-+++UUse to give your image a label, -+++-
+-+++v                                            so you can use 3+++-i+++m-+++3&#92;-+++1ref-+++4&#123;-+++3label-+++4&#125;-+++F to reference it.-+++-
+-+++2    3+++0li++1q3+++-i+++9-+++4figure-+++0: 3+++-b+++o-+++3&#92;-+++3width-+++4&#123;-+++3Width-+++4&#125;3+++-p++01-+++S Set the width of your image. -+++-
+-++-0                    Width can have the following formats: 10px, 10-+++-%-+++6, 10cm. -+++-
+-+++2    3+++0li++1u3+++-i+++9-+++4figure-+++0: 3+++-b+++q-+++3&#92;-+++4height-+++4&#123;-+++4Height-+++4&#125;3+++-p++03-+++T Set the height of your image. -+++-
+-++-1                    Height can have the following formats: 10px, 10-+++-%-+++6, 10cm. -+++-
+-+++2    3+++0li++0f3+++-i+++9-+++4figure-+++0: 3+++-b+++t-+++3&#92;-+++5alttext-+++4&#123;-+++6alt text-+++4&#125;3+++-p+++w-+++rSet the alt text, also called hovertext, of your image.-+++-
+-+++-
+-+++-
+3+++0h5+++B-+++6Settings-+++-
+3+++-p++6O-+++-
+-++2q    Reference labels are used to point to your image from the text. They put the following text in your caption: Figure N, where N is replaced with the number of your image. However, you might want to use a different text. For this you can access the global variable 'figureheader'. For example, you could do: -+++3&#92;-+++4define-+++4&#123;-+++Afigureheader-+++4&#125;-+++4&#123;-+++3image-+++4&#125;-+++t. Now, the caption wil read: Image N. You should put the -+++3&#92;-+++4define-+++T above all figure environments.-+++-
+-+++-
+-+++-
+3+++0h5+++A-+++5Example-+++-
+3+++1pre++9v3+++2code++9i4+++3class+++Clanguage-latex-+++-
+-+++2    -+++3&#92;-+++4define-+++4&#123;-+++Afigureheader-+++4&#125;-+++4&#123;-+++3image-+++4&#125;-+++-
+-+++2    -+++3&#92;-+++3begin-+++4&#123;-+++4figure-+++4&#125;-+++-
+-+++6        -+++3&#92;-+++Dincludegraphics-+++4&#123;-+++6test.png-+++4&#125;-+++-
+-+++6        -+++3&#92;-+++5caption-+++4&#123;-+++IThis is a test image-+++4&#125;-+++-
+-+++6        -+++3&#92;-+++3label-+++4&#123;-+++7testimage-+++4&#125;-+++-
+-+++6        -+++3&#92;-+++3width-+++4&#123;-+++3120px-+++4&#125;-+++-
+-+++6        -+++3&#92;-+++4height-+++4&#123;-+++030-+++-%-+++4&#125;-+++-
+-+++6        -+++3&#92;-+++5alttext-+++4&#123;-+++6A mouse!-+++4&#125;-+++-
+-+++2    -+++3&#92;-+++1end-+++4&#123;-+++4figure-+++4&#125;-+++- -+++-
+-+++-

@@ -8,47 +8,68 @@ class DocumentationModule extends Module
     public function environments() { 
         return array(
             "page" => "\\MarTeX\\PageEnvironment", 
-            "document" => "\\MarTeX\\BodyEnvironment"
+            "document" => "\\MarTeX\\BodyEnvironment",
+            "code" => "\\MarTeX\\CodeEnvironment"
         ); 
     }
 
+    public $argsfor_descriptor = array(Bytes, Bytes, Bytes);
     public function descriptor($env, $args) 
     {
-        if (count($args) !== 3)
-            throw new \Exception("Descriptor takes 3 arguments.");
-            
         return 
-            html("i", bytes($args[0])) .
+            html("i", $args[0]) .
             mstr(": ") .
-            html("b", bytes($args[1])) .
+            html("b", $args[1]) .
             newline() .
-            html("p", bytes($args[2]))
+            html("p", $args[2])
         ;
     }
 
+    public $argsfor_envdescriptor = array(Bytes, Bytes);
     public function envdescriptor($env, $args) 
     {
-        if (count($args) !== 2)
-            throw new \Exception("Envdescriptor takes 2 arguments.");
-            
         return batch(
-            html("i", bytes($args[0])),
+            html("i", $args[0]),
             html("br"), 
-            html("p", bytes($args[1]))
+            html("p", $args[1])
         );
     }
 
+    public $argsfor_command = array(Bytes, MoreBytes);
     public function command($env, $args)
     {
-        $cmd = mstr("&#92;") . bytes($args[0]);
+        $cmd = mstr("&#92;") . $args[0];
 
         if (count($args) == 1)
             return $cmd;
 
         for($i=1; $i<count($args); $i++)
-            $cmd .= mstr("&#123;") . bytes($args[$i]) . mstr("&#125;");
+            $cmd .= mstr("&#123;") . $args[$i] . mstr("&#125;");
 
         return $cmd;
+    }
+}
+
+class CodeEnvironment extends Environment
+{
+    private $language = "latex";
+
+    public $argsfor_begin = PlainText;
+    public function begin($bracket_argument)
+    {
+        if ($bracket_argument !== "")
+            $this->language = $bracket_argument;
+    }
+
+    public $argsfor_end = array(Bytes);
+    public function end($content)
+    {
+        return html("pre",
+            html("code", 
+                attr("class", "language-" . $this->language) .
+                $content
+            )
+        );
     }
 }
 
@@ -70,14 +91,13 @@ class PageEnvironment extends Environment
             }
         }
 
-        $a = html("!DOCTYPE html",
+        $a = mstr("<!DOCTYPE html>") .
             html("html",
                 html("head", $head) .
                 $body
-            )
-        );
+            );
 
-        file_put_contents(__DIR__ . "/../tests/speed.bin", $a);
+        //file_put_contents(__DIR__ . "/../tests/speed.bin", $a);
 
         return $a;
     }
@@ -85,8 +105,9 @@ class PageEnvironment extends Environment
 
 class BodyEnvironment extends Environment
 {
+    public $argsfor_end = array(Bytes);
     public function end($content) 
     {
-        return html("body", bytes($content));
+        return html("body", $content);
     }
 }

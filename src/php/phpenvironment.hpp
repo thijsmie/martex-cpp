@@ -9,10 +9,32 @@
 #include <string>
 #include <memory>
 
+enum ArgType : int
+{
+  NoArg,
+  Full,
+  Text,
+  Bytes,
+  PlainFull,
+  PlainText,
+  PlainBytes,
+  MoreFull,
+  MoreText,
+  MoreBytes,
+  MorePlainFull,
+  MorePlainText,
+  MorePlainBytes
+};
+
+std::vector<ArgType> ParseSignature(Php::Value signature);
+Php::Value ValidateSignature(std::vector<ArgType> types, std::vector<Value> arguments);
+
 class PhpEnvironment : public Environment
 {
   private:
     std::vector<std::string> commands;
+    std::map<std::string, std::vector<ArgType>> callsigns;
+    ArgType BeginBracketArg;
   public:
     Php::Object myEnvironment;
 

@@ -1,6 +1,7 @@
 <?php
 namespace MarTeX;
 require_once __DIR__ . "/tools.php";
+require_once __DIR__ . "/../modules/document.php";
 
 class TestSpeedModule extends Module
 {
@@ -21,5 +22,6 @@ class TestSpeedEnvironment extends Environment
 start("Speed");
 runstest("Spd.1", array("\\MarTeX\\TestSpeedModule"), "\\begin{a}\\end{a}");
 runstest("Spd.2", array("\\MarTeX\\TestSpeedModule"), "\\a");
+runstest("Spd.3", array("\\MarTeX\\DocumentModule"), \file_get_contents(__DIR__ . "/testpage.tex"));
 
 finish();

@@ -8,7 +8,8 @@
 Value PhpToCpp(const Php::Value&);
 Php::Value CppToPhp(const Value&);
 Php::Value CppToPhp(const std::vector<Value>&);
-std::vector<Value> PhpToCppMulti(const unsigned char *b, int &pos, const uint32_t end);
+Php::Value CppToPhpBytes(const Value&);
+std::vector<Value> PhpToCppMulti(const unsigned char *b, uint32_t &pos, const uint32_t end);
 
 
 Php::Value PhpAsBytes(Php::Parameters&);

@@ -12,7 +12,17 @@ function runstest($name, $mods, $tx)
         $a->RegisterModule($mod);
     $a->parse($tx);
     $finish = microtime(true);
-    echo "took " . round(($finish - $start) * 1000.0) . "ms\n";
+
+    if (! $a->HasError()) {
+        echo "success, took " . round(($finish - $start) * 1000.0) . "ms\n";
+    }
+    else {
+        global $success;
+        $success = false;
+        echo "fail, ";
+        echo "errorinfo:\n";
+        echo $a->GetError();
+    }
 }
 
 function runtest($name, $tx, $exp, $error_expected=false)

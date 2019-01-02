@@ -87,6 +87,7 @@ class FigureEnvironment extends Environment
         $this->_image = $this->module->getOrigin() . $args[0][0][1];
     }
 
+    public $argsfor_alttext = array();
     public function alttext($env, $args)
     {
         if (count($args) != 1 || !is_string($args[0][0][1]))
