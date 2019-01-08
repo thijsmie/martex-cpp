@@ -1,11 +1,11 @@
 #include "environment.hpp"
 
-void Environment::Set(std::string name, Value value)
+void Environment::Set(std::string name, Value &value)
 {
     values[name] = value;
 }
 
-void Environment::SetGlobal(std::string name, Value value)
+void Environment::SetGlobal(std::string name, Value &value)
 {
     if (is_root)
         values[name] = value;
@@ -46,7 +46,7 @@ Value Environment::Get(std::string name)
 }
 
 
-Value Environment::RunCommand(std::shared_ptr<Environment> env, Token name, std::vector<Value> arguments)
+Value Environment::RunCommand(std::shared_ptr<Environment> env, Token name, std::vector<Value> &arguments)
 {
     if (HasCommand(name.GetLexeme()))
         return RunCommandHere(env, name, arguments);

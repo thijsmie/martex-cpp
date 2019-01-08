@@ -10,12 +10,17 @@ using std::shared_ptr;
 using std::string;
 using std::vector;
 
-MarTeX::MarTeX() : has_error(false), last_result(""), error_log("") {}
+MarTeX::MarTeX() : has_error(false), last_result(""), error_log(""), allow_page(false) {}
 
 void MarTeX::RegisterModule(Php::Parameters &params)
 {
     string module_name = params[0];
     modules.push_back(module_name);
+}
+
+void MarTeX::AllowPage()
+{
+    allow_page = true;
 }
 
 void MarTeX::Parse(Php::Parameters &params)
@@ -36,7 +41,7 @@ void MarTeX::Parse(Php::Parameters &params)
     phpmod_inst.reserve(modules.size());
 
     // Add the stdlib
-    module_inst.push_back(std::make_shared<StdLib>());
+    module_inst.push_back(std::make_shared<StdLib>(allow_page));
 
     // Add php modules
     for (auto m : modules)

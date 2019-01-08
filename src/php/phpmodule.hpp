@@ -27,5 +27,5 @@ class PhpModule : public Module
     std::vector<std::string> GetGlobals();
     std::vector<std::string> GetEnvs();
     std::shared_ptr<Environment> MakeEnv(std::string, std::shared_ptr<Environment>);
-    Value RunGlobal(std::shared_ptr<Environment>, Token, std::vector<Value>);
+    Value RunGlobal(std::shared_ptr<Environment>, Token, std::vector<Value>&);
 };

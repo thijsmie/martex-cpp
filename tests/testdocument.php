@@ -13,5 +13,6 @@ runmtest("D.2", $mods, "\\colour{34,55,88,5}{hoi}", "<span style=\"color:rgba(34
 runmtest("D.3", $mods, "\\color{#00ff00}{hoi}", "<span style=\"color:#00ff00\">hoi</span>");
 runmtest("D.4", $mods, "\\colour{hsl}{0,20,20}{hoi}", "<span style=\"color:hsl(0,20%,20%)\">hoi</span>");
 runmtest("D.5", $mods, "\\colour{hsl}{0,20,20}{hoi \\textbf{hoi}}", "<span style=\"color:hsl(0,20%,20%)\">hoi <b>hoi</b></span>");
+runmtest("D.6", $mods, "\\href{a}{b}", "<a href=\"a\">b</a>");
 
 finish();

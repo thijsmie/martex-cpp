@@ -6,7 +6,7 @@
 #include <vector>
 #include <cstdint>
 
-#include "encoding/buffer.hpp"
+#include "util/buffer.hpp"
 
 
 enum ValueType : int

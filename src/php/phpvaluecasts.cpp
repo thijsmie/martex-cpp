@@ -1,7 +1,7 @@
 #include "phpvaluecasts.hpp"
 #include "language/runtime_error.hpp"
 #include "language/token.hpp"
-#include "encoding/buffer.hpp"
+#include "util/buffer.hpp"
 #include <chrono>
 #include <cstdint>
 

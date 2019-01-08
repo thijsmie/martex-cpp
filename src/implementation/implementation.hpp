@@ -17,9 +17,9 @@ class GlobalEnv : public Environment
   public:
     GlobalEnv(std::vector<std::shared_ptr<Module>>);
     bool HasCommand(std::string);
-    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>);
-    void StartEnvironment(Token, Value);
-    Value EndEnvironment(Token, Value);
+    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>&);
+    void StartEnvironment(Token, Value&);
+    Value EndEnvironment(Token, Value&);
 };
 
 class Implementation

@@ -29,6 +29,7 @@ extern "C"
         Php::Class<MarTeX> martex("MarTeX");
         martex.method<&MarTeX::Parse>("parse", {Php::ByVal("text", Php::Type::String)});
         martex.method<&MarTeX::RegisterModule>("registerModule", {Php::ByVal("module", Php::Type::String)});
+        martex.method<&MarTeX::AllowPage>("allowPage");
         martex.method<&MarTeX::HasError>("hasError");
         martex.method<&MarTeX::GetErrors>("getError");
         martex.method<&MarTeX::GetResult>("getResult");

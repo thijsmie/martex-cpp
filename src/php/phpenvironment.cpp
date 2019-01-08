@@ -55,7 +55,7 @@ bool PhpEnvironment::HasCommand(std::string c)
     return (std::find(commands.begin(), commands.end(), c) != commands.end());
 }
 
-Value PhpEnvironment::RunCommandHere(std::shared_ptr<Environment> env, Token name, std::vector<Value> args)
+Value PhpEnvironment::RunCommandHere(std::shared_ptr<Environment> env, Token name, std::vector<Value> &args)
 {
     std::shared_ptr<PhpEnvironment> phpenv = std::dynamic_pointer_cast<PhpEnvironment>(env);
     try
@@ -69,7 +69,7 @@ Value PhpEnvironment::RunCommandHere(std::shared_ptr<Environment> env, Token nam
     }
 }
 
-void PhpEnvironment::StartEnvironment(Token begin, Value arg)
+void PhpEnvironment::StartEnvironment(Token begin, Value &arg)
 {
     try
     {
@@ -108,7 +108,7 @@ void PhpEnvironment::StartEnvironment(Token begin, Value arg)
     }
 }
 
-Value PhpEnvironment::EndEnvironment(Token end, Value content)
+Value PhpEnvironment::EndEnvironment(Token end, Value &content)
 {
     try
     {

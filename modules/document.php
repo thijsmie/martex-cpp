@@ -7,18 +7,12 @@ class DocumentModule extends Module {
 
     public function globals() {
         return array(
-            "href", "col", "color", "colour"
+            "col", "color", "colour"
         );
     }
 
     public function environments() {
         return array("paragraph" => "\\MarTeX\\ParagraphEnvironment");
-    }
-
-    public $argsfor_href = array(PlainBytes, PlainBytes);
-    public function href($env, $args)
-    {
-        return html("a", attr("href", $args[0]), mstr($args[1]));
     }
 
     public function col($env, $args)

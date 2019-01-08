@@ -40,7 +40,7 @@ class PhpEnvironment : public Environment
 
     PhpEnvironment(std::string, Php::Object, Php::Object, std::shared_ptr<Environment>);
     bool HasCommand(std::string);
-    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>);
-    void StartEnvironment(Token, Value);
-    Value EndEnvironment(Token, Value);
+    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>&);
+    void StartEnvironment(Token, Value&);
+    Value EndEnvironment(Token, Value&);
 };

@@ -9,6 +9,7 @@ $input = file_get_contents(__DIR__ . "/documentation.tex");
 
 $start = microtime(true);
 $Tex = new \MarTeX\MarTeX();
+$Tex->allowPage();
 $Tex->registerModule("\\MarTeX\\ItemizeModule");
 $Tex->registerModule("\\MarTeX\\FigureModule");
 $Tex->registerModule("\\MarTeX\\DocumentModule");

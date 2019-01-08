@@ -5,8 +5,8 @@ namespace MarTeX;
 class ItemizeModule extends Module {
     public function environments() {
         return array(
-            "itemize" => "\\MarTeX\\ItemizeEnvironment", 
-            "enumerate" => "\\MarTeX\\EnumerateEnvironment"
+            "itemize2" => "\\MarTeX\\ItemizeEnvironment", 
+            "enumerate2" => "\\MarTeX\\EnumerateEnvironment"
         );
     }
 }
@@ -45,10 +45,10 @@ class ItemizeEnvironment extends Environment
                 return attr("list-style-type", "square");
             case "bullet":
                 $this->html_tag = "ul";
-                return attr("list-style-type", "square");
+                return attr("list-style-type", "bullet");
             case "circle":
                 $this->html_tag = "ul";
-                return attr("list-style-type", "square");
+                return attr("list-style-type", "none");
             case "none":
                 $this->html_tag = "ul";
                 return attr("list-style-type", "none");
