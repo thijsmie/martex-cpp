@@ -27,7 +27,8 @@ enum ArgType : int
 };
 
 std::vector<ArgType> ParseSignature(Php::Value signature);
-Php::Value ValidateSignature(std::vector<ArgType> types, std::vector<Value> arguments);
+Php::Value ValidateSignature(std::vector<ArgType> types, const std::vector<Value> &arguments);
+Php::Value ValidateSignature(ArgType type, const Value& arguments);
 
 class PhpEnvironment : public Environment
 {
@@ -40,7 +41,7 @@ class PhpEnvironment : public Environment
 
     PhpEnvironment(std::string, Php::Object, Php::Object, std::shared_ptr<Environment>);
     bool HasCommand(std::string);
-    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>&);
-    void StartEnvironment(Token, Value&);
-    Value EndEnvironment(Token, Value&);
+    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>);
+    void StartEnvironment(Token, Value);
+    Value EndEnvironment(Token, Value);
 };

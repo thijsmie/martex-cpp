@@ -49,7 +49,7 @@ std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<E
         return std::make_shared<EnumerateEnvironment>(parent);
     if (name == "paragraph")
         return std::make_shared<ParagraphEnvironment>(parent);
-    if (!hasdocument && name == "document") 
+    if (!hasdocument && name == "document")
     {
         hasdocument = true;
         return std::make_shared<DocumentEnvironment>(parent);
@@ -62,7 +62,7 @@ std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<E
     throw RuntimeError(Token(BEGIN_ENV, "", -1), "Env not allowed");
 }
 
-Value StdLib::RunGlobal(std::shared_ptr<Environment> runenv, Token cmd, std::vector<Value> &args)
+Value StdLib::RunGlobal(std::shared_ptr<Environment> runenv, Token cmd, std::vector<Value> args)
 {
     static const std::vector<std::string> easy_replace(
         {"func", "ss", "copy", "euro",
@@ -116,42 +116,43 @@ Value StdLib::RunGlobal(std::shared_ptr<Environment> runenv, Token cmd, std::vec
             subsection = 0;
             subsubsection = 0;
             if (labeling)
-                args.insert(args.begin(), Value(t_string, std::to_string(section) + "&emsp;"));
+                args.emplace(args.begin(), t_string, std::to_string(section) + "&emsp;");
 
-            return Value("h3", args);
+            return Value("h3", std::move(args));
         }
         case 1: // subsection
         {
             subsection++;
             subsubsection = 0;
             if (labeling)
-                args.insert(args.begin(), Value(t_string,
-                                                std::to_string(section) + "." + std::to_string(subsection) + "&emsp;"));
+                args.emplace(args.begin(), t_string,
+                             std::to_string(section) + "." + std::to_string(subsection) + "&emsp;");
 
-            return Value("h4", args);
+            return Value("h4", std::move(args));
         }
         case 2: // subsubsection
         {
             subsubsection++;
             if (labeling)
-                args.insert(args.begin(), Value(t_string,
-                                                std::to_string(section) + "." + std::to_string(subsection) +
-                                                    std::to_string(subsubsection) + "&emsp;"));
+                args.emplace(args.begin(), t_string,
+                             std::to_string(section) + "." + std::to_string(subsection) +
+                                 std::to_string(subsubsection) + "&emsp;");
 
-            return Value("h5", args);
+            return Value("h5", std::move(args));
         }
         case 3: // textbf
-            return Value("b", args);
+            return Value("b", std::move(args));
         case 4: // textit
-            return Value("i", args);
+            return Value("i", std::move(args));
         case 5: // underline
-            return Value("u", args);
+            return Value("u", std::move(args));
         case 6: // smallcaps
-            return Value("span", {Value("style", "font-variant: small-caps;"), args[0]});
+            args.emplace(args.begin(), "style", "font-variant: small-caps;");
+            return Value("span", std::move(args[0]));
         case 7: // newline
-            return Value("br", {});
+            return Value("br", std::vector<Value>());
         case 8: // title
-            return Value("h1", args);
+            return Value("h1", std::move(args));
         case 9: // chapter
         {
             chapter++;
@@ -159,10 +160,9 @@ Value StdLib::RunGlobal(std::shared_ptr<Environment> runenv, Token cmd, std::vec
             subsection = 0;
             subsubsection = 0;
             if (labeling)
-                args.insert(args.begin(), Value(t_string,
-                                                std::to_string(chapter) + "&emsp;"));
+                args.emplace(args.begin(), t_string, std::to_string(chapter) + "&emsp;");
 
-            return Value("h2", args);
+            return Value("h2", std::move(args));
         }
         case 10: // labeling
         {
@@ -175,7 +175,7 @@ Value StdLib::RunGlobal(std::shared_ptr<Environment> runenv, Token cmd, std::vec
         }
         case 11: // ref
         {
-            return runenv->Get(Token(WORD, args[0].GetContent(), cmd.GetLine()));
+            return Value(t_string, runenv->Get(Token(WORD, std::move(args)[0].GetContent(), cmd.GetLine())).GetContent());
         }
         case 12: // label
         {
@@ -192,13 +192,13 @@ Value StdLib::RunGlobal(std::shared_ptr<Environment> runenv, Token cmd, std::vec
             while (!runenv->IsRoot())
                 runenv = runenv->GetEnclosing();
 
-            Value temp(t_string, l);
-            runenv->Set(args[0].GetContent(), temp);
+            runenv->Set(args[0].GetContent(), Value(t_string, l));
             return Value();
         }
         case 13: // command
         {
-            return Value({Value(t_string, "&#92;"), args[0]});
+            args.emplace(args.begin(), t_string, "&#92;");
+            return Value(std::move(args));
         }
         }
     }
@@ -206,16 +206,15 @@ Value StdLib::RunGlobal(std::shared_ptr<Environment> runenv, Token cmd, std::vec
     {
         if (command == "command")
         {
-            args.reserve(args.size() + (args.size()-1)*2 + 1);
+            args.reserve(args.size() + (args.size() - 1) * 2 + 1);
 
             for (int i = args.size() - 1; i > 0; i--)
             {
-                args.insert(args.begin() + i + 1, {Value(t_string, "&#125;")});
-                args.insert(args.begin() + i, {Value(t_string, "&#123;")});
+                args.emplace(args.begin() + i + 1, t_string, "&#125;");
+                args.emplace(args.begin() + i, t_string, "&#123;");
             }
 
-            args.insert(args.begin(), {Value(t_string, "&#92;")});
-
+            args.emplace(args.begin(), t_string, "&#92;");
             return Value(std::move(args));
         }
         else if (command == "href")
@@ -223,7 +222,9 @@ Value StdLib::RunGlobal(std::shared_ptr<Environment> runenv, Token cmd, std::vec
             if (args.size() != 2)
                 throw RuntimeError(cmd, "href takes two arguments");
 
-            return Value("a", {Value("href", args[0].GetContent()), args[1]});
+            args[0] = Value("href", args[0].GetContent());
+
+            return Value("a", std::move(args));
         }
     }
     throw RuntimeError(cmd, "This command does not exist?");

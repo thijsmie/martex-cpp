@@ -20,7 +20,7 @@ class ItemizeEnvironment : public Environment
         return (name == "item" or name == "setmarker");
     }
 
-    Value RunCommandHere(std::shared_ptr<Environment> env, Token name, std::vector<Value> &arguments)
+    Value RunCommandHere(std::shared_ptr<Environment> env, Token name, std::vector<Value> arguments)
     {
         if (env.get() != (Environment *)this)
             throw RuntimeError(name, "cannot call in nested environment");
@@ -30,7 +30,7 @@ class ItemizeEnvironment : public Environment
             if (arguments.size() > 1)
                 throw RuntimeError(name, "takes zero/one argument");
             if (arguments.size() == 1)
-                return Value("li", {arguments[0]});
+                return Value("li", std::move(arguments));
             return Value(t_ampersand, "");
         }
         else
@@ -106,19 +106,17 @@ class ItemizeEnvironment : public Environment
         }
     }
 
-    void StartEnvironment(Token, Value&){};
-    Value EndEnvironment(Token end, Value &content)
+    void StartEnvironment(Token, Value){};
+    Value EndEnvironment(Token end, Value content)
     {
-        std::vector<Value> cnt = content.Flattened().GetValues();
-
         std::vector<Value> items;
         Value* attr = nullptr;
-        items.reserve(cnt.size());
+        items.reserve(content.multicontent.size());
 
         std::vector<Value> current_item;
         bool in_item = false;
 
-        for (Value &v : cnt)
+        for (Value &v : content.multicontent)
         {
             switch (v.GetType())
             {
@@ -130,7 +128,7 @@ class ItemizeEnvironment : public Environment
                 if (!in_item && !util::wsonly(v.GetContent()))
                     throw RuntimeError(end, "Item environment contains loose data");
                 if (in_item)
-                    current_item.push_back(v);
+                    current_item.push_back(std::move(v));
                 break;
             case t_attr:
                 attr = &v;
@@ -140,21 +138,21 @@ class ItemizeEnvironment : public Environment
                 {
                     if (in_item)
                     {
-                        items.push_back(Value("li", current_item));
+                        items.emplace_back("li", std::move(current_item));
                         current_item.clear();
                         in_item = false;
                     }
-                    items.push_back(v);
+                    items.push_back(std::move(v));
                 }
                 else if (in_item)
-                    current_item.push_back(v);
+                    current_item.push_back(std::move(v));
                 else
                     throw RuntimeError(end, "Item environment contains loose data");
                 break;
             case t_ampersand:
                 if (in_item)
                 {
-                    items.push_back(Value("li", current_item));
+                    items.emplace_back("li", std::move(current_item));
                     current_item.clear();
                 }
                 in_item = true;
@@ -166,13 +164,16 @@ class ItemizeEnvironment : public Environment
         }
 
         if (in_item && current_item.size() > 0)
-            items.push_back(Value("li", current_item));
+            items.emplace_back("li", std::move(current_item));
 
-        //Compress to string
         if (attr == nullptr)
-            return Value(mytag, {Value(t_string, Value(std::move(items)).GetContent())});
-        else
-            return Value(mytag, {Value(t_string, Value(std::move(items)).GetContent()), *attr});
+            return Value(mytag, Value::asString(items));
+        else {
+            std::vector<Value> ret; ret.reserve(2);
+            ret.insert(ret.begin(), std::move(*attr));
+            ret.insert(ret.begin()+1, Value::asString(items));
+            return Value(mytag, std::move(ret));
+        }
     }
 };
 

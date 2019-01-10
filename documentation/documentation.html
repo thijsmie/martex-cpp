@@ -10,23 +10,23 @@
 The document module exposes the basic commands that are designed to mimick the LaTeX main environment.
 
 <h5>Implemented commands</h5>
-<ul><li><i>global</i>: <b>&#92;title&#123;Title&#125;</b><p>Make a big fancy title.</p>
-    </li><li><i>global</i>: <b>&#92;section&#123;Title&#125;</b><p>Make a section title.</p>
-    </li><li><i>global</i>: <b>&#92;subsection&#123;Title&#125;</b><p>Make a subsection title.</p>
-    </li><li><i>global</i>: <b>&#92;subsubsection&#123;Title&#125;</b><p>Make a subsubsection title.</p>
-    </li><li><i>global</i>: <b>&#92;textbf&#123;Text&#125;</b><p>Render Text in <b>bold</b>.</p>
-    </li><li><i>global</i>: <b>&#92;textit&#123;Text&#125;</b><p>Render Text in <i>italics</i>.</p>
-    </li><li><i>global</i>: <b>&#92;underline&#123;Text&#125;</b><p>Render Text <u>underlined</u>.</p>
-    </li><li><i>global</i>: <b>&#92;smallcaps&#123;Text&#125;</b><p>Render Text <span style="font-variant: small-caps;">smallcaps</span>.</p>
-    </li><li><i>global</i>: <b>&#92;hline</b><p>Make a horizontal line.</p>
-    </li><li><i>global</i>: <b>&#92;newline</b><p>Line break, equivalent to a double backslash.</p>
-    </li><li><i>global</i>: <b>&#92;paragraph&#123;text&#125;</b><p>Render the text as a paragraph, normally not noticable, but might have implications if a stylesheet is loaded. 
+<ul><li><i>global</i>: <b>&#92;title&#123;Title&#125;</b><br/><p>Make a big fancy title.</p>
+    </li><li><i>global</i>: <b>&#92;section&#123;Title&#125;</b><br/><p>Make a section title.</p>
+    </li><li><i>global</i>: <b>&#92;subsection&#123;Title&#125;</b><br/><p>Make a subsection title.</p>
+    </li><li><i>global</i>: <b>&#92;subsubsection&#123;Title&#125;</b><br/><p>Make a subsubsection title.</p>
+    </li><li><i>global</i>: <b>&#92;textbf&#123;Text&#125;</b><br/><p>Render Text in <b>bold</b>.</p>
+    </li><li><i>global</i>: <b>&#92;textit&#123;Text&#125;</b><br/><p>Render Text in <i>italics</i>.</p>
+    </li><li><i>global</i>: <b>&#92;underline&#123;Text&#125;</b><br/><p>Render Text <u>underlined</u>.</p>
+    </li><li><i>global</i>: <b>&#92;smallcaps&#123;Text&#125;</b><br/><p>Render Text <span style="font-variant: small-caps;"/>.</p>
+    </li><li><i>global</i>: <b>&#92;hline</b><br/><p>Make a horizontal line.</p>
+    </li><li><i>global</i>: <b>&#92;newline</b><br/><p>Line break, equivalent to a double backslash.</p>
+    </li><li><i>global</i>: <b>&#92;paragraph&#123;text&#125;</b><br/><p>Render the text as a paragraph, normally not noticable, but might have implications if a stylesheet is loaded. 
                                                         Use for a single line of text without commands only, please use the environment <i>paragraph</i> otherwise.</p>
-    </li><li><i>global</i>: <b>&#92;ref&#123;label&#125;</b><p>Reference a label (from an image, for example). Works with both forward and backwards declaration (The label can be both above and below the ref command). Outputs a question mark when the label is undefined.</p>
-    </li><li><i>global</i>: <b>&#92;define&#123;Variable&#125;&#123;Value&#125;</b><p>Set the global Variable to Value. Often used to change module behaviour.</p>
-    </li><li><i>global</i>: <b>&#92;href&#123;URL&#125;&#123;Text&#125;</b><p>Make a hyperlink to URL with text Text</p>
-    </li><li><i>global</i>: <b>&#92;colo(u)r&#123;type&#125;&#123;definition&#125;&#123;text&#125;</b><p>Change the colour of a piece of text. There are a few possibilities: <span style="color:rgb(255,0,100)">&#92;colour&#123;rgb&#125;&#123;255,0,100&#125;&#123;text&#125;</span>, <span style="color:rgba(255,100,255,07)">&#92;colour&#123;rgba&#125;&#123;100,100,255,0.7&#125;</span>, <span style="color:hsl(200,50%,50%)">&#92;colour&#123;hsl&#125;&#123;200,50,50&#125;&#123;text&#125;</span>, <span style="color:hsla(200,50%,50%,07)">&#92;colour&#123;hsla&#125;&#123;200,50,50,0.7&#125;&#123;text&#125;</span> and <span style="color:#ff00ff">&#92;colour&#123;hex&#125;&#123;#ff00ff&#125;&#123;text&#125;</span>. Please note that hsl and hsla are not supported by all browsers (especially email clients).</p>
-    </li><li><i>global</i>: <b>&#92;colo(u)r&#123;definition&#125;&#123;text&#125;</b><p>Same as above, but allow MarTeX to guess your colour type. Will always choose rgb over hsl.</p>
+    </li><li><i>global</i>: <b>&#92;ref&#123;label&#125;</b><br/><p>Reference a label (from an image, for example). Works with both forward and backwards declaration (The label can be both above and below the ref command). Outputs a question mark when the label is undefined.</p>
+    </li><li><i>global</i>: <b>&#92;define&#123;Variable&#125;&#123;Value&#125;</b><br/><p>Set the global Variable to Value. Often used to change module behaviour.</p>
+    </li><li><i>global</i>: <b>&#92;href&#123;URL&#125;&#123;Text&#125;</b><br/><p>Make a hyperlink to URL with text Text</p>
+    </li><li><i>global</i>: <b>&#92;colo(u)r&#123;type&#125;&#123;definition&#125;&#123;text&#125;</b><br/><p>Change the colour of a piece of text. There are a few possibilities: <span style="color:rgb(255,0,100)">&#92;colour&#123;rgb&#125;&#123;255,0,100&#125;&#123;text&#125;</span>, <span style="color:rgba(255,100,255,07)">&#92;colour&#123;rgba&#125;&#123;100,100,255,0.7&#125;</span>, <span style="color:hsl(200,50%,50%)">&#92;colour&#123;hsl&#125;&#123;200,50,50&#125;&#123;text&#125;</span>, <span style="color:hsla(200,50%,50%,07)">&#92;colour&#123;hsla&#125;&#123;200,50,50,0.7&#125;&#123;text&#125;</span> and <span style="color:#ff00ff">&#92;colour&#123;hex&#125;&#123;#ff00ff&#125;&#123;text&#125;</span>. Please note that hsl and hsla are not supported by all browsers (especially email clients).</p>
+    </li><li><i>global</i>: <b>&#92;colo(u)r&#123;definition&#125;&#123;text&#125;</b><br/><p>Same as above, but allow MarTeX to guess your colour type. Will always choose rgb over hsl.</p>
 </li></ul>
 
 <p>
@@ -35,15 +35,15 @@ The document module exposes the basic commands that are designed to mimick the L
 </p>
 
 <h5>Implemented commands</h5>
-<ul><li><i>figure</i>: <b>&#92;includegraphics&#123;path/to/image&#125;</b><p>Use to display an image.</p>
-    </li><li><i>figure</i>: <b>&#92;caption&#123;caption text&#125;</b><p>Use to display text under your image.</p>
-    </li><li><i>figure</i>: <b>&#92;label&#123;label text&#125;</b><p>Use to give your image a label, 
+<ul><li><i>figure</i>: <b>&#92;includegraphics&#123;path/to/image&#125;</b><br/><p>Use to display an image.</p>
+    </li><li><i>figure</i>: <b>&#92;caption&#123;caption text&#125;</b><br/><p>Use to display text under your image.</p>
+    </li><li><i>figure</i>: <b>&#92;label&#123;label text&#125;</b><br/><p>Use to give your image a label, 
                                             so you can use <i>&#92;ref&#123;label&#125;</i> to reference it.</p>
-    </li><li><i>figure</i>: <b>&#92;width&#123;Width&#125;</b><p> Set the width of your image. 
+    </li><li><i>figure</i>: <b>&#92;width&#123;Width&#125;</b><br/><p> Set the width of your image. 
                     Width can have the following formats: 10 (this is a percentage), 10px, 10cm, 10em.</p>
-    </li><li><i>figure</i>: <b>&#92;height&#123;Height&#125;</b><p> Set the height of your image. 
+    </li><li><i>figure</i>: <b>&#92;height&#123;Height&#125;</b><br/><p> Set the height of your image. 
                     Height can have the following formats: 10 (this is a percentage), 10px, 10cm, 10em. </p>
-    </li><li><i>figure</i>: <b>&#92;alttext&#123;alt text&#125;</b><p>Set the alt text, also called hovertext, of your image.</p>
+    </li><li><i>figure</i>: <b>&#92;alttext&#123;alt text&#125;</b><br/><p>Set the alt text, also called hovertext, of your image.</p>
 </li></ul>
 
 <h5>Settings</h5>

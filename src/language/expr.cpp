@@ -1,5 +1,6 @@
 #include "expr.hpp"
 
+
 using std::nullptr_t;
 using std::shared_ptr;
 using std::string;
@@ -7,9 +8,9 @@ using std::vector;
 
 BlockExpr::BlockExpr(vector<shared_ptr<const Expr>> expressions) : expressions(expressions){};
 
-void BlockExpr::Accept(ExprVisitor *visitor) const
+Value BlockExpr::Accept(ExprVisitor *visitor) const
 {
-    visitor->VisitBlockExpr(shared_from_this());
+    return visitor->VisitBlockExpr(shared_from_this());
 }
 
 void BlockExpr::Print(std::ostream& o) const
@@ -22,9 +23,9 @@ void BlockExpr::Print(std::ostream& o) const
 
 LiteralExpr::LiteralExpr(Token value) : value(value){};
 
-void LiteralExpr::Accept(ExprVisitor *visitor) const
+Value LiteralExpr::Accept(ExprVisitor *visitor) const
 {
-    visitor->VisitLiteralExpr(shared_from_this());
+    return visitor->VisitLiteralExpr(shared_from_this());
 }
 
 void LiteralExpr::Print(std::ostream& o) const
@@ -34,9 +35,9 @@ void LiteralExpr::Print(std::ostream& o) const
 
 ActionableExpr::ActionableExpr(Token value) : value(value){};
 
-void ActionableExpr::Accept(ExprVisitor *visitor) const
+Value ActionableExpr::Accept(ExprVisitor *visitor) const
 {
-    visitor->VisitActionableExpr(shared_from_this());
+    return visitor->VisitActionableExpr(shared_from_this());
 }
 
 void ActionableExpr::Print(std::ostream& o) const
@@ -46,9 +47,9 @@ void ActionableExpr::Print(std::ostream& o) const
 
 CommandExpr::CommandExpr(Token command, std::vector<std::shared_ptr<const Expr>> arguments) : command(command), arguments(arguments){};
 
-void CommandExpr::Accept(ExprVisitor *visitor) const
+Value CommandExpr::Accept(ExprVisitor *visitor) const
 {
-    visitor->VisitCommandExpr(shared_from_this());
+    return visitor->VisitCommandExpr(shared_from_this());
 }
 
 void CommandExpr::Print(std::ostream& o) const
@@ -64,9 +65,9 @@ EnvironmentExpr::EnvironmentExpr(Token begin, Token end, std::shared_ptr<const E
                                                                       bracket_argument(bracket_argument),
                                                                       block(block){};
 
-void EnvironmentExpr::Accept(ExprVisitor *visitor) const
+Value EnvironmentExpr::Accept(ExprVisitor *visitor) const
 {
-    visitor->VisitEnvironmentExpr(shared_from_this());
+    return visitor->VisitEnvironmentExpr(shared_from_this());
 }
 
 void EnvironmentExpr::Print(std::ostream& o) const

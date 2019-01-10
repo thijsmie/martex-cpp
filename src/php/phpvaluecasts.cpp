@@ -14,7 +14,7 @@ Php::Value CppToPhpSingle(const Value &v)
     {
         k[0] = t_html;
         k[1] = v.GetTag();
-        k[2] = CppToPhp(std::move(v.GetValues()));
+        k[2] = CppToPhp(v.multicontent);
     }
     else if (v.GetType() == t_attr)
     {
@@ -41,7 +41,7 @@ Value PhpToCppSlow(Php::Value value)
         std::vector<Value> a;
         for (auto v : value)
             a.push_back(PhpToCpp(v.second));
-        return Value(a);
+        return Value(std::move(a));
     }
 
     switch ((int)first)
@@ -66,7 +66,7 @@ Value PhpToCppSlow(Php::Value value)
 
         for (int i = 2; i < value.count(); i++)
             a.push_back(PhpToCpp(value[i]));
-        return Value(tag, a);
+        return Value(tag, std::move(a));
     }
     case t_multi:
     {
@@ -74,7 +74,7 @@ Value PhpToCppSlow(Php::Value value)
         Php::Value content = value[1];
         for (int i = 0; i < content.count(); i++)
             a.push_back(PhpToCpp(content[i]));
-        return Value(a);
+        return Value(std::move(a));
     }
     case t_break:
         return Value(t_break, "<br>");
@@ -226,9 +226,9 @@ Value PhpToCpp(const Php::Value &value)
     if (res.size() == 0)
         return Value();
     else if (res.size() == 1)
-        return res[0];
+        return std::move(res[0]);
     else
-        return Value(res);
+        return Value(std::move(res));
 }
 
 Php::Value CppToPhp(const Value &v)
@@ -236,9 +236,16 @@ Php::Value CppToPhp(const Value &v)
     Php::Value k;
     int i = 0;
 
-    for (Value h : v.Flattened().GetValues())
+    if (v.GetType() == t_multi)
     {
-        k[i++] = CppToPhpSingle(h);
+        for (const Value &h : v.multicontent)
+        {
+            k[i++] = CppToPhpSingle(h);
+        }
+    }
+    else
+    {
+        k = CppToPhpSingle(v);
     }
 
     return k;
@@ -249,7 +256,7 @@ Php::Value CppToPhp(const std::vector<Value> &values)
     Php::Value k;
     int i = 0;
 
-    for (Value h : values)
+    for (const Value &h : values)
     {
         k[i++] = CppToPhp(h);
     }

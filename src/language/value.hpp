@@ -24,17 +24,17 @@ class Value
 {
   public:
     Value(ValueType, std::string);
+    Value(ValueType);
     
     //multi
     Value(std::vector<Value>);
-    Value(std::initializer_list<Value>);
 
     //null
     Value();
 
     //html
+    Value(std::string, Value);
     Value(std::string, std::vector<Value>);
-    Value(std::string, std::initializer_list<Value>);
 
     //attr
     Value(std::string, std::string);
@@ -42,22 +42,31 @@ class Value
     //frombytes
     Value(const unsigned char *b, uint32_t &pos);
 
+    // disable copy
+    Value(const Value&) = delete;
+    Value& operator=(const Value&) = delete;
+    // enable move
+    Value(Value&&) = default;
+    Value& operator=(Value&&) = default;
+
     std::string GetContent() const;
     std::string GetTag() const;
     std::string GetRawContent() const;
-    std::vector<Value> GetValues() const;
     ValueType GetType() const;
 
     bool IsPlain() const;
 
-    Value Flattened() const;
-
     uint32_t ByteSize() const;
     void WriteOut(unsigned char *b, uint32_t &pos) const;
+    void SanitizeMulti();
+
+    static Value asString(const Value& v);
+    static Value asString(const std::vector<Value>& vs);
   private:
     ValueType type;
     std::string tag;
     std::string content;
+  public:
     std::vector<Value> multicontent;
 };
 

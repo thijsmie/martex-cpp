@@ -1,19 +1,19 @@
 #include "environment.hpp"
 
-void Environment::Set(std::string name, Value &value)
+void Environment::Set(std::string name, Value value)
 {
-    values[name] = value;
+    values.insert(std::make_pair(name, std::move(value)));
 }
 
-void Environment::SetGlobal(std::string name, Value &value)
+void Environment::SetGlobal(std::string name, Value value)
 {
     if (is_root)
-        values[name] = value;
+        values.insert(std::make_pair(name, std::move(value)));
     else
-        enclosing->SetGlobal(name, value);
+        enclosing->SetGlobal(name, std::move(value));
 }
 
-Value Environment::Get(Token name)
+Value& Environment::Get(Token name)
 {
     if (values.find(name.GetLexeme()) == values.end())
     {
@@ -29,7 +29,7 @@ Value Environment::Get(Token name)
     return values[name.GetLexeme()];
 }
 
-Value Environment::Get(std::string name)
+Value& Environment::Get(std::string name)
 {
     if (values.find(name) == values.end())
     {
@@ -46,11 +46,11 @@ Value Environment::Get(std::string name)
 }
 
 
-Value Environment::RunCommand(std::shared_ptr<Environment> env, Token name, std::vector<Value> &arguments)
+Value Environment::RunCommand(std::shared_ptr<Environment> env, Token name, std::vector<Value> arguments)
 {
     if (HasCommand(name.GetLexeme()))
-        return RunCommandHere(env, name, arguments);
+        return RunCommandHere(env, name, std::move(arguments));
     if (is_root)
         throw RuntimeError(name, "Unknown command.");
-    return enclosing->RunCommand(env, name, arguments);
+    return enclosing->RunCommand(env, name, std::move(arguments));
 }

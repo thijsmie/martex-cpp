@@ -15,8 +15,7 @@ Interpreter::Interpreter(shared_ptr<Implementation> i, ErrorReporter &reporter) 
 
 Value Interpreter::Evaluate(shared_ptr<const Expr> expr)
 {
-    expr->Accept(this);
-    return value;
+    return expr->Accept(this);
 }
 
 Value Interpreter::ExecuteBlock(vector<shared_ptr<const Expr>> expressions)
@@ -35,7 +34,7 @@ Value Interpreter::ExecuteBlock(vector<shared_ptr<const Expr>> expressions)
             error_reporter.Log("Ignoring and moving on.");
         }
     }
-    return Value(result);
+    return Value(std::move(result));
 }
 
 RuntimeError Interpreter::Error(Token token, string message)
@@ -43,39 +42,39 @@ RuntimeError Interpreter::Error(Token token, string message)
     return RuntimeError(token, message);
 }
 
-void Interpreter::VisitBlockExpr(shared_ptr<const BlockExpr> block)
+Value Interpreter::VisitBlockExpr(shared_ptr<const BlockExpr> block)
 {
     // return
-    value = ExecuteBlock(block->expressions);
+    return ExecuteBlock(block->expressions);
 }
 
-void Interpreter::VisitLiteralExpr(shared_ptr<const LiteralExpr> literal)
+Value Interpreter::VisitLiteralExpr(shared_ptr<const LiteralExpr> literal)
 {
     switch (literal->value.GetType())
     {
     case TokenType::WORD:
     case TokenType::LINE:
     case TokenType::WHITESPACE:
-        value = Value(t_string, literal->value.GetLexeme());
+        return Value(t_string, literal->value.GetLexeme());
         break;
     case TokenType::NEWLINE:
-        value = Value(t_break, implementation->LineBreak());
+        return Value(t_break, implementation->LineBreak());
         break;
     case TokenType::AMPERSAND:
-        value = Value(t_ampersand, implementation->Ampersand());
+        return Value(t_ampersand, implementation->Ampersand());
         break;
     default:
-        value = Value();
+        return Value();
     }
 }
 
-void Interpreter::VisitActionableExpr(shared_ptr<const ActionableExpr> actionable)
+Value Interpreter::VisitActionableExpr(shared_ptr<const ActionableExpr> actionable)
 {
     // return
-    value = Value(t_string, implementation->Escaped(actionable->value.GetType(), actionable->value.GetLexeme().at(0)));
+    return Value(t_string, implementation->Escaped(actionable->value.GetType(), actionable->value.GetLexeme().at(0)));
 }
 
-void Interpreter::VisitCommandExpr(shared_ptr<const CommandExpr> command)
+Value Interpreter::VisitCommandExpr(shared_ptr<const CommandExpr> command)
 {
     vector<Value> arguments;
     arguments.reserve(command->arguments.size());
@@ -84,30 +83,33 @@ void Interpreter::VisitCommandExpr(shared_ptr<const CommandExpr> command)
         arguments.push_back(Evaluate(argument));
 
     // return
-    value = environment->RunCommand(environment, command->command, arguments);
+    return environment->RunCommand(environment, command->command, std::move(arguments));
 }
 
-void Interpreter::VisitEnvironmentExpr(shared_ptr<const EnvironmentExpr> env)
+Value Interpreter::VisitEnvironmentExpr(shared_ptr<const EnvironmentExpr> env)
 {
     shared_ptr<Environment> current = environment;
     try
     {
         environment = implementation->Create(env->begin, environment);
-        Value bracket_argument;
 
         if (env->bracket_argument != nullptr)
-            bracket_argument = Evaluate(env->bracket_argument);
-
-        environment->StartEnvironment(env->begin, bracket_argument);
+        {
+            Value bracket_argument = Evaluate(env->bracket_argument);
+            environment->StartEnvironment(env->begin, std::move(bracket_argument));
+        }
+        else
+            environment->StartEnvironment(env->begin, Value());
 
         Value v = Evaluate(env->block);
 
-        value = environment->EndEnvironment(env->end, v);
+        Value ret = environment->EndEnvironment(env->end, std::move(v));
+        environment = current;
+        return std::move(ret);
     }
     catch (RuntimeError e)
     {
         environment = current;
         throw e;
     }
-    environment = current;
 };

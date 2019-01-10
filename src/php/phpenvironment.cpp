@@ -55,13 +55,13 @@ bool PhpEnvironment::HasCommand(std::string c)
     return (std::find(commands.begin(), commands.end(), c) != commands.end());
 }
 
-Value PhpEnvironment::RunCommandHere(std::shared_ptr<Environment> env, Token name, std::vector<Value> &args)
+Value PhpEnvironment::RunCommandHere(std::shared_ptr<Environment> env, Token name, std::vector<Value> args)
 {
     std::shared_ptr<PhpEnvironment> phpenv = std::dynamic_pointer_cast<PhpEnvironment>(env);
     try
     {
         Php::Value arguments = ValidateSignature(callsigns[name.GetLexeme()], args);
-        return PhpToCpp(myEnvironment.call(name.GetLexeme().c_str(), (Php::Value)phpenv->myEnvironment, arguments));
+        return PhpToCpp(myEnvironment.call(name.GetLexeme().c_str(), (Php::Value)phpenv->myEnvironment, std::move(arguments)));
     }
     catch (Php::Exception &e)
     {
@@ -69,7 +69,7 @@ Value PhpEnvironment::RunCommandHere(std::shared_ptr<Environment> env, Token nam
     }
 }
 
-void PhpEnvironment::StartEnvironment(Token begin, Value &arg)
+void PhpEnvironment::StartEnvironment(Token begin, Value arg)
 {
     try
     {
@@ -108,11 +108,11 @@ void PhpEnvironment::StartEnvironment(Token begin, Value &arg)
     }
 }
 
-Value PhpEnvironment::EndEnvironment(Token end, Value &content)
+Value PhpEnvironment::EndEnvironment(Token end, Value content)
 {
     try
     {
-        Php::Value phpcont = ValidateSignature(callsigns["end"], std::vector<Value>{content})[0];
+        Php::Value phpcont = ValidateSignature(callsigns["end"][0], content);
         Php::Value res = myEnvironment.call("end", phpcont);
         if (res.isNull())
             return content;
@@ -161,7 +161,52 @@ std::vector<ArgType> ParseSignature(Php::Value signature)
     return res;
 }
 
-Php::Value ValidateSignature(std::vector<ArgType> types, std::vector<Value> arguments)
+Php::Value ValidateSignature(ArgType type, const Value &argument)
+{
+    switch (type)
+    {
+    case Full:
+    case Text:
+    case Bytes:
+        // No further requirements
+        break;
+    case PlainFull:
+    case PlainText:
+    case PlainBytes:
+        if (!argument.IsPlain())
+            throw Php::Exception("This command takes 'plain' content only (so no html)!");
+        break;
+    default:
+        // Note, we don't have "more" types anymore
+        break;
+    }
+
+    // Okay! Ready for conversion!
+    Php::Value arg;
+
+    switch (type)
+    {
+    case Full:
+    case PlainFull:
+        arg = CppToPhp(argument);
+        break;
+    case Text:
+    case PlainText:
+        arg = argument.GetContent();
+        break;
+    case Bytes:
+    case PlainBytes:
+        arg = CppToPhpBytes(argument);
+        break;
+    default:
+        // Note, we don't have "more" types anymore
+        break;
+    }
+
+    return arg;
+}
+
+Php::Value ValidateSignature(std::vector<ArgType> types, const std::vector<Value> &arguments)
 {
     if (types.size() == 0 && arguments.size() > 0)
         throw Php::Exception("Arguments given to command that does not accept any");

@@ -21,14 +21,12 @@ class PhpGlobalEnvironment : public Php::Base//, public Php::ArrayAccess
     void __set(const Php::Value &name, const Php::Value &value)
     {
         std::string _name = name;
-        Value v = PhpToCpp(value);
-        gEnv->Set(_name, v);
+        gEnv->Set(_name, PhpToCpp(value));
     }
 
     Php::Value __get(const Php::Value &name)
     {
         std::string _name = name;
-        Value v = gEnv->Get(_name);
-        return CppToPhp(v);
+        return CppToPhpBytes(gEnv->Get(_name));
     }
 };

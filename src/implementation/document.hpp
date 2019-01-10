@@ -12,11 +12,11 @@ class ParagraphEnvironment : public Environment
     };
 
     bool HasCommand(std::string) { return false; }
-    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>&) { return Value(); };
-    void StartEnvironment(Token, Value&){};
-    Value EndEnvironment(Token, Value &content)
+    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>) { return Value(); };
+    void StartEnvironment(Token, Value){};
+    Value EndEnvironment(Token, Value content)
     {
-        return Value("p", {Value(t_string, content.GetContent())});
+        return Value("p", Value::asString(content));
     }
 };
 
@@ -30,11 +30,14 @@ class PageEnvironment : public Environment
     }
 
     bool HasCommand(std::string) { return false; }
-    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>&) { return Value(); };
-    void StartEnvironment(Token, Value&){};
-    Value EndEnvironment(Token, Value &content)
+    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>) { return Value(); };
+    void StartEnvironment(Token, Value){};
+    Value EndEnvironment(Token, Value content)
     {
-        return Value({Value(t_string, "<!DOCTYPE html>"), Value("html", {Value(t_string, content.GetContent())})});
+        std::vector<Value> ret; ret.reserve(2);
+        ret.push_back(Value(t_string, "<!DOCTYPE html>"));
+        ret.push_back(Value("html", Value::asString(content)));
+        return Value(std::move(ret));
     }
 };
 
@@ -48,10 +51,10 @@ class DocumentEnvironment : public Environment
     }
 
     bool HasCommand(std::string) { return false; }
-    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>&) { return Value(); };
-    void StartEnvironment(Token, Value&){};
-    Value EndEnvironment(Token, Value& content)
+    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>) { return Value(); };
+    void StartEnvironment(Token, Value){};
+    Value EndEnvironment(Token, Value content)
     {
-        return Value("body", {Value(t_string, content.GetContent())});
+        return Value("body", Value::asString(content));
     }
 };
