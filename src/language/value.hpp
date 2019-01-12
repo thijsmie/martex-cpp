@@ -17,12 +17,14 @@ enum ValueType : int
     t_break = 3,
     t_multi = 4,
     t_html = 5,
-    t_attr = 6
+    t_attr = 6,
+    t_info = 7
 };
 
 class Value
 {
   public:
+    Value(ValueType, std::string, std::string);
     Value(ValueType, std::string);
     Value(ValueType);
     
@@ -35,6 +37,9 @@ class Value
     //html
     Value(std::string, Value);
     Value(std::string, std::vector<Value>);
+
+    //info
+    Value(ValueType, std::string, std::vector<Value>);
 
     //attr
     Value(std::string, std::string);

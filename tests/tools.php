@@ -15,6 +15,7 @@ function runstest($name, $mods, $tx)
 
     if (! $a->HasError()) {
         echo "success, took " . round(($finish - $start) * 1000.0) . "ms\n";
+        var_dump($a->GetResult());
     }
     else {
         global $success;

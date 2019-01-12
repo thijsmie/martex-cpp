@@ -26,11 +26,10 @@ class DocumentationModule extends Module
     public $argsfor_envdescriptor = array(Bytes, Bytes);
     public function envdescriptor($env, $args) 
     {
-        return batch(
-            html("i", $args[0]),
-            html("br"), 
-            html("p", $args[1])
-        );
+        return 
+            html("i", $args[0]) .
+            newline() .
+            html("p", $args[1]);
     }
 }
 

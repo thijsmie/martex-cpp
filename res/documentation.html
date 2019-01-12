@@ -1,0 +1,182 @@
+<!DOCTYPE html><html><head>
+
+<link href="martex.css" rel="stylesheet" type="text/css"/>
+
+
+</head><body>
+<h1>MarTeX</h1>
+	<hr>
+		MarTeX is a versitale TeX to HTML interpreter. 
+		It comes with a few basic modules, but can easily be expanded upon. 
+		It was written by Thijs Miedema for use with marie-curie.nl.
+<h3>Modules</h3>
+<h4>Module Document</h4>
+The document module exposes the basic commands that are designed to mimick the LaTeX main environment.
+
+<h5>Implemented commands</h5>
+<ul><li><i>global</i>: <b>&#92;title&#123;Title&#125;</b><br/><p>Make a big fancy title.</p>
+    </li><li><i>global</i>: <b>&#92;section&#123;Title&#125;</b><br/><p>Make a section title.</p>
+    </li><li><i>global</i>: <b>&#92;subsection&#123;Title&#125;</b><br/><p>Make a subsection title.</p>
+    </li><li><i>global</i>: <b>&#92;subsubsection&#123;Title&#125;</b><br/><p>Make a subsubsection title.</p>
+    </li><li><i>global</i>: <b>&#92;textbf&#123;Text&#125;</b><br/><p>Render Text in <b>bold</b>.</p>
+    </li><li><i>global</i>: <b>&#92;textit&#123;Text&#125;</b><br/><p>Render Text in <i>italics</i>.</p>
+    </li><li><i>global</i>: <b>&#92;underline&#123;Text&#125;</b><br/><p>Render Text <u>underlined</u>.</p>
+    </li><li><i>global</i>: <b>&#92;smallcaps&#123;Text&#125;</b><br/><p>Render Text <span style="font-variant: small-caps;"/>.</p>
+    </li><li><i>global</i>: <b>&#92;hline</b><br/><p>Make a horizontal line.</p>
+    </li><li><i>global</i>: <b>&#92;newline</b><br/><p>Line break, equivalent to a double backslash.</p>
+    </li><li><i>global</i>: <b>&#92;paragraph&#123;text&#125;</b><br/><p>Render the text as a paragraph, normally not noticable, but might have implications if a stylesheet is loaded. 
+                                                        Use for a single line of text without commands only, please use the environment <i>paragraph</i> otherwise.</p>
+    </li><li><i>global</i>: <b>&#92;ref&#123;label&#125;</b><br/><p>Reference a label (from an image, for example). Works with both forward and backwards declaration (The label can be both above and below the ref command). Outputs a question mark when the label is undefined.</p>
+    </li><li><i>global</i>: <b>&#92;define&#123;Variable&#125;&#123;Value&#125;</b><br/><p>Set the global Variable to Value. Often used to change module behaviour.</p>
+    </li><li><i>global</i>: <b>&#92;href&#123;URL&#125;&#123;Text&#125;</b><br/><p>Make a hyperlink to URL with text Text</p>
+    </li><li><i>global</i>: <b>&#92;colo(u)r&#123;type&#125;&#123;definition&#125;&#123;text&#125;</b><br/><p>Change the colour of a piece of text. There are a few possibilities: <span style="color:rgb(255,0,100)">&#92;colour&#123;rgb&#125;&#123;255,0,100&#125;&#123;text&#125;</span>, <span style="color:rgba(255,100,255,07)">&#92;colour&#123;rgba&#125;&#123;100,100,255,0.7&#125;</span>, <span style="color:hsl(200,50%,50%)">&#92;colour&#123;hsl&#125;&#123;200,50,50&#125;&#123;text&#125;</span>, <span style="color:hsla(200,50%,50%,07)">&#92;colour&#123;hsla&#125;&#123;200,50,50,0.7&#125;&#123;text&#125;</span> and <span style="color:#ff00ff">&#92;colour&#123;hex&#125;&#123;#ff00ff&#125;&#123;text&#125;</span>. Please note that hsl and hsla are not supported by all browsers (especially email clients).</p>
+    </li><li><i>global</i>: <b>&#92;colo(u)r&#123;definition&#125;&#123;text&#125;</b><br/><p>Same as above, but allow MarTeX to guess your colour type. Will always choose rgb over hsl.</p>
+</li></ul>
+
+<h5>Special characters</h5>
+MarTeX has some special characters you need to escape to render:
+
+<table class="martex"><tr><td>
+<table class="martex"><tr><td class="a-l b-l b-t">
+
+<b>Command</b>  </td><td class="a-l b-l b-r b-t">  <b>Result</b> </td></tr><tr><td class="a-l b-l b-tt">
+
+&#92;&amp;     </td><td class="a-l b-l b-r b-tt"> &amp; </td></tr><tr><td class="a-l b-l">
+&#92;%	 </td><td class="a-l b-l b-r"> % </td></tr><tr><td class="a-l b-l">
+&#92;$   	 </td><td class="a-l b-l b-r"> $ </td></tr><tr><td class="a-l b-l">
+&#92;copy	 </td><td class="a-l b-l b-r"> &copy;</td></tr><tr><td class="a-l b-l">
+&#92;&gt;	 </td><td class="a-l b-l b-r"> &gt; </td></tr><tr><td class="a-l b-l">
+&#92;&lt;	 </td><td class="a-l b-l b-r"> &lt; </td></tr><tr><td class="a-l b-l">
+&#92;&#125;	 </td><td class="a-l b-l b-r"> &#125; </td></tr><tr><td class="a-l b-l">
+&#92;&#123;	 </td><td class="a-l b-l b-r"> &#123; </td></tr><tr><td class="a-l b-l">
+&#92;cdot	 </td><td class="a-l b-l b-r"> &middot;</td></tr><tr><td class="a-l b-l">
+&#92;euro	 </td><td class="a-l b-l b-r"> &euro;</td></tr><tr><td class="a-l b-l">
+&#92;pound	 </td><td class="a-l b-l b-r"> &pound;</td></tr><tr><td class="a-l b-l">
+&#92;deg	 </td><td class="a-l b-l b-r"> &deg;</td></tr><tr><td class="a-l b-l b-b">
+&#92;backslash </td><td class="a-l b-l b-r b-b"> &#92;</td></tr></table>
+</td><td>
+<table class="martex"><tr><td class="a-l b-l b-t">
+
+<b>Command</b>  </td><td class="a-l b-l b-r b-t">  <b>Result</b> </td></tr><tr><td class="a-l b-l b-tt">
+
+&#92;"AaEeIiOoUuy </td><td class="a-l b-l b-r b-tt"> &Auml;&auml;&Euml;&euml;&Iuml;&iuml;&Ouml;&ouml;&Uuml;&uuml;&yuml; </td></tr><tr><td class="a-l b-l">
+&#92;'AaEeIiOoUuZ </td><td class="a-l b-l b-r"> &Aacute;&aacute;&Eacute;&eacute;&Iacute;&iacute;&Oacute;&oacute;&Uacute;&uacute;&Zacute; </td></tr><tr><td class="a-l b-l">
+&#92;`AaEeIiOoUu </td><td class="a-l b-l b-r"> &Agrave;&agrave;&Egrave;&egrave;&Igrave;&igrave;&Ograve;&ograve;&Ugrave;&ugrave; </td></tr><tr><td class="a-l b-l">
+&#92;^AaEeIiOoUu </td><td class="a-l b-l b-r"> &Acirc;&acirc;&Ecirc;&ecirc;&Icirc;&icirc;&Ocirc;&ocirc;&Ucirc;&ucirc; </td></tr><tr><td class="a-l b-l">
+&#92;~AaIiOoNnUu </td><td class="a-l b-l b-r"> &Atilde;&atilde;&Itilde;&itilde;&Otilde;&otilde;&Ntilde;&ntilde;&Utilde;&utilde; </td></tr><tr><td class="a-l b-l">
+&#92;.AaUu </td><td class="a-l b-l b-r"> &Aring;&aring;&Uring;&uring; </td></tr><tr><td class="a-l b-l">
+&#92;-O&#92;-o </td><td class="a-l b-l b-r"> &Oslash;&oslash; </td></tr><tr><td class="a-l b-l">
+&#92;ss </td><td class="a-l b-l b-r"> &ss;</td></tr><tr><td class="a-l b-l">
+&#92;Alpha&#92;alpha </td><td class="a-l b-l b-r"> &Alpha;&alpha;</td></tr><tr><td class="a-l b-l">
+&#92;Beta&#92;beta </td><td class="a-l b-l b-r"> &Beta;&beta;</td></tr><tr><td class="a-l b-l">
+... </td><td class="a-l b-l b-r"> ... </td></tr><tr><td class="a-l b-l">
+&#92;Phi&#92;phi </td><td class="a-l b-l b-r"> &Phi;&phi;</td></tr><tr><td class="a-l b-l b-b">
+&#92;Omega&#92;omega </td><td class="a-l b-l b-r b-b"> &Omega;&omega;</td></tr></table>
+</td></tr></table>
+
+<h4>Module Figure</h4>
+	
+<p>
+    The figure module exposes commands that are designed to mimick the LaTeX package graphicx, with a few exceptions. 
+    Maybe the most notable exception is that most of these commands only work inside a figure environment, and will result in "command not found" errors if you use them elsewhere.
+</p>
+
+<h5>Implemented commands</h5>
+<ul><li><i>figure</i>: <b>&#92;includegraphics&#123;path/to/image&#125;</b><br/><p>Use to display an image.</p>
+    </li><li><i>figure</i>: <b>&#92;caption&#123;caption text&#125;</b><br/><p>Use to display text under your image.</p>
+    </li><li><i>figure</i>: <b>&#92;label&#123;label text&#125;</b><br/><p>Use to give your image a label, 
+                                            so you can use <i>&#92;ref&#123;label&#125;</i> to reference it.</p>
+    </li><li><i>figure</i>: <b>&#92;width&#123;Width&#125;</b><br/><p> Set the width of your image. 
+                    Width can have the following formats: 10 (this is a percentage), 10px, 10cm, 10em.</p>
+    </li><li><i>figure</i>: <b>&#92;height&#123;Height&#125;</b><br/><p> Set the height of your image. 
+                    Height can have the following formats: 10 (this is a percentage), 10px, 10cm, 10em. </p>
+    </li><li><i>figure</i>: <b>&#92;alttext&#123;alt text&#125;</b><br/><p>Set the alt text, also called hovertext, of your image.</p>
+</li></ul>
+
+<h5>Settings</h5>
+<p>
+    Reference labels are used to point to your image from the text. They put the following text in your caption: Figure N, where N is replaced with the number of your image. However, you might want to use a different text. For this you can access the global variable 'figureheader'. For example, you could do: &#92;define&#123;figureheader&#125;&#123;image&#125;. Now, the caption wil read: Image N. You should put the &#92;define above all figure environments.
+</p>
+
+<h5>Example</h5>
+<pre><code class="language-latex">&#92;define&#123;figureheader&#125;&#123;image&#125;
+&#92;begin&#123;figure&#125;
+    &#92;includegraphics&#123;test.png&#125;
+    &#92;caption&#123;This is a test image&#125;
+    &#92;label&#123;testimage&#125;
+    &#92;width&#123;120px&#125;
+    &#92;height&#123;30&#125;
+    &#92;alttext&#123;A mouse!&#125;
+&#92;end&#123;figure&#125; 
+</code></pre>
+
+<h4>Module Itemize</h4>
+
+<p>
+    The itemize module exposes commands to help make fancy lists.
+</p>
+
+<h5>Implemented commands</h5>
+<ul><li><i>itemize/enumerate</i>: <b>&#92;item&#123;(optional)Itemtext&#125;</b><br/><p>Add an item to a list.</p>
+    </li><li><i>itemize/enumerate</i>: <b>&#92;setmarker&#123;type&#125;</b><br/><p>Set the marker type. Valid types are: square, bullet, circle, none, numbers, letters, LETTERS, roman, ROMAN.</p>
+</li></ul>
+
+<h5>Implemented environments</h5>
+<p>
+The itemize module implements two environments. They are equivalent, but have a different default marker type.
+</p>
+<ul><li><i>itemize</i><br/><p>A list with default marker 'bullet'</p>
+    </li><li><i>paragraph</i><br/><p>A list with default marker 'numbers'</p>
+</li></ul>
+
+<h5>Example</h5>
+
+<table class="martex"><tr><td class="a-l">
+Code </td><td class="a-l b-l"> Rendered </td></tr><tr><td class="a-l b-t">
+
+<pre><code class="language-latex">
+&#92;begin&#123;itemize&#125;
+    &#92;item&#123;Akcie&#125;
+    &#92;item&#123;Ambicie&#125;
+    &#92;item&#123;Batavieren&#125;
+    &#92;item&#123;Boson&#125;
+&#92;end&#123;itemize&#125;
+&#92;begin&#123;itemize&#125;
+    &#92;setmarker&#123;square&#125;
+    &#92;item Brouwcommissie
+    &#92;item Colloquiumcommissie
+    &#92;item Excurcie
+&#92;end&#123;itemize&#125;
+&#92;begin&#123;enumerate&#125;
+    &#92;item&#123;Impuls&#125;
+    &#92;item&#123;Lustrumcie&#125;
+    &#92;item&#123;M&uuml;nchencie&#125;
+&#92;end&#123;enumerate&#125;
+&#92;begin&#123;enumerate&#125;
+    &#92;setmarker&#123;letters&#125;
+    &#92;item&#123;Ouderdagcie&#125;
+    &#92;item&#123;Particie&#125;
+    &#92;item&#123;PR-cie&#125;
+    &#92;item&#123;Reunistencie&#125;
+&#92;end&#123;enumerate&#125;
+&#92;begin&#123;enumerate&#125;
+    &#92;setmarker&#123;ROMAN&#125;
+    &#92;item Sponsorcommissie
+    &#92;item Symposiumcie
+    &#92;item Vakancie
+    &#92;item Weekendcommissie
+    &#92;item WWW-cie
+    &#92;item Co&ouml;rdinatiecommissie
+&#92;end&#123;enumerate&#125;
+</code></pre>
+</td><td class="a-l b-l b-t">
+<ul><li>Akcie</li><li>Ambicie</li><li>Batavieren</li><li>Boson</li></ul>
+<ul list-style-type="square"><li>Brouwcommissie</li><li>Colloquiumcommissie</li><li>Excurcie</li></ul>
+<ol><li>Impuls</li><li>Lustrumcie</li><li>M&uuml;nchencie</li></ol>
+<ol type="a"><li>Ouderdagcie</li><li>Particie</li><li>PR-cie</li><li>Reunistencie</li></ol>
+<ol type="I"><li>Sponsorcommissie</li><li>Symposiumcie</li><li>Vakancie</li><li>Weekendcommissie</li><li>WWW-cie</li><li>Co&ouml;rdinatiecommissie</li></ol>
+</td></tr></table>
+
+<h4>Module Tabular</h4>
+
+</body></html>

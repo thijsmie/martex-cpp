@@ -1,0 +1,59 @@
+/* martex.css 1.0 by Thijs Miedema, 2019-01-10. */
+
+/* tables - table cell borders */
+
+table.martex {
+    margin:1em;
+    border-collapse: collapse;
+    border-style: solid;
+    border-width: 0px;
+}
+
+table.martex tr td {
+    min-width: 20px;
+    min-height: 12px;
+    text-align: center;
+    padding: 4px;
+}
+
+table.martex tr td.b-t {
+    border-top: 1px solid black;
+}
+
+table.martex tr td.b-b {
+    border-bottom: 1px solid black;
+}
+
+table.martex tr td.b-l {
+    border-left: 1px solid black;
+}
+
+table.martex tr td.b-r {
+    border-right: 1px solid black;
+}
+
+table.martex tr td.b-tt {
+    border-top: 3px double black;
+}
+
+table.martex tr td.b-bb {
+    border-bottom: 3px double black;
+}
+
+table.martex tr td.b-ll {
+    border-left: 3px double black;
+}
+
+table.martex tr td.b-rr {
+    border-right: 3px double black;
+}
+
+/* tables - text align */
+
+table.martex tr td.a-r {
+    text-align: right;
+}
+
+table.martex tr td.a-l {
+    text-align: left;
+}

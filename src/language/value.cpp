@@ -11,14 +11,14 @@ void Value::SanitizeMulti()
         }
 }
 
-Value Value::asString(const Value& v)
+Value Value::asString(const Value &v)
 {
     return Value(t_string, v.GetContent());
 }
-Value Value::asString(const std::vector<Value>& vs)
+Value Value::asString(const std::vector<Value> &vs)
 {
     std::string ret = "";
-    for(auto &v : vs)
+    for (auto &v : vs)
     {
         ret += v.GetContent();
     }
@@ -28,6 +28,8 @@ Value Value::asString(const std::vector<Value>& vs)
 Value::Value(ValueType type) : type(type), multicontent(), content() {}
 
 Value::Value(ValueType type, std::string content) : type(type), content(content) {}
+
+Value::Value(ValueType type, std::string tag, std::string content) : type(type), tag(tag), content(content) {}
 
 //multi
 Value::Value(std::vector<Value> multicontent) : type(t_multi), multicontent(std::move(multicontent))
@@ -40,6 +42,12 @@ Value::Value() : type(t_null), content("") {}
 
 //html
 Value::Value(std::string tag, std::vector<Value> multicontent) : type(t_html), tag(tag), multicontent(std::move(multicontent))
+{
+    SanitizeMulti();
+}
+
+//info
+Value::Value(ValueType type, std::string tag, std::vector<Value> multicontent) : type(type), tag(tag), multicontent(std::move(multicontent))
 {
     SanitizeMulti();
 }
@@ -109,6 +117,7 @@ bool Value::IsPlain() const
     case t_attr:
     case t_ampersand:
     case t_html:
+    case t_info:
         return false;
     case t_multi:
     {
@@ -132,7 +141,8 @@ std::string valueTypes[] = {
     "t_break",
     "t_multi",
     "t_html",
-    "t_attr"};
+    "t_attr",
+    "t_info"};
 
 std::string ValueTypeName(ValueType v)
 {
@@ -144,33 +154,29 @@ std::string ValueTypeName(ValueType v)
 Value::Value(const unsigned char *b, uint32_t &pos)
 {
     uint8_t r_type = deserialize_byte(b, pos);
+    type = (ValueType)(int)r_type;
 
     switch (r_type)
     {
     case t_null:
-        type = t_null;
         content = "";
         break;
     case t_ampersand:
-        type = t_ampersand;
         content = "&amp;";
         break;
     case t_break:
-        type = t_break;
         content = "<br/>";
         break;
     case t_string:
-        type = t_string;
         content = deserialize_sized_string(b, pos);
         break;
     case t_attr:
-        type = t_attr;
         tag = deserialize_sized_string(b, pos);
         content = deserialize_sized_string(b, pos);
         break;
     case t_html:
+    case t_info:
     {
-        type = t_html;
         tag = deserialize_sized_string(b, pos);
         uint32_t content_length = deserialize_uint32_t(b, pos);
         uint32_t current_pos = pos;
@@ -181,7 +187,6 @@ Value::Value(const unsigned char *b, uint32_t &pos)
     }
     case t_multi:
     {
-        type = t_multi;
         uint32_t content_length = deserialize_uint32_t(b, pos);
         uint32_t current_pos = pos;
 
@@ -211,6 +216,7 @@ void Value::WriteOut(unsigned char *b, uint32_t &pos) const
         serialize_sized_string(b, pos, content.c_str(), content.size());
         return;
     case t_html:
+    case t_info:
     {
         serialize_sized_string(b, pos, tag.c_str(), tag.size());
         uint32_t content_length = 0;
@@ -255,6 +261,7 @@ uint32_t Value::ByteSize() const
     case t_attr:
         return sizeof(uint8_t) + 2 * sizeof(uint32_t) + tag.size() + content.size();
     case t_html:
+    case t_info:
     {
         uint32_t content_length = 0;
 

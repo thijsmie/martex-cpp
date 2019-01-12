@@ -1,3 +1,5 @@
+#pragma once
+
 #include <algorithm>
 #include <cctype>
 #include <locale>
@@ -55,6 +57,13 @@ static inline std::string trim_copy(std::string s)
 static inline bool wsonly(const std::string &s)
 {
     auto f = [](unsigned char const c) { return std::isspace(c); };
+    return std::all_of(s.begin(), s.end(), f);
+}
+
+// dgonly
+static inline bool dgonly(const std::string &s)
+{
+    auto f = [](unsigned char const c) { return std::isdigit(c); };
     return std::all_of(s.begin(), s.end(), f);
 }
 } // namespace util

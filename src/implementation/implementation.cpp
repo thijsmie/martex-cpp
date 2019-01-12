@@ -43,7 +43,7 @@ std::string Implementation::Escaped(TokenType escapetype, char escapee)
         temp = temp.insert(1, 1, escapee);
         return temp;
     case TokenType::DASH:
-        temp = "&uml;";
+        temp = "&slash;";
         temp = temp.insert(1, 1, escapee);
         return temp;
     case TokenType::DOT:

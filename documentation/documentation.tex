@@ -1,4 +1,7 @@
 \begin{page}
+
+\link{martex.css}{stylesheet}{text/css}
+
 \begin{document}
 \title{MarTeX}
 	\hline
@@ -30,6 +33,54 @@ The document module exposes the basic commands that are designed to mimick the L
     \item \descriptor{global}{\command{colo(u)r}{definition}{text}}{Same as above, but allow MarTeX to guess your colour type. Will always choose rgb over hsl.}
 \end{itemize}
 
+\subsubsection{Special characters}
+MarTeX has some special characters you need to escape to render:
+
+\begin{tabular}[cc]
+\begin{tabular}[|l | l |]
+\hline
+\textbf{Command}  &  \textbf{Result} \\
+\hline \hline
+\command{\&}     & \& \\
+\command{\%}	 & \% \\
+\command{\$}   	 & \$ \\
+\command{copy}	 & \copy \\
+\command{\>}	 & \> \\
+\command{\<}	 & \< \\
+\command{\}}	 & \} \\
+\command{\{}	 & \{ \\
+\command{cdot}	 & \cdot \\
+\command{euro}	 & \euro \\
+\command{pound}	 & \pound \\
+\command{deg}	 & \deg \\
+\command{backslash} & \backslash \\
+\hline
+\end{tabular}
+&
+\begin{tabular}[|l | l |]
+\hline
+\textbf{Command}  &  \textbf{Result} \\
+\hline \hline
+\command{"}AaEeIiOoUuy & \"A\"a\"E\"e\"I\"i\"O\"o\"U\"u\"y \\
+\command{'}AaEeIiOoUuZ & \'A\'a\'E\'e\'I\'i\'O\'o\'U\'u\'Z \\
+\command{`}AaEeIiOoUu & \`A\`a\`E\`e\`I\`i\`O\`o\`U\`u \\
+\command{^}AaEeIiOoUu & \^A\^a\^E\^e\^I\^i\^O\^o\^U\^u \\
+\command{~}AaIiOoNnUu & \~A\~a\~I\~i\~O\~o\~N\~n\~U\~u \\
+\command{.}AaUu & \.A\.a\.U\.u \\
+\command{-O}\command{-o} & \-O\-o \\
+\command{ss} & \ss \\
+\command{Alpha}\command{alpha} & \Alpha\alpha \\
+\command{Beta}\command{beta} & \Beta\beta \\
+... & ... \\
+\command{Phi}\command{phi} & \Phi\phi \\
+\command{Omega}\command{omega} & \Omega\omega \\
+\hline
+\end{tabular}
+\\
+\end{tabular}
+
+\subsection{Module Figure}
+	
 \begin{paragraph}
     The figure module exposes commands that are designed to mimick the LaTeX package graphicx, with a few exceptions. 
     Maybe the most notable exception is that most of these commands only work inside a figure environment, and will result in "command not found" errors if you use them elsewhere.
@@ -64,5 +115,106 @@ The document module exposes the basic commands that are designed to mimick the L
     \command{alttext}{A mouse!}
 \command{end}{figure} 
 \end{code}
+
+\subsection{Module Itemize}
+
+\begin{paragraph}
+    The itemize module exposes commands to help make fancy lists.
+\end{paragraph}
+
+\subsubsection{Implemented commands}
+\begin{itemize}
+    \item \descriptor{itemize/enumerate}{\command{item}{(optional)Itemtext}}{Add an item to a list.}
+    \item \descriptor{itemize/enumerate}{\command{setmarker}{type}}{Set the marker type. Valid types are: square, bullet, circle, none, numbers, letters, LETTERS, roman, ROMAN.}
+\end{itemize}
+
+\subsubsection{Implemented environments}
+\begin{paragraph}
+The itemize module implements two environments. They are equivalent, but have a different default marker type.
+\end{paragraph}
+\begin{itemize}
+    \item \envdescriptor{itemize}{A list with default marker 'bullet'}
+    \item \envdescriptor{paragraph}{A list with default marker 'numbers'}
+\end{itemize}
+
+\subsubsection{Example}
+
+\begin{tabular}[l|l]
+Code & Rendered \\
+\hline
+\begin{code}[latex]
+\command{begin}{itemize}
+    \command{item}{Akcie}
+    \command{item}{Ambicie}
+    \command{item}{Batavieren}
+    \command{item}{Boson}
+\command{end}{itemize}
+\command{begin}{itemize}
+    \command{setmarker}{square}
+    \command{item} Brouwcommissie
+    \command{item} Colloquiumcommissie
+    \command{item} Excurcie
+\command{end}{itemize}
+\command{begin}{enumerate}
+    \command{item}{Impuls}
+    \command{item}{Lustrumcie}
+    \command{item}{M\"unchencie}
+\command{end}{enumerate}
+\command{begin}{enumerate}
+    \command{setmarker}{letters}
+    \command{item}{Ouderdagcie}
+    \command{item}{Particie}
+    \command{item}{PR-cie}
+    \command{item}{Reunistencie}
+\command{end}{enumerate}
+\command{begin}{enumerate}
+    \command{setmarker}{ROMAN}
+    \command{item} Sponsorcommissie
+    \command{item} Symposiumcie
+    \command{item} Vakancie
+    \command{item} Weekendcommissie
+    \command{item} WWW-cie
+    \command{item} Co\"ordinatiecommissie
+\command{end}{enumerate}
+\end{code}
+&
+\begin{itemize}
+    \item{Akcie}
+    \item{Ambicie}
+    \item{Batavieren}
+    \item{Boson}
+\end{itemize}
+\begin{itemize}
+    \setmarker{square}
+    \item{Brouwcommissie}
+    \item{Colloquiumcommissie}
+    \item{Excurcie}
+\end{itemize}
+\begin{enumerate}
+    \item{Impuls}
+    \item{Lustrumcie}
+    \item{M\"unchencie}
+\end{enumerate}
+\begin{enumerate}
+    \setmarker{letters}
+    \item{Ouderdagcie}
+    \item{Particie}
+    \item{PR-cie}
+    \item{Reunistencie}
+\end{enumerate}
+\begin{enumerate}
+    \setmarker{ROMAN}
+    \item{Sponsorcommissie}
+    \item{Symposiumcie}
+    \item{Vakancie}
+    \item{Weekendcommissie}
+    \item{WWW-cie}
+    \item{Co\"ordinatiecommissie}
+\end{enumerate}
+\\
+\end{tabular}
+
+\subsection{Module Tabular}
+
 \end{document}
 \end{page}

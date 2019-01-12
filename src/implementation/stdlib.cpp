@@ -1,6 +1,7 @@
 #include "stdlib.hpp"
 #include "itemize.hpp"
 #include "document.hpp"
+#include "tabular.hpp"
 
 StdLib::StdLib(bool allow_page)
 {
@@ -16,7 +17,7 @@ StdLib::StdLib(bool allow_page)
 
 std::vector<std::string> StdLib::GetEnvs()
 {
-    return std::vector<std::string>{"itemize", "enumerate", "paragraph", "page", "document"};
+    return std::vector<std::string>{"itemize", "enumerate", "paragraph", "page", "document", "tabular"};
 }
 
 std::vector<std::string> StdLib::GetGlobals()
@@ -49,6 +50,8 @@ std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<E
         return std::make_shared<EnumerateEnvironment>(parent);
     if (name == "paragraph")
         return std::make_shared<ParagraphEnvironment>(parent);
+    if (name == "tabular")
+        return std::make_shared<TabularEnvironment>(parent);
     if (!hasdocument && name == "document")
     {
         hasdocument = true;

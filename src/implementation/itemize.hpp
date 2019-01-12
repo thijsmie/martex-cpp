@@ -1,3 +1,5 @@
+#pragma once
+
 #include "language/environment.hpp"
 #include "util/string_util.hpp"
 #include "language/runtime_error.hpp"
