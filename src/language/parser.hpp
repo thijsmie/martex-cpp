@@ -53,4 +53,6 @@ class Parser
     std::shared_ptr<const Expr> Environment();
     std::shared_ptr<const Expr> Bracketed();
     std::shared_ptr<const Expr> Braced();
+    std::shared_ptr<const Expr> NewCommand();
+    std::shared_ptr<const Expr> Variable();
 };

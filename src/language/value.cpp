@@ -1,8 +1,9 @@
 #include "value.hpp"
+#include <stdexcept>
 
 void Value::SanitizeMulti()
 {
-    for (int i = 0; i < multicontent.size(); i++)
+    for (unsigned int i = 0; i < multicontent.size(); i++)
         if (multicontent[i].GetType() == t_multi)
         {
             // dissallow nested multi's
@@ -25,7 +26,7 @@ Value Value::asString(const std::vector<Value> &vs)
     return Value(t_string, ret);
 }
 
-Value::Value(ValueType type) : type(type), multicontent(), content() {}
+Value::Value(ValueType type) : type(type), content(), multicontent() {}
 
 Value::Value(ValueType type, std::string content) : type(type), content(content) {}
 
@@ -280,4 +281,41 @@ uint32_t Value::ByteSize() const
         return sizeof(uint8_t) + sizeof(uint32_t) + content_length;
     }
     }
+
+    throw std::runtime_error("This valuetype is screwed up!");
+}
+
+Value Value::explicit_copy() const
+{
+    switch (type)
+    {
+    case t_null:
+        return Value();
+    case t_ampersand:
+    case t_string:
+    case t_break:
+        return Value(type, content);
+    case t_attr:
+        return Value(tag, content);
+    case t_html:
+    case t_info:
+    {
+        std::vector<Value> copies;
+
+        for (const Value &v : multicontent)
+            copies.push_back(v.explicit_copy());
+
+        return Value(type, tag, std::move(copies));
+    }
+    case t_multi:
+    {
+        std::vector<Value> copies;
+
+        for (const Value &v : multicontent)
+            copies.push_back(v.explicit_copy());
+
+        return Value(std::move(copies));
+    }
+    }
+    throw std::runtime_error("Weird valuetype!");
 }

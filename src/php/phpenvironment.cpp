@@ -134,7 +134,7 @@ std::vector<ArgType> ParseSignature(Php::Value signature)
         res.push_back(t);
     }
 
-    for (int i = 0; i < res.size(); i++)
+    for (unsigned int i = 0; i < res.size(); i++)
         switch (res[i])
         {
         case Full:
@@ -250,6 +250,9 @@ Php::Value ValidateSignature(std::vector<ArgType> types, const std::vector<Value
         case MorePlainBytes:
             last = PlainBytes;
             break;
+        default:
+            throw Php::Exception("Unknown type?");
+            break;
         }
 
         // Set last
@@ -293,6 +296,9 @@ Php::Value ValidateSignature(std::vector<ArgType> types, const std::vector<Value
         case MorePlainBytes:
             last = PlainBytes;
             break;
+        default:
+            throw Php::Exception("Unknown type?");
+            break;
         }
 
         // Set last
@@ -321,6 +327,9 @@ Php::Value ValidateSignature(std::vector<ArgType> types, const std::vector<Value
         case MorePlainText:
         case MorePlainBytes:
             break;
+        default:
+            throw Php::Exception("Unknown type?");
+            break;
         }
 
         /// drop the moretype
@@ -337,7 +346,7 @@ Php::Value ValidateSignature(std::vector<ArgType> types, const std::vector<Value
 
     // Check "Plain"-ness of vars when needed
 
-    for (int i = 0; i < types.size(); i++)
+    for (unsigned int i = 0; i < types.size(); i++)
     {
         switch (types[i])
         {
@@ -361,7 +370,7 @@ Php::Value ValidateSignature(std::vector<ArgType> types, const std::vector<Value
     // Okay! Ready for conversion!
     Php::Array args;
 
-    for (int i = 0; i < types.size(); i++)
+    for (unsigned int i = 0; i < types.size(); i++)
     {
         switch (types[i])
         {

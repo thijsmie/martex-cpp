@@ -65,6 +65,8 @@ class Value
     void WriteOut(unsigned char *b, uint32_t &pos) const;
     void SanitizeMulti();
 
+    Value explicit_copy() const;
+
     static Value asString(const Value& v);
     static Value asString(const std::vector<Value>& vs);
   private:

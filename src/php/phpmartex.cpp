@@ -10,7 +10,7 @@ using std::shared_ptr;
 using std::string;
 using std::vector;
 
-MarTeX::MarTeX() : has_error(false), last_result(""), error_log(""), allow_page(false) {}
+MarTeX::MarTeX() : has_error(false), allow_page(false), last_result(""), error_log("") {}
 
 void MarTeX::RegisterModule(Php::Parameters &params)
 {

@@ -11,7 +11,7 @@ class ItemizeEnvironment : public Environment
     std::string mytag;
 
   public:
-    ItemizeEnvironment(std::shared_ptr<Environment> parent) : mytag("ul"), marker_set(false) 
+    ItemizeEnvironment(std::shared_ptr<Environment> parent) : marker_set(false), mytag("ul")  
     {
         enclosing = parent;
         is_root = false;
@@ -124,6 +124,7 @@ class ItemizeEnvironment : public Environment
             {
             case t_null:
             case t_break:
+            case t_info:
                 // don't care
                 break;
             case t_string:

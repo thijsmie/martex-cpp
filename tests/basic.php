@@ -57,4 +57,8 @@ runtest("ws.2", "\\euro\ a", "&euro; a");
 runtest("ws.3", "\\euro\\euro\\ a", "&euro;&euro; a");
 runtest("ws.4", "\\'ea", "&eacute;a");
 
+// Variable
+
+runtest("var.1", "\\define{a}{b}#a", "b");
+
 finish();

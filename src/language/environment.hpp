@@ -27,3 +27,18 @@ class Environment
     virtual void StartEnvironment(Token, Value) = 0;
     virtual Value EndEnvironment(Token, Value) = 0;
 };
+
+class EmptyEnvironment : public Environment
+{
+  public:
+    EmptyEnvironment(std::shared_ptr<Environment> parent) 
+    {
+      is_root = false;
+      enclosing = parent;
+    }
+
+    bool HasCommand(std::string) {return false;}
+    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value>) {return Value();}
+    void StartEnvironment(Token, Value) {}
+    Value EndEnvironment(Token, Value c) { return std::move(c); }
+};

@@ -1,4 +1,5 @@
 #include "interpreter.hpp"
+#include "util/string_util.hpp"
 
 using std::dynamic_pointer_cast;
 using std::make_shared;
@@ -76,18 +77,53 @@ Value Interpreter::VisitActionableExpr(shared_ptr<const ActionableExpr> actionab
 
 Value Interpreter::VisitCommandExpr(shared_ptr<const CommandExpr> command)
 {
+    IncrStack();
     vector<Value> arguments;
     arguments.reserve(command->arguments.size());
 
     for (auto argument : command->arguments)
         arguments.push_back(Evaluate(argument));
 
+    if (runnables.find(command->command.GetLexeme()) != runnables.end())
+    {
+        // Oh! we have a newcommand!
+        // build a new env and set some args
+        shared_ptr<Environment> current = environment;
+        try
+        {
+            environment = make_shared<EmptyEnvironment>(environment);
+
+            // set argument variables
+            for (unsigned int i = 0; i < arguments.size(); i++)
+            {
+                environment->Set(std::to_string(i+1), std::move(arguments[i]));
+            }
+            
+            // we don't care about starting or ending the env
+            Value v = Evaluate(runnables[command->command.GetLexeme()]);
+
+            environment = current;
+            DecrStack();
+            return std::move(v);
+        }
+        catch (RuntimeError e)
+        {
+            environment = current;
+            e.token = command->command;
+            DecrStack();
+            throw e;
+        }
+    }
+
     // return
-    return environment->RunCommand(environment, command->command, std::move(arguments));
+    Value v = environment->RunCommand(environment, command->command, std::move(arguments));
+    DecrStack();
+    return std::move(v);
 }
 
 Value Interpreter::VisitEnvironmentExpr(shared_ptr<const EnvironmentExpr> env)
 {
+    IncrStack();
     shared_ptr<Environment> current = environment;
     try
     {
@@ -105,11 +141,38 @@ Value Interpreter::VisitEnvironmentExpr(shared_ptr<const EnvironmentExpr> env)
 
         Value ret = environment->EndEnvironment(env->end, std::move(v));
         environment = current;
+        DecrStack();
         return std::move(ret);
     }
     catch (RuntimeError e)
     {
         environment = current;
+        DecrStack();
         throw e;
     }
 };
+
+Value Interpreter::VisitNewCommandExpr(shared_ptr<const NewCommandExpr> cmd)
+{
+    runnables[util::trim_copy(cmd->name.GetLexeme())] = cmd->content;
+    return Value();
+}
+
+Value Interpreter::VisitVarExpr(shared_ptr<const VarExpr> cmd)
+{
+    Value &v = environment->Get(cmd->variable);
+    return v.explicit_copy();
+}
+
+void Interpreter::IncrStack()
+{
+    StackDepth++;
+
+    if (StackDepth >= MAX_STACK_DEPTH)
+        throw RuntimeError(Token(WORD, "", -1), "Recursion limit reached");
+}
+
+void Interpreter::DecrStack()
+{
+    StackDepth--;
+}

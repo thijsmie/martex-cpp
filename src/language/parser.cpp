@@ -1,5 +1,6 @@
 #include "parser.hpp"
 #include "interpreter.hpp"
+#include "util/string_util.hpp"
 
 using std::dynamic_pointer_cast;
 using std::static_pointer_cast;
@@ -145,6 +146,14 @@ std::shared_ptr<const Expr> Parser::Expression()
     {
         return Command();
     }
+    else if (Check(NEWCOMMAND))
+    {
+        return NewCommand();
+    }
+    else if (Check(VAR))
+    {
+        return Variable();
+    }
     else if (Check(BEGIN_ENV))
     {
         return Environment();
@@ -227,6 +236,64 @@ std::shared_ptr<const Expr> Parser::Braced()
     shared_ptr<const Expr> argument = BlockExpression();
     Consume(RIGHT_BRACE, "Expected }");
     return argument;
+}
+
+std::shared_ptr<const Expr> Parser::NewCommand()
+{
+    Token newcommand = Advance();
+
+    bool eatrs = false;
+    if (CheckIgnore({WHITESPACE}, {LEFT_BRACE}))
+    {
+        Ignore({WHITESPACE});
+        Advance();
+        eatrs = true;
+    }
+
+    Token command = Consume(COMMAND, "Expected a command to define");
+
+    Ignore({WHITESPACE});
+    if (eatrs) {
+        Consume(RIGHT_BRACE, "Expected }");
+        Ignore({WHITESPACE});
+    }
+
+    int numargs = 0;
+    if (Check(LEFT_BRACKET))
+    {
+        Token lb = Advance();
+        if (!CheckIgnore({WHITESPACE, WORD}, {RIGHT_BRACKET}))
+            throw Error(lb, "Expected a number and then ]");
+
+        std::string numargs_ = "";
+
+        while(!Check(RIGHT_BRACKET))
+        {
+            Token w = Advance();
+            numargs_ += w.GetLexeme();
+        }
+        Token rb = Advance();
+
+        util::trim(numargs_);
+
+        if(!util::dgonly(numargs_))
+            throw Error(rb, "Expected a number and then ]");
+
+        numargs = std::stoi(numargs_);
+        Ignore({WHITESPACE});
+    }
+
+    Consume(LEFT_BRACE, "Expected {");
+    shared_ptr<const Expr> block = BlockExpression();
+    Consume(RIGHT_BRACE, "Expected }");
+
+    return make_shared<NewCommandExpr>(newcommand, command, numargs, block);
+}
+
+shared_ptr<const Expr> Parser::Variable()
+{
+    Token var = Advance();
+    return make_shared<VarExpr>(var);
 }
 
 shared_ptr<const Expr> Parser::Parse()

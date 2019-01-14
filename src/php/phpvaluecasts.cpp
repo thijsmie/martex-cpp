@@ -151,6 +151,8 @@ std::string PhpAsBytesI(Php::Value value)
         return a;
     }
     }
+    
+    throw Php::Exception("Unconvertable value");
 }
 
 Php::Value PhpAsBytes(Php::Parameters &params)

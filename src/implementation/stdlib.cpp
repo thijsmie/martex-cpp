@@ -39,7 +39,7 @@ std::vector<std::string> StdLib::GetGlobals()
             "Rho", "rho", "Sigma", "sigma",
             "Tau", "tau", "Upsilon", "upsilon",
             "Phi", "phi", "Omega", "omega",
-            "ref", "label", "labeling", "command", "href"};
+            "ref", "label", "labeling", "command", "href", "define"};
 }
 
 std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<Environment> parent)
@@ -93,7 +93,8 @@ Value StdLib::RunGlobal(std::shared_ptr<Environment> runenv, Token cmd, std::vec
         {"section", "subsection", "subsubsection",
          "textbf", "textit", "underline",
          "smallcaps", "newline", "title", "chapter",
-         "labeling", "ref", "label", "command"});
+         "labeling", "ref", "label", "command",
+         "define"});
 
     std::string command = cmd.GetLexeme();
 
@@ -228,6 +229,20 @@ Value StdLib::RunGlobal(std::shared_ptr<Environment> runenv, Token cmd, std::vec
             args[0] = Value("href", args[0].GetContent());
 
             return Value("a", std::move(args));
+        }
+        else if (command == "define")
+        {
+            if (args.size() != 2)
+                throw RuntimeError(cmd, "define takes two arguments");
+            
+            if (!args[0].IsPlain())
+                throw RuntimeError(cmd, "name should be plaintext");
+
+            std::string name = args[0].GetContent();
+            util::trim(name);
+
+            runenv->Set(name, std::move(args[1]));
+            return Value();
         }
     }
     throw RuntimeError(cmd, "This command does not exist?");

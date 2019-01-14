@@ -1,6 +1,5 @@
 #include "expr.hpp"
 
-
 using std::nullptr_t;
 using std::shared_ptr;
 using std::string;
@@ -13,7 +12,7 @@ Value BlockExpr::Accept(ExprVisitor *visitor) const
     return visitor->VisitBlockExpr(shared_from_this());
 }
 
-void BlockExpr::Print(std::ostream& o) const
+void BlockExpr::Print(std::ostream &o) const
 {
     o << "[block " << expressions.size() << "]\n";
     for (auto e : expressions)
@@ -28,7 +27,7 @@ Value LiteralExpr::Accept(ExprVisitor *visitor) const
     return visitor->VisitLiteralExpr(shared_from_this());
 }
 
-void LiteralExpr::Print(std::ostream& o) const
+void LiteralExpr::Print(std::ostream &o) const
 {
     o << "[literal=" << value.GetLexeme() << "] ";
 }
@@ -40,7 +39,7 @@ Value ActionableExpr::Accept(ExprVisitor *visitor) const
     return visitor->VisitActionableExpr(shared_from_this());
 }
 
-void ActionableExpr::Print(std::ostream& o) const
+void ActionableExpr::Print(std::ostream &o) const
 {
     o << "[literal=" << value.GetLexeme() << "] ";
 }
@@ -52,7 +51,7 @@ Value CommandExpr::Accept(ExprVisitor *visitor) const
     return visitor->VisitCommandExpr(shared_from_this());
 }
 
-void CommandExpr::Print(std::ostream& o) const
+void CommandExpr::Print(std::ostream &o) const
 {
     o << "[command=" << command.GetLexeme() << "] ";
     for (auto e : arguments)
@@ -70,9 +69,32 @@ Value EnvironmentExpr::Accept(ExprVisitor *visitor) const
     return visitor->VisitEnvironmentExpr(shared_from_this());
 }
 
-void EnvironmentExpr::Print(std::ostream& o) const
+void EnvironmentExpr::Print(std::ostream &o) const
 {
     o << "[env=" << begin.GetLexeme() << "] ";
     block->Print(o);
     o << "[endevn]\n";
 }
+
+NewCommandExpr::NewCommandExpr(Token newcommand, Token name, int numargs,
+                               std::shared_ptr<const Expr> content) : newcommand(newcommand), name(name),
+                                                                      numargs(numargs),
+                                                                      content(content){};
+
+Value NewCommandExpr::Accept(ExprVisitor *visitor) const
+{
+    return visitor->VisitNewCommandExpr(shared_from_this());
+}
+
+void NewCommandExpr::Print(std::ostream &o) const
+{
+}
+
+VarExpr::VarExpr(Token variable) : variable(variable) {}
+
+Value VarExpr::Accept(ExprVisitor *visitor) const
+{
+    return visitor->VisitVarExpr(shared_from_this());
+}
+
+void VarExpr::Print(std::ostream &o) const {}

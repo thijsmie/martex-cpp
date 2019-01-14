@@ -66,4 +66,18 @@ static inline bool dgonly(const std::string &s)
     auto f = [](unsigned char const c) { return std::isdigit(c); };
     return std::all_of(s.begin(), s.end(), f);
 }
+
+// cmdonly
+static inline bool cmdonly(const char &c)
+{
+    return (c > 47 && c < 58) || (c > 64 && c < 91) || (c > 96 && c < 123) || c == 95;
+}
+
+static inline bool cmdonly(const std::string &s)
+{
+    auto f = [](unsigned char const c) { return cmdonly(c); };
+    return std::all_of(s.begin(), s.end(), f);
+}
+
+
 } // namespace util

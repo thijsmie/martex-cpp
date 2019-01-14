@@ -1,4 +1,5 @@
 #include "scanner.hpp"
+#include "util/string_util.hpp"
 
 using std::string;
 using std::vector;
@@ -59,6 +60,8 @@ void Scanner::ScanCommandOrSpecial()
             AddToken(BEGIN_ENV);
         else if (lexeme == "end")
             AddToken(END_ENV);
+        else if (lexeme == "newcommand")
+            AddToken(NEWCOMMAND);
         else /// implement other keywords like 'if', 'else', 'foreach' etc here
             AddToken(COMMAND, lexeme);
             
@@ -158,6 +161,11 @@ void Scanner::ScanCommandOrSpecial()
     {
         AddToken(ESCAPE, ">");
     }
+    else if (Match('#'))
+    {
+        // Really no need to escape, add as word
+        AddToken(WORD, "#");
+    }
 }
 
 bool is_valid_char(char c)
@@ -172,7 +180,7 @@ bool is_valid_char(char c)
     /// [\]^_`abcdefghijklmnopqrstuvwxyz{|}~
 
     /// In future: filter $ too
-    return (c != '<' && c != '>' && c != '[' && c != ']' &&
+    return (c != '<' && c != '>' && c != '[' && c != ']' && c != '#' &&
             c != '{' && c != '}' && c != '%' && c != '\\' && c != '&');
 }
 
@@ -211,6 +219,15 @@ void Scanner::ScanToken()
         line++;
         AddToken(LINE, literal);
         break;
+    case '#':
+        while (!IsAtEnd() && util::cmdonly(Peek()))
+        {
+            literal.push_back(Advance());
+        }
+        if (literal.length() == 1)
+            throw Error("Unexpected # in text, maybe escape it?");
+        AddToken(VAR, literal.substr(1));
+    break;
     default:
         if (!is_valid_char(c)) {
             current--;

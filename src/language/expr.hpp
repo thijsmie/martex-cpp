@@ -72,6 +72,29 @@ class EnvironmentExpr : public Expr, public Visitable<EnvironmentExpr>
     std::shared_ptr<const Expr> block;
 };
 
+class NewCommandExpr : public Expr, public Visitable<NewCommandExpr>
+{
+  public:
+    NewCommandExpr(Token newcommand, Token name, int newargs, std::shared_ptr<const Expr> content);
+    /*virtual*/ Value Accept(ExprVisitor *) const;
+    void Print(std::ostream&o) const;
+
+    Token newcommand;
+    Token name;
+    int numargs;
+    std::shared_ptr<const Expr> content;
+};
+
+class VarExpr : public Expr, public Visitable<VarExpr>
+{
+  public:
+    VarExpr(Token variable);
+    Value Accept(ExprVisitor *) const;
+    void Print(std::ostream&o) const;
+
+    Token variable;
+};
+
 class ExprVisitor
 {
   public:
@@ -80,4 +103,6 @@ class ExprVisitor
     virtual Value VisitActionableExpr(std::shared_ptr<const ActionableExpr>) = 0;
     virtual Value VisitCommandExpr(std::shared_ptr<const CommandExpr>) = 0;
     virtual Value VisitEnvironmentExpr(std::shared_ptr<const EnvironmentExpr>) = 0;
+    virtual Value VisitNewCommandExpr(std::shared_ptr<const NewCommandExpr>) = 0;
+    virtual Value VisitVarExpr(std::shared_ptr<const VarExpr>) = 0;
 };

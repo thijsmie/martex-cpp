@@ -40,7 +40,7 @@ class PageEnvironment : public Environment
         attr.emplace_back("href", arguments[0].GetContent());
         attr.emplace_back("rel", arguments[1].GetContent());
         attr.emplace_back("type", arguments[2].GetContent());
-        
+
         return Value("link", std::move(attr));
     }
 
@@ -57,6 +57,7 @@ class PageEnvironment : public Environment
             if (v.GetType() == t_html && v.GetTag() == "body")
             {
                 html.push_back(std::move(v));
+                break;
             }
             else
             {

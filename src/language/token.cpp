@@ -8,14 +8,14 @@ string tokenTypes[] = {
   
   // Actionables
   "QUOT", "DUQUOT", "TICK", "HAT", "TILT", "DOT", "DASH",
-  "ESCAPE",
+  "ESCAPE", "VAR",
 
   // Literals.
   "WORD", "WHITESPACE", "LINE",
   "AMPERSAND", "NEWLINE",
 
   // Specials
-  "BEGIN_ENV", "END_ENV", "COMMAND", 
+  "BEGIN_ENV", "END_ENV", "COMMAND", "NEWCOMMAND",
 
   "EOTF"
 };
