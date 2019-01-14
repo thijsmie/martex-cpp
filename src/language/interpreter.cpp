@@ -26,6 +26,7 @@ Value Interpreter::ExecuteBlock(vector<shared_ptr<const Expr>> expressions)
     {
         try
         {
+            // maybe check for t_multi and insert instead?
             result.push_back(Evaluate(expr));
         }
         catch (RuntimeError e)
