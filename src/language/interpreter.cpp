@@ -8,10 +8,8 @@ using std::static_pointer_cast;
 using std::string;
 using std::vector;
 
-Interpreter::Interpreter(shared_ptr<Implementation> i, ErrorReporter &reporter) : implementation(i), error_reporter(reporter)
+Interpreter::Interpreter(shared_ptr<Environment> global, shared_ptr<Implementation> i, ErrorReporter &reporter) : implementation(i), error_reporter(reporter), globals(global), environment(global)
 {
-    environment = implementation->Global();
-    globals = environment;
 }
 
 Value Interpreter::Evaluate(shared_ptr<const Expr> expr)

@@ -15,8 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 
     return;
 }
+
+if ( $_SERVER['REQUEST_URI'] !== "/")
+    return false;
 ?>
 <html>
+    <head>
+        <link href="martex.css" rel="stylesheet" type="text/css"/>
+    </head>
 <body>
 <textarea cols="100" rows="20" id="data" onchange="update();" oninput="update();"></textarea>
 <div id="response"></div>

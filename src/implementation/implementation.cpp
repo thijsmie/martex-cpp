@@ -1,11 +1,6 @@
 #include "implementation.hpp"
 
-Implementation::Implementation(std::shared_ptr<Environment> global, std::vector<std::shared_ptr<Module>> modules) : global(global), modules(modules) {}
-
-std::shared_ptr<Environment> Implementation::Global()
-{
-    return global;
-}
+Implementation::Implementation(std::vector<std::shared_ptr<Module>> modules) : modules(modules) {}
 
 std::string Implementation::LineBreak() const
 {
@@ -84,24 +79,3 @@ std::shared_ptr<Environment> Implementation::Create(Token name, std::shared_ptr<
 
     throw RuntimeError(name, "No such environment.");
 }
-
-GlobalEnv::GlobalEnv(std::vector<std::shared_ptr<Module>> modules) : commands()
-{
-    is_root = true;
-    for (auto m : modules)
-        for (auto c : m.get()->GetGlobals())
-            commands[c] = m;
-}
-
-bool GlobalEnv::HasCommand(std::string c)
-{
-    return (commands.find(c) != commands.end());
-}
-
-Value GlobalEnv::RunCommandHere(std::shared_ptr<Environment> runenv, Token c, std::vector<Value> arguments)
-{
-    return commands[c.GetLexeme()].get()->RunGlobal(runenv, c, std::move(arguments));
-}
-
-void GlobalEnv::StartEnvironment(Token, Value) {}
-Value GlobalEnv::EndEnvironment(Token, Value s) { return s; }

@@ -43,7 +43,6 @@ class TabularEnvironment : public Environment
     std::vector<RowspecType> m_rowspec;
 
   public:
-    
     TabularEnvironment(std::shared_ptr<Environment> parent)
     {
         enclosing = parent;
@@ -140,17 +139,17 @@ class TabularEnvironment : public Environment
         int tablewidth = m_colspec.size() - 1;
         int tableheight = m_rowspec.size() - 1;
 
-        std::vector<int> skipcol (tablewidth, 0);
+        std::vector<int> skipcol(tablewidth, 0);
 
         bool skip = false;
         int x = 0;
         int y = 0;
 
         rows.emplace_back("class", "martex");
-        
-        if(x < tablewidth && y < tableheight)
+
+        if (x < tablewidth && y < tableheight)
         {
-            generateCellMarkup(m_colspec[x], m_colspec[x+1], m_rowspec[y], m_rowspec[y+1], cell);
+            generateCellMarkup(m_colspec[x], m_colspec[x + 1], m_rowspec[y], m_rowspec[y + 1], cell);
         }
 
         for (Value &v : content.multicontent)
@@ -171,29 +170,51 @@ class TabularEnvironment : public Environment
                 row.push_back(Value("td", std::move(cell)));
                 cell.clear();
                 x++;
-                while(x < tablewidth && skipcol[x] > 0)
+                while (x < tablewidth && skipcol[x] > 0)
                 {
                     skipcol[x]--;
                     x++;
                 }
 
-                if(x < tablewidth && y < tableheight)
+                if (x < tablewidth && y < tableheight)
                 {
-                    generateCellMarkup(m_colspec[x], m_colspec[x+1], m_rowspec[y], m_rowspec[y+1], cell);
+                    generateCellMarkup(m_colspec[x], m_colspec[x + 1], m_rowspec[y], m_rowspec[y + 1], cell);
                 }
                 break;
             case t_break:
                 skip = false;
                 row.push_back(Value("td", std::move(cell)));
                 cell.clear();
+
+                // if we break the table before the end we need to gen some empty cells
+                while (x < tablewidth-1)
+                {
+                    if (skipcol[++x])
+                        skipcol[x]--;
+                    else
+                    {
+                        generateCellMarkup(m_colspec[x], m_colspec[x + 1], m_rowspec[y], m_rowspec[y + 1], cell);
+                        row.push_back(Value("td", std::move(cell)));
+                        cell.clear();
+                    }
+                }
+
                 rows.push_back(Value("tr", std::move(row)));
                 row.clear();
+
                 x = 0;
                 y++;
                 
-                if(x < tablewidth && y < tableheight)
+                // if we have any skipped left cols
+                while (x < tablewidth && skipcol[x] > 0)
                 {
-                    generateCellMarkup(m_colspec[x], m_colspec[x+1], m_rowspec[y], m_rowspec[y+1], cell);
+                    skipcol[x]--;
+                    x++;
+                }
+
+                if (x < tablewidth && y < tableheight)
+                {
+                    generateCellMarkup(m_colspec[x], m_colspec[x + 1], m_rowspec[y], m_rowspec[y + 1], cell);
                 }
 
                 break;
@@ -213,29 +234,29 @@ class TabularEnvironment : public Environment
                     std::string numcols = v.multicontent[0].GetContent();
                     util::trim(numcols);
                     int cols = std::stoi(numcols);
-                            
+
                     cell.emplace_back("colspan", numcols);
 
                     // detect collision
-                    for(int i=x; i<x+cols;i++)
-                        if(i < tablewidth && skipcol[i] > 0)
+                    for (int i = x; i < x + cols; i++)
+                        if (i < tablewidth && skipcol[i] > 0)
                             throw RuntimeError(end, "collision of multirow and multicolumn detected");
-                    x += cols-1; // we get one from the ampersand
+                    x += cols - 1; // we get one from the ampersand
 
                     // parse colspec
                     std::vector<ColspecType> _colspec = parseColspec(v.multicontent[1].GetContent());
 
                     // aply markup
-                    if( y < tableheight)
+                    if (y < tableheight)
                     {
-                        generateCellMarkup(_colspec[0], _colspec[1], m_rowspec[y], m_rowspec[y+1], cell);
+                        generateCellMarkup(_colspec[0], _colspec[1], m_rowspec[y], m_rowspec[y + 1], cell);
                     }
 
                     // move in content
                     cell.push_back(std::move(v.multicontent[2]));
 
                     // skip rest of cell content till amp/break, hopefully only ws
-                    skip=true;
+                    skip = true;
                     break;
                 }
                 case 2: //multirow
@@ -247,24 +268,24 @@ class TabularEnvironment : public Environment
                     std::string numrows = v.multicontent[0].GetContent();
                     util::trim(numrows);
                     int rows = std::stoi(numrows);
-                            
+
                     cell.emplace_back("rowspan", numrows);
 
                     // apply skipcols
                     if (x < tablewidth)
-                        skipcol[x] += rows;
+                        skipcol[x] += rows - 1;
 
                     // aply markup
-                    if(x < tablewidth && y+rows < tableheight)
+                    if (x < tablewidth && y + rows <= tableheight)
                     {
-                        generateCellMarkup(m_colspec[x], m_colspec[x+1], m_rowspec[y], m_rowspec[y+rows], cell);
+                        generateCellMarkup(m_colspec[x], m_colspec[x + 1], m_rowspec[y], m_rowspec[y + rows], cell);
                     }
 
                     // move in content
                     cell.push_back(std::move(v.multicontent[1]));
 
                     // skip rest of cell content till amp/break, probably only ws
-                    skip=true;
+                    skip = true;
                     break;
                 }
                 }
@@ -483,27 +504,27 @@ class TabularEnvironment : public Environment
         // top border
         switch (mainrs)
         {
-            case rt_t:
-                cls += "b-t ";
-                break;
-            case rt_tt:
-                cls += "b-tt ";
-                break;
-            default:
-                break;
+        case rt_t:
+            cls += "b-t ";
+            break;
+        case rt_tt:
+            cls += "b-tt ";
+            break;
+        default:
+            break;
         }
 
         // bottom border
-        switch(modrs)
+        switch (modrs)
         {
-            case rt_b:
-                cls += "b-b ";
-                break;
-            case rt_bb:
-                cls += "b-bb ";
-                break;
-            default:
-                break;
+        case rt_b:
+            cls += "b-b ";
+            break;
+        case rt_bb:
+            cls += "b-bb ";
+            break;
+        default:
+            break;
         }
 
         // class?
