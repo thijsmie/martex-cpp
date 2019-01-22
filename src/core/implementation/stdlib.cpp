@@ -3,6 +3,8 @@
 #include "document.hpp"
 #include "tabular.hpp"
 
+#include "core/util/uri_util.hpp"
+
 static const std::vector<std::string> easy_replace(
     {"func", "ss", "copy", "euro",
      "pound", "deg",
@@ -259,7 +261,12 @@ Value StdLib::href(std::shared_ptr<Environment>, Token cmd, std::vector<Value> a
     if (args.size() != 2)
         throw RuntimeError(cmd, "takes two arguments");
 
-    args[0] = Value("href", args[0].GetContent());
+    std::string url = args[0].GetContent();
+
+    if (!util::is_valid_url(url))
+        throw RuntimeError(cmd, "Invalid URL");
+
+    args[0] = Value("href", url);
 
     return Value("a", std::move(args));
 }

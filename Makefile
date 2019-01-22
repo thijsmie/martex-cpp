@@ -1,54 +1,18 @@
-ifndef WASM
-#Compiler and Linker
-CC          := g++ -std=c++11
-
-#The Target Binary Program
-TARGET      := martex.so
-
-#The Directories, Source, Objects and Binary
+# Common Variables
 SRCDIR      := src
-SRCSPEC     := php
-BUILDDIR    := obj
-TARGETDIR   := bin
 SRCEXT      := cpp
 DEPEXT      := d
 OBJEXT      := o
 
-#Flags, Libraries and Includes
-CFLAGS      := -fopenmp -Wall -Wextra -O3 -g -fpic
-LFLAGS		:= -shared
-LIB         := -fopenmp -lphpcpp
-INC         := -I/usr/local/include -I./src/
-
-INI_DIR				=	/etc/php/7.0/mods-available
-EXTENSION_DIR		=	$(shell php-config --extension-dir)
-
+ifeq ($(target), php)
+include config/php.env
+else ifeq ($(target), wasm)
+include config/wasm.env
 else
-# WEBASSEMBLY
-#Compiler and Linker
-CC          := em++ -std=c++11
-
-#The Target Binary Program
-TARGET      := martex.js
-
-#The Directories, Source, Objects and Binary
-SRCDIR      := src
-SRCSPEC     := wasm
-BUILDDIR    := obj
-TARGETDIR   := res
-SRCEXT      := cpp
-DEPEXT      := d
-OBJEXT      := o
-
-#Flags, Libraries and Includes
-CFLAGS      := -fopenmp -Wall -Wextra -O3 -g -fpic
-LFLAGS		:= --bind -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -s DISABLE_EXCEPTION_CATCHING=0
-LIB         := -fopenmp
-INC         := -I/usr/local/include -I./src/
-
-INI_DIR				=	res
-EXTENSION_DIR		=	res
+$(error Please specify the target, example make target=php)
 endif
+
+BUILDDIR    := obj/$(SRCSPEC)
 
 #---------------------------------------------------------------------------------
 #DO NOT EDIT BELOW THIS LINE

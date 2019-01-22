@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/language/environment.hpp"
+#include "core/util/cppenvironment.hpp"
 #include "core/util/string_util.hpp"
 #include "core/language/runtime_error.hpp"
 #include "core/util/buffer.hpp"
@@ -36,88 +36,78 @@ enum RowspecType
     rt_bb,
 };
 
-class TabularEnvironment : public Environment
+class TabularEnvironment;
+typedef util::CppEnvironment<TabularEnvironment> ParentTabular;
+class TabularEnvironment : public ParentTabular
 {
   private:
     std::vector<ColspecType> m_colspec;
     std::vector<RowspecType> m_rowspec;
 
   public:
-    TabularEnvironment(std::shared_ptr<Environment> parent)
+    TabularEnvironment(std::shared_ptr<Environment> parent) : ParentTabular(parent)
     {
-        enclosing = parent;
-        is_root = false;
+        AddMethod("hline", &TabularEnvironment::hline);
+        AddMethod("multicolumn", &TabularEnvironment::multicolumn);
+        AddMethod("multirow", &TabularEnvironment::multirow);
     }
 
-    bool HasCommand(std::string name)
+    Value hline(std::shared_ptr<Environment>, Token command, std::vector<Value> arguments)
     {
-        return (std::find(tabular_commands.begin(), tabular_commands.end(), name) != tabular_commands.end());
+        if (arguments.size() != 0)
+            throw RuntimeError(command, "takes no arguments");
+        return Value(t_info, command.GetLexeme(), std::move(arguments));
     }
 
-    Value RunCommandHere(std::shared_ptr<Environment> env, Token command, std::vector<Value> arguments)
+    Value multicolumn(std::shared_ptr<Environment>, Token command, std::vector<Value> arguments)
     {
-        if (env.get() != (Environment *)this)
-            throw RuntimeError(command, "cannot call in nested environment");
-        // because the command is only handled in this env and not in a nested one we can pretty safely emit
-        // infotypes. It might go through a \color command or something but that should be fine.
+        if (arguments.size() != 3)
+            throw RuntimeError(command, "takes three arguments");
 
-        std::string cmd = command.GetLexeme();
-        switch ((int)std::distance(tabular_commands.begin(), std::find(tabular_commands.begin(),
-                                                                       tabular_commands.end(), cmd)))
+        // Check if numerical number of columns
+        std::string numcols = arguments[0].GetContent();
+        util::trim(numcols);
+        int cols = 0;
+        try
         {
-        case 0: //hline
-            if (arguments.size() != 0)
-                throw RuntimeError(command, "takes no arguments");
-
-            break;
-        case 1: //multicolumn
+            cols = std::stoi(numcols);
+        }
+        catch (...)
         {
-            if (arguments.size() != 3)
-                throw RuntimeError(command, "takes three arguments");
-
-            // Check if numerical number of columns
-            std::string numcols = arguments[0].GetContent();
-            util::trim(numcols);
-            int cols = 0;
-            try
-            {
-                cols = std::stoi(numcols);
-            }
-            catch (...)
-            {
-                throw RuntimeError(command, "'" + numcols + "' is not an acceptable integer");
-            }
-            if (cols < 1 or cols >= 32)
-                throw RuntimeError(command, "number of columns should be in range [1,31]");
-
-            // Validate colspec
-            std::string colspec = arguments[1].GetContent();
-            if (!validateColspec(colspec))
-                throw RuntimeError(command, "'" + colspec + "' is not an acceptable column specification");
-            break;
+            throw RuntimeError(command, "'" + numcols + "' is not an acceptable integer");
         }
-        break;
-        case 2: //multirow
-            if (arguments.size() != 2)
-                throw RuntimeError(command, "takes three arguments");
+        if (cols < 1 or cols >= 32)
+            throw RuntimeError(command, "number of columns should be in range [1,31]");
 
-            // Check if numerical number of columns
-            std::string numrows = arguments[0].GetContent();
-            util::trim(numrows);
-            int rows = 0;
-            try
-            {
-                rows = std::stoi(numrows);
-            }
-            catch (...)
-            {
-                throw RuntimeError(command, numrows + " is not an acceptable integer.");
-            }
-            if (rows < 1 or rows >= 32)
-                throw RuntimeError(command, "number of rows should be in range [1,31]");
-            break;
+        // Validate colspec
+        std::string colspec = arguments[1].GetContent();
+        if (!validateColspec(colspec))
+            throw RuntimeError(command, "'" + colspec + "' is not an acceptable column specification");
+
+        return Value(t_info, command.GetLexeme(), std::move(arguments));
+    }
+
+    Value multirow(std::shared_ptr<Environment>, Token command, std::vector<Value> arguments)
+    {
+        if (arguments.size() != 2)
+            throw RuntimeError(command, "takes three arguments");
+
+        // Check if numerical number of columns
+        std::string numrows = arguments[0].GetContent();
+        util::trim(numrows);
+        int rows = 0;
+        try
+        {
+            rows = std::stoi(numrows);
         }
-        return Value(t_info, cmd, std::move(arguments));
+        catch (...)
+        {
+            throw RuntimeError(command, numrows + " is not an acceptable integer.");
+        }
+        if (rows < 1 or rows >= 32)
+            throw RuntimeError(command, "number of rows should be in range [1,31]");
+
+        return Value(t_info, command.GetLexeme(), std::move(arguments));
     }
 
     void StartEnvironment(Token begin, Value colspec)
@@ -187,7 +177,7 @@ class TabularEnvironment : public Environment
                 cell.clear();
 
                 // if we break the table before the end we need to gen some empty cells
-                while (x < tablewidth-1)
+                while (x < tablewidth - 1)
                 {
                     if (skipcol[++x])
                         skipcol[x]--;
@@ -204,7 +194,7 @@ class TabularEnvironment : public Environment
 
                 x = 0;
                 y++;
-                
+
                 // if we have any skipped left cols
                 while (x < tablewidth && skipcol[x] > 0)
                 {

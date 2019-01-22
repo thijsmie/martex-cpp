@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/language/module.hpp"
+#include "core/language/environment.hpp"
 #include "core/language/value.hpp"
 #include "core/language/runtime_error.hpp"
 
@@ -8,14 +8,12 @@
 #include <map>
 #include <string>
 #include <algorithm>
-#include <type_traits>
-
 
 namespace util
 {
 
-template <typename T> /// T is the implementing module
-class CppModule : public Module
+template <typename T> /// T is the implementing environment
+class CppEnvironment : public Environment
 {
   private:
     typedef Value (T::*module_method_t)(std::shared_ptr<Environment>, Token, std::vector<Value>);
@@ -29,18 +27,18 @@ class CppModule : public Module
     }
 
   public:
-    std::vector<std::string> GetGlobals()
+    CppEnvironment(std::shared_ptr<Environment> p) : Environment(p) {}
+    
+    bool HasCommand(std::string name)
     {
-        std::vector<std::string> funcnames;
-        funcnames.reserve(funcs.size());
-        for (auto const &kv : funcs)
-            funcnames.push_back(kv.first);
-
-        return std::move(funcnames);
+        return (funcs.find(name) != funcs.end());
     }
 
-    Value RunGlobal(std::shared_ptr<Environment> env, Token cmd, std::vector<Value> args)
+    Value RunCommandHere(std::shared_ptr<Environment> env, Token cmd, std::vector<Value> args)
     {
+        if (env.get() != (Environment *)this)
+            throw RuntimeError(cmd, "cannot call in nested environment");
+
         auto x = funcs.find(cmd.GetLexeme());
 
         if (x != funcs.end())

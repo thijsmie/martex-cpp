@@ -14,6 +14,9 @@ class Environment
     std::shared_ptr<Environment> enclosing;
 
   public:
+    Environment() {}
+    Environment(std::shared_ptr<Environment> p) : is_root(false), enclosing(p) {}
+
     bool IsRoot() { return is_root; }
     std::shared_ptr<Environment> GetEnclosing() { return enclosing; }
     void Set(std::string, Value);
