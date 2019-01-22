@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="martex.css" rel="stylesheet" type="text/css" />
+    <script src="martex.js"></script>
+    <script>
+        var enabled = true;
+        function update() {
+            if (enabled) {
+                var dt = document.getElementById("data");
+                var rp = document.getElementById("response");
+                var txt = dt.value;
+                var t1 = performance.now();
+                var out = Module._compile(dt.value);
+                var t2 = performance.now();
+                rp.innerHTML = out;
+
+                console.log("Martex roundtrip was " + (t2 - t1) + " milliseconds.");
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <textarea cols="100" rows="20" id="data" onchange="update();" oninput="update();"></textarea>
+    <div id="response"></div>
+</body>
+
+</html>

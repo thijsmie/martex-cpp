@@ -1,6 +1,6 @@
 #include "parser.hpp"
 #include "interpreter.hpp"
-#include "util/string_util.hpp"
+#include "core/util/string_util.hpp"
 
 using std::dynamic_pointer_cast;
 using std::static_pointer_cast;

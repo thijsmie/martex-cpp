@@ -1,7 +1,7 @@
 #include "phpvaluecasts.hpp"
-#include "language/runtime_error.hpp"
-#include "language/token.hpp"
-#include "util/buffer.hpp"
+#include "core/language/runtime_error.hpp"
+#include "core/language/token.hpp"
+#include "core/util/buffer.hpp"
 #include <chrono>
 #include <cstdint>
 
@@ -10,9 +10,9 @@ Php::Value CppToPhpSingle(const Value &v)
     // v garuanteed no t_multi
 
     Php::Value k;
-    if (v.GetType() == t_html)
+    if (v.GetType() == t_html || v.GetType() == t_info)
     {
-        k[0] = t_html;
+        k[0] = v.GetType();
         k[1] = v.GetTag();
         k[2] = CppToPhp(v.multicontent);
     }
@@ -161,7 +161,7 @@ Php::Value PhpAsBytes(Php::Parameters &params)
     return PhpAsBytesI(value);
 }
 
-Value PhpToCppSingle(const unsigned char *b, uint32_t &pos, const uint32_t end)
+Value PhpToCppSingle(const unsigned char *b, uint32_t &pos, const uint32_t)
 {
     const uint8_t type = deserialize_byte(b, pos);
 
@@ -381,7 +381,7 @@ Php::Value attr(Php::Parameters &params)
     return ret;
 }
 
-Php::Value ampersand(Php::Parameters &params)
+Php::Value ampersand(Php::Parameters &)
 {
     unsigned char b[1];
     uint32_t pos = 0;
@@ -389,7 +389,7 @@ Php::Value ampersand(Php::Parameters &params)
     return Php::Value((char*)b, pos);
 }
 
-Php::Value newline(Php::Parameters &params)
+Php::Value newline(Php::Parameters &)
 {
     unsigned char b[1];
     uint32_t pos = 0;

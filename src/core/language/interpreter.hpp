@@ -14,7 +14,7 @@ class Interpreter;
 #include "environment.hpp"
 #include "error_reporter.hpp"
 #include "runtime_error.hpp"
-#include "implementation/implementation.hpp"
+#include "core/implementation/implementation.hpp"
 
 class Interpreter : public ExprVisitor
 {
@@ -43,6 +43,6 @@ class Interpreter : public ExprVisitor
     void DecrStack();
 
   public:
-    Interpreter(shared_ptr<Environment>, std::shared_ptr<Implementation>, ErrorReporter &error_reporter);
+    Interpreter(std::shared_ptr<Environment>, std::shared_ptr<Implementation>, ErrorReporter &error_reporter);
     Value Evaluate(std::shared_ptr<const Expr>);
 };

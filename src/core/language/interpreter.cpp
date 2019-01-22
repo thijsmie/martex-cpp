@@ -1,5 +1,5 @@
 #include "interpreter.hpp"
-#include "util/string_util.hpp"
+#include "core/util/string_util.hpp"
 
 using std::dynamic_pointer_cast;
 using std::make_shared;
@@ -8,7 +8,7 @@ using std::static_pointer_cast;
 using std::string;
 using std::vector;
 
-Interpreter::Interpreter(shared_ptr<Environment> global, shared_ptr<Implementation> i, ErrorReporter &reporter) : implementation(i), error_reporter(reporter), globals(global), environment(global)
+Interpreter::Interpreter(shared_ptr<Environment> global, shared_ptr<Implementation> i, ErrorReporter &reporter) : environment(global), globals(global), implementation(i), error_reporter(reporter)
 {
 }
 

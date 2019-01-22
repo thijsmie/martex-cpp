@@ -1,6 +1,6 @@
 #pragma once
 
-#include "implementation/module.hpp"
+#include "core/language/module.hpp"
 #include "phpenvironment.hpp"
 
 #include <phpcpp.h>
@@ -8,6 +8,21 @@
 #include <vector>
 #include <map>
 #include <string>
+
+/// Base class for php modules to inherit
+class PhpModuleBase : public Php::Base
+{
+public:
+  Php::Value globals()
+  {
+    return Php::Array();
+  }
+
+  Php::Value environments()
+  {
+    return Php::Array();
+  }
+};
 
 class PhpModule : public Module
 {

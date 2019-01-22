@@ -1,7 +1,8 @@
 #include <phpcpp.h>
 
-#include "phpglobal.hpp"
 #include "phpmartex.hpp"
+#include "phpmodule.hpp"
+#include "phpenvironment.hpp"
 #include "phpvaluecasts.hpp"
 
 /**
@@ -9,7 +10,6 @@
  */
 extern "C"
 {
-
     /**
      *  Function that is called by PHP right after the PHP process
      *  has started, and that returns an address of an internal PHP
@@ -44,13 +44,10 @@ extern "C"
         base2.method<&PhpEnvironmentBase::begin>("begin", {Php::ByVal("bracket_argument", Php::Type::Resource)});
         base2.method<&PhpEnvironmentBase::end>("end", {Php::ByVal("content", Php::Type::Resource)});
 
-        Php::Class<PhpGlobalEnvironment> base3("GlobalEnv");
-
         // Add classes to namespace
         texspace.add(std::move(martex));
         texspace.add(std::move(base1));
         texspace.add(std::move(base2));
-        texspace.add(std::move(base3));
 
         // Helpers
         texspace.add<html>("html");
@@ -70,6 +67,7 @@ extern "C"
         texspace.add(Php::Constant("TypeMulti", ValueType::t_multi));
         texspace.add(Php::Constant("TypeHtml", ValueType::t_html));
         texspace.add(Php::Constant("TypeAttr", ValueType::t_attr));
+        texspace.add(Php::Constant("TypeInfo", ValueType::t_info));
 
         // Add argtype constants to namespace
         texspace.add(Php::Constant("Full", ArgType::Full));

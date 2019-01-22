@@ -79,5 +79,16 @@ static inline bool cmdonly(const std::string &s)
     return std::all_of(s.begin(), s.end(), f);
 }
 
+// hexonly
+static inline bool hexonly(const char &c)
+{
+    return (c > 47 && c < 58) || (c > 64 && c < 71) || (c > 96 && c < 103);
+}
+
+static inline bool hexonly(const std::string &s)
+{
+    auto f = [](unsigned char const c) { return hexonly(c); };
+    return std::all_of(s.begin(), s.end(), f);
+}
 
 } // namespace util

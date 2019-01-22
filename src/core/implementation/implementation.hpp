@@ -5,9 +5,9 @@
 #include <map>
 #include <vector>
 
-#include "language/environment.hpp"
-#include "language/token.hpp"
-#include "language/module.hpp"
+#include "core/language/environment.hpp"
+#include "core/language/token.hpp"
+#include "core/language/module.hpp"
 
 
 class Implementation

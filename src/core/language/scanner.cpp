@@ -1,5 +1,5 @@
 #include "scanner.hpp"
-#include "util/string_util.hpp"
+#include "core/util/string_util.hpp"
 
 using std::string;
 using std::vector;

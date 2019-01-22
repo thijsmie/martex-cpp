@@ -1,9 +1,9 @@
 #pragma once
 
-#include "language/environment.hpp"
-#include "util/string_util.hpp"
-#include "language/runtime_error.hpp"
-#include "util/buffer.hpp"
+#include "core/language/environment.hpp"
+#include "core/util/string_util.hpp"
+#include "core/language/runtime_error.hpp"
+#include "core/util/buffer.hpp"
 
 #include <memory>
 #include <vector>

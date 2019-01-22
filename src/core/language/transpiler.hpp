@@ -1,10 +1,7 @@
 #pragma once
     
-#include "globalenvironment.hpp"
 #include "error_reporter.hpp"
-#include "interpreter.hpp"
-    
-#include "implementation/implementation.hpp"
+#include "module.hpp"
     
 #include <memory>
 #include <vector>
@@ -12,13 +9,18 @@
 class Transpiler
 {
   private:
+    bool used;
     ErrorReporter error_reporter;
+    std::vector<std::shared_ptr<Module>> modules;
+    Value result;
     
   public:
     Transpiler(std::vector<std::shared_ptr<Module>>);
-    Parse(std::string);
+
+    void Parse(std::string);
     
-    void HadError();
+    bool HasError();
     std::string GetErrors();
     std::string GetResult();
-}
+    std::string GetResultBytes();
+};

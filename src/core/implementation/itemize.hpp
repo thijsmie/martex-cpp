@@ -1,8 +1,8 @@
 #pragma once
 
-#include "language/environment.hpp"
-#include "util/string_util.hpp"
-#include "language/runtime_error.hpp"
+#include "core/language/environment.hpp"
+#include "core/util/string_util.hpp"
+#include "core/language/runtime_error.hpp"
 
 class ItemizeEnvironment : public Environment
 {

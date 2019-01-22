@@ -88,6 +88,7 @@ Value NewCommandExpr::Accept(ExprVisitor *visitor) const
 
 void NewCommandExpr::Print(std::ostream &o) const
 {
+    o << "[newcommand]" << std::endl;
 }
 
 VarExpr::VarExpr(Token variable) : variable(variable) {}
@@ -97,4 +98,7 @@ Value VarExpr::Accept(ExprVisitor *visitor) const
     return visitor->VisitVarExpr(shared_from_this());
 }
 
-void VarExpr::Print(std::ostream &o) const {}
+void VarExpr::Print(std::ostream &o) const 
+{
+    o << "[var " << variable.GetLexeme() << "]" << std::endl;
+}

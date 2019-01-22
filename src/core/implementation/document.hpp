@@ -1,4 +1,4 @@
-#include "language/environment.hpp"
+#include "core/language/environment.hpp"
 #include <string>
 #include <memory>
 
@@ -34,7 +34,7 @@ class PageEnvironment : public Environment
         return (cmd == "link");
     }
 
-    Value RunCommandHere(std::shared_ptr<Environment>, Token cmd, std::vector<Value> arguments)
+    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value> arguments)
     {
         std::vector<Value> attr;
         attr.emplace_back("href", arguments[0].GetContent());
