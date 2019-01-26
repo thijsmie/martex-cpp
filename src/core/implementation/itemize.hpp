@@ -16,7 +16,7 @@ class ItemizeEnvironment : public ParentItemize
     ItemizeEnvironment(std::shared_ptr<Environment> parent) : ParentItemize(parent), marker_set(false), mytag("ul")
     {
         AddMethod("item", &ItemizeEnvironment::item);
-        AddMethod("setmarket", &ItemizeEnvironment::setmarker);
+        AddMethod("setmarker", &ItemizeEnvironment::setmarker);
     }
 
     Value item(std::shared_ptr<Environment>, Token name, std::vector<Value> arguments)

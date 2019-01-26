@@ -2,8 +2,9 @@
 #include "itemize.hpp"
 #include "document.hpp"
 #include "tabular.hpp"
+#include "figure.hpp"
 
-#include "core/util/uri_util.hpp"
+#include "core/util/regex_util.hpp"
 
 static const std::vector<std::string> easy_replace(
     {"func", "ss", "copy", "euro",
@@ -76,7 +77,7 @@ StdLib::StdLib(bool allow_page)
 
 std::vector<std::string> StdLib::GetEnvs()
 {
-    return std::vector<std::string>{"itemize", "enumerate", "paragraph", "page", "document", "tabular"};
+    return std::vector<std::string>{"itemize", "enumerate", "paragraph", "page", "document", "tabular", "figure"};
 }
 
 std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<Environment> parent)
@@ -89,6 +90,8 @@ std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<E
         return std::make_shared<ParagraphEnvironment>(parent);
     if (name == "tabular")
         return std::make_shared<TabularEnvironment>(parent);
+    if (name == "figure")
+        return std::make_shared<FigureEnvironment>(parent);
     if (!_hasdocument && name == "document")
     {
         _hasdocument = true;

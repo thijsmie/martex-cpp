@@ -4,14 +4,13 @@ SRCEXT      := cpp
 DEPEXT      := d
 OBJEXT      := o
 
-ifeq ($(target), php)
-include config/php.env
-else ifeq ($(target), wasm)
-include config/wasm.env
-else
+CONFIGFILE	:= config/$(target).env
+
+ifeq ("$(wildcard $(CONFIGFILE))","")
 $(error Please specify the target, example make target=php)
 endif
 
+include $(CONFIGFILE)
 BUILDDIR    := obj/$(SRCSPEC)
 
 #---------------------------------------------------------------------------------
@@ -56,10 +55,6 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
 	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
 
-install:		
-	cp ${BIN}/${TARGET} ${EXTENSION_DIR}
-	cp martex.ini ${INI_DIR}
-
 #Non-File Targets
-.PHONY: all remake clean cleaner install
+.PHONY: all remake clean cleaner
 
