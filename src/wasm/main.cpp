@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <cstdlib>
 
-#include "core/implementation/stdlib.hpp"
+#include "core/modules/stdlib.hpp"
 #include "core/language/transpiler.hpp"
 
 std::string do_replace(std::string const &in, std::string const &from, std::string const &to)

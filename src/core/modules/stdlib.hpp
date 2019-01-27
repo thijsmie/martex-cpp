@@ -44,4 +44,6 @@ class StdLib : public util::CppModule<StdLib>
     Value define(std::shared_ptr<Environment>, Token, std::vector<Value>);
 
     Value colour(std::shared_ptr<Environment>, Token, std::vector<Value>);
+
+    Value mono(std::shared_ptr<Environment>, Token, std::vector<Value>);
 };

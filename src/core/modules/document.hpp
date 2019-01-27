@@ -31,17 +31,28 @@ class PageEnvironment : public Environment
 
     bool HasCommand(std::string cmd)
     {
-        return (cmd == "link");
+        return (cmd == "link" || cmd == "meta");
     }
 
-    Value RunCommandHere(std::shared_ptr<Environment>, Token, std::vector<Value> arguments)
+    Value RunCommandHere(std::shared_ptr<Environment>, Token cmd, std::vector<Value> arguments)
     {
-        std::vector<Value> attr;
-        attr.emplace_back("href", arguments[0].GetContent());
-        attr.emplace_back("rel", arguments[1].GetContent());
-        attr.emplace_back("type", arguments[2].GetContent());
+        if (cmd.GetLexeme() == "link")
+        {
+            std::vector<Value> attr;
+            attr.emplace_back("href", arguments[0].GetContent());
+            attr.emplace_back("rel", arguments[1].GetContent());
+            attr.emplace_back("type", arguments[2].GetContent());
 
-        return Value("link", std::move(attr));
+            return Value("link", std::move(attr));
+        }
+        else
+        {
+            std::vector<Value> attr;
+            attr.emplace_back("name", arguments[0].GetContent());
+            attr.emplace_back("content", arguments[1].GetContent());
+
+            return Value("meta", std::move(attr));
+        }
     }
 
     void StartEnvironment(Token, Value){};

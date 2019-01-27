@@ -1,13 +1,11 @@
 #include "implementation.hpp"
 
-Implementation::Implementation(std::vector<std::shared_ptr<Module>> modules) : modules(modules) {}
-
-std::string Implementation::LineBreak() const
+std::string Implementation::LineBreak()
 {
     return "<br />";
 }
 
-std::string Implementation::Ampersand() const
+std::string Implementation::Ampersand()
 {
     return "&amp;";
 }
@@ -66,16 +64,4 @@ std::string Implementation::Escaped(TokenType escapetype, char escapee)
     default:
         return "";
     }
-}
-
-std::shared_ptr<Environment> Implementation::Create(Token name, std::shared_ptr<Environment> parent)
-{
-    std::string cname = name.GetLexeme();
-
-    for (auto m : modules)
-        for (std::string e : m.get()->GetEnvs())
-            if (e == cname)
-                return m.get()->MakeEnv(cname, parent);
-
-    throw RuntimeError(name, "No such environment.");
 }

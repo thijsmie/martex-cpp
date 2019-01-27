@@ -46,25 +46,25 @@ class ItemizeEnvironment : public ParentItemize
         {
             marker_set = true;
             mytag = "ul";
-            return Value("list-style-type", "square");
+            return Value("style", "list-style-type: square;");
         }
         if (type == "bullet")
         {
             marker_set = true;
             mytag = "ul";
-            return Value("list-style-type", "bullet");
+            return Value("style", "list-style-type: bullet");
         }
         if (type == "circle")
         {
             marker_set = true;
             mytag = "ul";
-            return Value("list-style-type", "circle");
+            return Value("style", "list-style-type: circle");
         }
         if (type == "none")
         {
             marker_set = true;
             mytag = "ul";
-            return Value("list-style-type", "none");
+            return Value("style", "list-style-type: none");
         }
 
         // ols

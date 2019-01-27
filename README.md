@@ -50,6 +50,26 @@ This will yield a file martex in the bin folder. It takes TeX over standard inpu
 
 You might complain that my test file format is weird and is annoying to parse. I like it however, because it allows you to describe tests in however much detail you want and is also language independant, which is important because I would like to be able to run the tests in whatever module form I desire. 
 
+## Project structure
+
+```
+martex-cpp
+├── bin                 # build output
+├── config              # makefile environment variables for different targets
+├── documentation       # MarTeX usage documentation rendered with MarTeX-Cpp
+├── obj                 # object and dependency files
+├── res                 # resources
+├── src                 # source code
+│   ├── core            # the common core code for all targets
+│   │   ├── language    # implementation of the TeX language parser
+│   │   ├── modules     # standard library of commands and environments
+│   │   └── util        # utility functions, mostly string checks
+│   ├── cpp             # simple utility source
+│   ├── php             # Php module source. Most code has to do with conversion of values.
+│   └── wasm            # Webassembly module source.
+└── tests               # Tests in TeX input/HTML output style.
+```
+
 ## Contributing
 
 Please feel free to submit anything! The only thing I ask is that you include at least one test that verifies the behaviour of your change.

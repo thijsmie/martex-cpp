@@ -158,7 +158,7 @@ class FigureEnvironment : public util::CppEnvironment<FigureEnvironment>
         }
 
         attributes.emplace_back("alt", alttext_);
-        attributes.emplace_back("href", graphic_);
+        attributes.emplace_back("src", graphic_);
 
         Value image("img", std::move(attributes));
 

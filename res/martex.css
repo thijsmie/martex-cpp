@@ -1,9 +1,22 @@
 /* martex.css 1.0 by Thijs Miedema, 2019-01-10. */
 
+/* fonting */
+
+.martex-text {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font: 400 16px/1.42 "Roboto","Helvetica Neue","Helvetica",sans-serif;
+    color: #000000ad;
+}
+
+.martex-mono {
+    font-family: "Roboto Mono",Menlo,monospace;
+}
+
 /* tables - table cell borders */
 
 table.martex {
-    margin:1em;
+    margin: 1em;
     border-collapse: collapse;
     border-style: solid;
     border-width: 0px;

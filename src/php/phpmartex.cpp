@@ -4,7 +4,7 @@
 #include "phpenvironment.hpp"
 
 #include "core/language/transpiler.hpp"
-#include "core/implementation/stdlib.hpp"
+#include "core/modules/stdlib.hpp"
 
 using std::shared_ptr;
 using std::string;

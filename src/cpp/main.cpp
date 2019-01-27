@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "core/implementation/stdlib.hpp"
+#include "core/modules/stdlib.hpp"
 #include "core/language/transpiler.hpp"
 
 
@@ -15,7 +15,7 @@ int main()
 
     std::vector<std::shared_ptr<Module>> module_inst;
     module_inst.reserve(1);
-    module_inst.push_back(std::make_shared<StdLib>(false));
+    module_inst.push_back(std::make_shared<StdLib>(true));
 
     // Run the transpiler
     Transpiler transpiler(module_inst);

@@ -8,7 +8,7 @@ using std::static_pointer_cast;
 using std::string;
 using std::vector;
 
-Interpreter::Interpreter(shared_ptr<Environment> global, shared_ptr<Implementation> i, ErrorReporter &reporter) : environment(global), globals(global), implementation(i), error_reporter(reporter)
+Interpreter::Interpreter(shared_ptr<Environment> global, vector<shared_ptr<Module>> modules, ErrorReporter &reporter) : modules(modules), environment(global), globals(global), error_reporter(reporter)
 {
 }
 
@@ -58,10 +58,10 @@ Value Interpreter::VisitLiteralExpr(shared_ptr<const LiteralExpr> literal)
         return Value(t_string, literal->value.GetLexeme());
         break;
     case TokenType::NEWLINE:
-        return Value(t_break, implementation->LineBreak());
+        return Value(t_break, Implementation::LineBreak());
         break;
     case TokenType::AMPERSAND:
-        return Value(t_ampersand, implementation->Ampersand());
+        return Value(t_ampersand, Implementation::Ampersand());
         break;
     default:
         return Value();
@@ -71,7 +71,7 @@ Value Interpreter::VisitLiteralExpr(shared_ptr<const LiteralExpr> literal)
 Value Interpreter::VisitActionableExpr(shared_ptr<const ActionableExpr> actionable)
 {
     // return
-    return Value(t_string, implementation->Escaped(actionable->value.GetType(), actionable->value.GetLexeme().at(0)));
+    return Value(t_string, Implementation::Escaped(actionable->value.GetType(), actionable->value.GetLexeme().at(0)));
 }
 
 Value Interpreter::VisitCommandExpr(shared_ptr<const CommandExpr> command)
@@ -126,7 +126,7 @@ Value Interpreter::VisitEnvironmentExpr(shared_ptr<const EnvironmentExpr> env)
     shared_ptr<Environment> current = environment;
     try
     {
-        environment = implementation->Create(env->begin, environment);
+        environment = CreateEnvironment(env->begin, environment);
 
         if (env->bracket_argument != nullptr)
         {
@@ -174,4 +174,16 @@ void Interpreter::IncrStack()
 void Interpreter::DecrStack()
 {
     StackDepth--;
+}
+
+std::shared_ptr<Environment> Interpreter::CreateEnvironment(Token name, std::shared_ptr<Environment> parent)
+{
+    std::string cname = name.GetLexeme();
+
+    for (auto m : modules)
+        for (std::string e : m.get()->GetEnvs())
+            if (e == cname)
+                return m.get()->MakeEnv(cname, parent);
+
+    throw RuntimeError(name, "No such environment.");
 }

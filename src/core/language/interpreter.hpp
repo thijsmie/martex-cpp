@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_STACK_DEPTH 2000
+#define MAX_STACK_DEPTH 500
 
 #include <iostream>
 #include <memory>
@@ -12,15 +12,17 @@ class Interpreter;
 #include "expr.hpp"
 #include "value.hpp"
 #include "environment.hpp"
+#include "module.hpp"
 #include "error_reporter.hpp"
 #include "runtime_error.hpp"
-#include "core/implementation/implementation.hpp"
+#include "implementation.hpp"
 
 class Interpreter : public ExprVisitor
 {
+  private:
+    std::vector<std::shared_ptr<Module>> modules;
     std::shared_ptr<Environment> environment;
     std::shared_ptr<Environment> globals;
-    std::shared_ptr<Implementation> implementation;
     ErrorReporter &error_reporter;
 
     int StackDepth = 0;
@@ -42,7 +44,9 @@ class Interpreter : public ExprVisitor
     void IncrStack();
     void DecrStack();
 
+    std::shared_ptr<Environment> CreateEnvironment(Token, std::shared_ptr<Environment>);
+
   public:
-    Interpreter(std::shared_ptr<Environment>, std::shared_ptr<Implementation>, ErrorReporter &error_reporter);
+    Interpreter(std::shared_ptr<Environment>, std::vector<std::shared_ptr<Module>>, ErrorReporter &error_reporter);
     Value Evaluate(std::shared_ptr<const Expr>);
 };

@@ -1,0 +1,14 @@
+body {
+    max-width: 38em;
+    margin: auto;
+    padding: 1em 0.7em;
+    background-color: #f2f0e8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font: 400 16px/1.42 "Roboto", "Helvetica Neue", "Helvetica", sans-serif;
+    color: #000000ad;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}

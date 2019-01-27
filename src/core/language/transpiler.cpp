@@ -8,7 +8,6 @@
 #include "interpreter.hpp"
 
 #include "globalenvironment.hpp"
-#include "core/implementation/implementation.hpp"
 
 Transpiler::Transpiler(std::vector<std::shared_ptr<Module>> modules) : used(false), error_reporter(), modules(modules) {}
 
@@ -34,7 +33,7 @@ void Transpiler::Parse(std::string text)
     std::shared_ptr<const Expr> ast = parser.Parse();
 
     // Create the interpreter
-    Interpreter interpreter(globalEnv, std::make_shared<Implementation>(modules), error_reporter);
+    Interpreter interpreter(globalEnv, modules, error_reporter);
     result = interpreter.Evaluate(ast);
 }
 

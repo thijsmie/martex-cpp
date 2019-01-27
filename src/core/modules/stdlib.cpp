@@ -73,6 +73,8 @@ StdLib::StdLib(bool allow_page)
 
     AddMethod("colour", &StdLib::colour);
     AddMethod("color", &StdLib::colour);
+
+    AddMethod("mono", &StdLib::mono);
 }
 
 std::vector<std::string> StdLib::GetEnvs()
@@ -242,7 +244,8 @@ Value StdLib::command(std::shared_ptr<Environment>, Token, std::vector<Value> ar
     if (args.size() == 1)
     {
         args.emplace(args.begin(), t_string, "&#92;");
-        return Value(std::move(args));
+        args.emplace(args.begin(), "class", "martex-mono");
+        return Value("span", std::move(args));
     }
     else
     {
@@ -255,7 +258,8 @@ Value StdLib::command(std::shared_ptr<Environment>, Token, std::vector<Value> ar
         }
 
         args.emplace(args.begin(), t_string, "&#92;");
-        return Value(std::move(args));
+        args.emplace(args.begin(), "class", "martex-mono");
+        return Value("span", std::move(args));
     }
 }
 
@@ -301,6 +305,16 @@ Value StdLib::colour(std::shared_ptr<Environment>, Token cmd, std::vector<Value>
         throw RuntimeError(cmd, "invalid hexcode");
 
     args[0] = Value("style", "color: #" + col);
+
+    return Value("span", std::move(args));
+}
+
+Value StdLib::mono(std::shared_ptr<Environment>, Token cmd, std::vector<Value> args)
+{
+    if (args.size() != 1)
+        throw RuntimeError(cmd, "takes one argument");
+
+    args.emplace(args.begin(), "class", "martex-mono");
 
     return Value("span", std::move(args));
 }
