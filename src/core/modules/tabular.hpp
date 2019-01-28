@@ -52,14 +52,14 @@ class TabularEnvironment : public ParentTabular
         AddMethod("multirow", &TabularEnvironment::multirow);
     }
 
-    Value hline(std::shared_ptr<Environment>, Token command, std::vector<Value> arguments)
+    Value hline(Token command, std::vector<Value> arguments)
     {
         if (arguments.size() != 0)
             throw RuntimeError(command, "takes no arguments");
         return Value(t_info, command.GetLexeme(), std::move(arguments));
     }
 
-    Value multicolumn(std::shared_ptr<Environment>, Token command, std::vector<Value> arguments)
+    Value multicolumn(Token command, std::vector<Value> arguments)
     {
         if (arguments.size() != 3)
             throw RuntimeError(command, "takes three arguments");
@@ -87,7 +87,7 @@ class TabularEnvironment : public ParentTabular
         return Value(t_info, command.GetLexeme(), std::move(arguments));
     }
 
-    Value multirow(std::shared_ptr<Environment>, Token command, std::vector<Value> arguments)
+    Value multirow(Token command, std::vector<Value> arguments)
     {
         if (arguments.size() != 2)
             throw RuntimeError(command, "takes three arguments");

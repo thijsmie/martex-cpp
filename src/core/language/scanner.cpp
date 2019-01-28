@@ -145,6 +145,14 @@ void Scanner::ScanCommandOrSpecial()
     {
         AddToken(ESCAPE, "}");
     }
+    else if (Match('['))
+    {
+        AddToken(WORD, "[");
+    }
+    else if (Match(']'))
+    {
+        AddToken(WORD, "]");
+    }
     else if (Match('&'))
     {
         AddToken(ESCAPE, "&");

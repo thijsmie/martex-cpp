@@ -19,7 +19,7 @@ class ItemizeEnvironment : public ParentItemize
         AddMethod("setmarker", &ItemizeEnvironment::setmarker);
     }
 
-    Value item(std::shared_ptr<Environment>, Token name, std::vector<Value> arguments)
+    Value item(Token name, std::vector<Value> arguments)
     {
         if (arguments.size() > 1)
             throw RuntimeError(name, "takes zero/one argument");
@@ -28,7 +28,7 @@ class ItemizeEnvironment : public ParentItemize
         return Value(t_ampersand, "");
     }
 
-    Value setmarker(std::shared_ptr<Environment>, Token name, std::vector<Value> arguments)
+    Value setmarker(Token name, std::vector<Value> arguments)
     {
 
         if (arguments.size() != 1)

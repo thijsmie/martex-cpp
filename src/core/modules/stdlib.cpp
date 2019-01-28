@@ -58,9 +58,14 @@ StdLib::StdLib(bool allow_page)
     AddMethod("textbf", &StdLib::textbf);
     AddMethod("textit", &StdLib::textit);
     AddMethod("textul", &StdLib::textul);
-    AddMethod("underline", &StdLib::textul);
     AddMethod("textsc", &StdLib::textsc);
+    AddMethod("textms", &StdLib::mono);
+    
+    AddMethod("bold", &StdLib::textbf);
+    AddMethod("italic", &StdLib::textit);
+    AddMethod("underline", &StdLib::textul);
     AddMethod("smallcaps", &StdLib::textsc);
+    AddMethod("mono", &StdLib::mono);
 
     AddMethod("ref", &StdLib::ref);
     AddMethod("label", &StdLib::label);
@@ -73,8 +78,6 @@ StdLib::StdLib(bool allow_page)
 
     AddMethod("colour", &StdLib::colour);
     AddMethod("color", &StdLib::colour);
-
-    AddMethod("mono", &StdLib::mono);
 }
 
 std::vector<std::string> StdLib::GetEnvs()
