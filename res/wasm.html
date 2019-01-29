@@ -2,7 +2,9 @@
 <html>
 
 <head>
-    <link href="martex.css" rel="stylesheet" type="text/css" />
+<link href="martex-page.css" rel="stylesheet" type="text/css"/>
+<link href="martex.css" rel="stylesheet" type="text/css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script src="martex.js"></script>
     <script>
         var enabled = true;
@@ -23,7 +25,9 @@
 </head>
 
 <body>
-    <textarea cols="100" rows="20" id="data" onchange="update();" oninput="update();"></textarea>
+    <h2>Live MarTex</h2>
+    Powered by WebAssembly. View the <a href="documentation.html">docs</a>.
+    <textarea width="100%" rows="20" id="data" onchange="update();" oninput="update();"></textarea>
     <div id="response"></div>
 </body>
 

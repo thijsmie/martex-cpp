@@ -10,7 +10,7 @@
 }%
 %
 \begin{document}
-\title{MarTeX-Cpp}\hline
+\begin{tabular}[lr]\width{100} \multirow{2}{\title{MarTeX-Cpp}} \\ By Thijs Miedema \\ \hline \end{tabular}
 		MarTeX-Cpp is a flexable, extendable and fast \textit{TeX-to-HTML} converter by fully tokenizing-lexing-parsing-interpreting the TeX source. It can be compiled to serve as a module for different languages, like PHP or JavaScript. It's goal is to provide a way to allow users to write TeX they are familiar with to produce nice looking pages like this one, but without allowing code injection.
         
 \section{Styling}
@@ -45,9 +45,9 @@
 
 \section{Special Characters}
 
-\begin{tabular}[|l | l |c| l |l |]
+\begin{tabular}[|l | l |c| l |l |] \width{100}
 \hline
-\textbf{Command}  &  \textbf{Result} \\
+\textbf{Command}  &  \textbf{Result} && \textbf{Command} & \textbf{Result} \\
 \hline \hline
 \command{\&}        & \&        && \command{"}AaEeIiOoUuy   & \"A\"a\"E\"e\"I\"i\"O\"o\"U\"u\"y \\
 \command{\%}        & \%        && \command{'}AaEeIiOoUuZ   & \'A\'a\'E\'e\'I\'i\'O\'o\'U\'u\'Z \\
@@ -135,6 +135,101 @@
     \command{hline}
 \command{end}{tabular}
 \end{code}
+
+\section{Development}
+\subsection{Getting Started}
+\subsubsection{Prerequisites}
+
+MarTeX-Cpp can be built as a module for several other languages. Currently supported are \textit{PHP} and \textit{WebAssembly} and an option to build as a simple utility using standard i/o.
+\\ \\
+A common dependencies for all module options is a C++ compiler with full C++11 support (gcc 4.9 or higher, clang 3.3). The makefile is set up to work with gcc but this can be easily changed in the config files.
+\\ \\ 
+MarTeX-Cpp's \textit{PHP} module was tested with \textit{PHP} versions 7 and higher. To build it you first need your relevant php development package and then you need to install the \href{http://www.php-cpp.com/}{PHP-CPP} library. 
+\\ \\
+MarTeX-Cpp's \textit{WebAssembly} module uses the \href{https://kripken.github.io/emscripten-site/}{emscripten} compiler. Make sure the \textit{em++} command is on your PATH by sourcing emsdk_env.sh.
+\\ \\
+The simple MarTeX-Cpp utility program has no further dependencies.
+\\ \\
+\subsubsection{Installing}
+
+If you have obtained a clone of the repository you can build the project:
+\\ \\
+\textbf{As \textit{PHP} module}
+\begin{code}
+make target=php
+\end{code}
+this will result in a php extension called martex.so in the bin folder. You can find out where to put it by typing:
+\begin{code}
+php-config --extension-dir
+\end{code}
+Now you need to add \textms{"extension=martex.so"} to your php.ini file or add it as separate .ini (example in res/martex.ini) in the php loading process. Your milage may vary but the location of these .ini's is \textms{/etc/php/7.1/mods-available} on my system. You should then be able to use:
+\begin{code}
+phpenmod martex
+\end{code}
+to activate the module.
+\\ \\
+\textbf{As \textbf{WebAssembly} module}
+\begin{code}
+make target=wasm
+\end{code}
+This will yield a martex.wasm and a martex.js file in the bin folder. Host these with a webserver to run MarTeX-Cpp directly in a browser. The file res/wasm.html demonstrates the usage.
+\\ \\
+\textbf{As simple utility}
+\begin{code}
+make target=cpp
+\end{code}
+This will yield a file martex in the bin folder. It takes TeX over standard input, will output the result over standard output and report errors over standard error.
+
+\subsection{Tests}
+
+You might complain that my test file format is weird and is annoying to parse. I like it however, because it allows you to describe tests in however much detail you want and is also language independant, which is important because I would like to be able to run the tests in whatever module form I desire. 
+
+\subsection{Project structure}
+
+\begin{itemize}
+\item \bold{bin}: build output
+\item \bold{config}: makefile environment variables for different targets
+\item \bold{obj}: object and dependency files
+\item \bold{res}: resources
+\item \bold{src}: source code
+\begin{itemize}
+  \item \bold{core}: the common core code for all targets
+  \begin{itemize}
+    \item \bold{language}: implementation of the TeX language parser
+    \item \bold{modules}: standard library of commands and environments
+    \item \bold{util}: utility functions, mostly string checks
+  \end{itemize}
+  \item \bold{cpp}: simple utility source
+  \item \bold{php}: Php module source. Most code has to do with conversion of values.
+  \item \bold{wasm}: Webassembly module source.
+\end{itemize}
+\item \bold{tests}: Tests in TeX input/HTML output style.
+\end{itemize}
+
+\subsection{Contributing}
+
+Please feel free to submit anything! The only thing I ask is that you include at least one test that verifies the behaviour of your change.
+
+\subsubsection{Bug Bounty Program}
+
+If you find a way insert arbitrary html tags and/or get javascript execution from a certain input string then first I'd like to congratualate you on a job well done! Please contact me privately with said input and we'll work on pushing out a fix as quickly as possible. Because I'm still a student there is unfortunately no hard cash to be made here, but certainly there is coffee and cake in it for you!
+
+\subsection{Authors}
+
+\begin{itemize}
+  \item \bold{Thijs Miedema} - \italic{Initial work} - \href{https://github.com/thijsmie}{thijsmie}
+\end{itemize}
+
+\subsection{Acknowledgments}
+
+Thanks to my committee for their endless patience and enthusiasm while listening to me whining on about this.
+\\
+Thanks to \href{http://www.iport.it}{\textit{Diego Perini}} for writing a nifty regex-based URL validator.
+
+\section{License}
+
+This project is licensed under the MIT License - see the \href{LICENSE.md}{LICENSE.md} file for details
+
 
 \end{document}
 \end{page}

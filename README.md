@@ -2,6 +2,8 @@
 
 Once upon a time the website committee of Marie-Curie decided it would be nice to have a __TeX-to-HTML__ converter because all physics students must be familiar with LaTeX. The first version was a [horrible regex-based monstrosity](https://github.com/thijsmie/MarTeXPHP) that you can go and look at and shiver in horror. This version, however, is actually practical to use!
 
+Go to the [in-browser preview](http://tmiedema.com/martex) to try it!
+
 ## Getting Started
 
 ### Prerequisites
@@ -81,16 +83,13 @@ If you find a way insert arbitrary html tags and/or get javascript execution fro
 ## Authors
 
 * **Thijs Miedema** - *Initial work* - [thijsmie](https://github.com/thijsmie)
-* You?
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
 
 Thanks to my committee for their endless patience and enthusiasm while listening to me whining on about this.
 
 Thanks to [**Diego Perini**](http://www.iport.it) for writing a nifty regex-based URL validator.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details

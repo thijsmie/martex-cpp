@@ -2,6 +2,7 @@
 
 #include "core/util/cppenvironment.hpp"
 #include "core/util/string_util.hpp"
+#include "core/util/regex_util.hpp"
 #include "core/language/runtime_error.hpp"
 #include "core/util/buffer.hpp"
 
@@ -43,6 +44,7 @@ class TabularEnvironment : public ParentTabular
   private:
     std::vector<ColspecType> m_colspec;
     std::vector<RowspecType> m_rowspec;
+    std::vector<Value> m_tableattr;
 
   public:
     TabularEnvironment(std::shared_ptr<Environment> parent) : ParentTabular(parent)
@@ -50,6 +52,8 @@ class TabularEnvironment : public ParentTabular
         AddMethod("hline", &TabularEnvironment::hline);
         AddMethod("multicolumn", &TabularEnvironment::multicolumn);
         AddMethod("multirow", &TabularEnvironment::multirow);
+        AddMethod("width", &TabularEnvironment::width);
+        AddMethod("height", &TabularEnvironment::height);
     }
 
     Value hline(Token command, std::vector<Value> arguments)
@@ -109,6 +113,46 @@ class TabularEnvironment : public ParentTabular
 
         return Value(t_info, command.GetLexeme(), std::move(arguments));
     }
+    
+    Value width(Token command, std::vector<Value> arguments)
+    {
+        if (arguments.size() != 1)
+            throw RuntimeError(command, "takes one argument");
+            
+        for(const Value &v : m_tableattr)
+            if (v.GetTag() == "width")
+                throw RuntimeError(command, "attribute already set!");
+                
+        std::string width = arguments[0].GetContent();
+        
+        if (!util::is_valid_sizing(width))
+            throw RuntimeError(command, width + " is not a valid size");
+        else if (util::dgonly(width))
+            width += "%";
+            
+        m_tableattr.emplace_back("width", width);
+        return Value();
+    }
+    
+    Value height(Token command, std::vector<Value> arguments)
+    {
+        if (arguments.size() != 1)
+            throw RuntimeError(command, "takes one argument");
+            
+        for(const Value &v : m_tableattr)
+            if (v.GetTag() == "height")
+                throw RuntimeError(command, "attribute already set!");
+                
+        std::string height = arguments[0].GetContent();
+        
+        if (!util::is_valid_sizing(height))
+            throw RuntimeError(command, height + " is not a valid size");
+        else if (util::dgonly(height))
+            height += "%";
+            
+        m_tableattr.emplace_back("height", height);
+        return Value();
+    }
 
     void StartEnvironment(Token begin, Value colspec)
     {
@@ -125,6 +169,10 @@ class TabularEnvironment : public ParentTabular
         std::vector<Value> rows;
         std::vector<Value> row;
         std::vector<Value> cell;
+        
+        // This leaves m_tableattr a mess but this class getś GC'ed after the EndEnvironment call anyway
+        rows.insert(rows.end(), std::make_move_iterator(m_tableattr.begin()), 
+                    std::make_move_iterator(m_tableattr.end()));
 
         int tablewidth = m_colspec.size() - 1;
         int tableheight = m_rowspec.size() - 1;

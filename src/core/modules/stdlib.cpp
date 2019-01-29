@@ -82,7 +82,7 @@ StdLib::StdLib(bool allow_page)
 
 std::vector<std::string> StdLib::GetEnvs()
 {
-    return std::vector<std::string>{"itemize", "enumerate", "paragraph", "page", "document", "tabular", "figure"};
+    return std::vector<std::string>{"itemize", "enumerate", "paragraph", "tabular", "figure", "code", "page", "document"};
 }
 
 std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<Environment> parent)
@@ -97,6 +97,9 @@ std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<E
         return std::make_shared<TabularEnvironment>(parent);
     if (name == "figure")
         return std::make_shared<FigureEnvironment>(parent);
+    if (name == "code")
+        return std::make_shared<CodeEnvironment>(parent);
+        
     if (!_hasdocument && name == "document")
     {
         _hasdocument = true;
@@ -273,7 +276,7 @@ Value StdLib::href(std::shared_ptr<Environment>, Token cmd, std::vector<Value> a
 
     std::string url = args[0].GetContent();
 
-    if (!util::is_valid_url(url))
+    if (!util::is_valid_url(url) && !util::is_valid_subpath(url))
         throw RuntimeError(cmd, "Invalid URL");
 
     args[0] = Value("href", url);

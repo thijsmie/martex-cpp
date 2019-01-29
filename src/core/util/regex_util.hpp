@@ -62,7 +62,7 @@ bool is_valid_url(const std::string &url)
 
 bool is_valid_subpath(const std::string &path)
 {
-    std::regex r("^\\\\?\\w+(?:\\\\\\w*)*(\\.\\w*)?$");
+    std::regex r("^/?\\w+(?:/\\w*)*(\\.\\w*)?$");
     return std::regex_match(path.begin(), path.end(), r);
 }
 
