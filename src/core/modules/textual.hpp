@@ -33,3 +33,19 @@ class CodeEnvironment : public util::CppEnvironment<CodeEnvironment>
         return Value("pre", std::move(content.multicontent));
     }
 };
+
+class CenterEnvironment : public util::CppEnvironment<CenterEnvironment>
+{
+  public:
+    CenterEnvironment(std::shared_ptr<Environment> parent) : util::CppEnvironment<CenterEnvironment>(parent)
+    {
+    }
+
+    void StartEnvironment(Token, Value) {}
+    Value EndEnvironment(Token, Value content)
+    {
+        content.multicontent.emplace(content.multicontent.begin(), "style", "text-align: center;");
+
+        return Value("div", std::move(content.multicontent));
+    }
+};

@@ -72,7 +72,7 @@ StdLib::StdLib(bool adminmode)
 
 std::vector<std::string> StdLib::GetEnvs()
 {
-    return std::vector<std::string>{"itemize", "enumerate", "paragraph", "tabular", "figure", "code", "page", "document"};
+    return {"itemize", "enumerate", "paragraph", "tabular", "figure", "code", "center", "page", "document"};
 }
 
 std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<Environment> parent)
@@ -89,6 +89,8 @@ std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<E
         return std::make_shared<FigureEnvironment>(parent);
     if (name == "code")
         return std::make_shared<CodeEnvironment>(parent);
+    if (name == "center")
+        return std::make_shared<CenterEnvironment>(parent);
         
     if (!m_hasdocument && name == "document")
     {
