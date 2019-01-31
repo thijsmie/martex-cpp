@@ -11,11 +11,10 @@
 class StdLib : public util::CppModule<StdLib>
 {
   private:
-    int _chapter, _section, _subsection, _subsubsection;
-    bool _labeling, _haspage, _hasdocument;
+    bool m_labeling, m_haspage, m_hasdocument, m_adminmode;
     
   public:
-    StdLib(bool allow_page);
+    StdLib(bool adminmode);
 
     std::vector<std::string> GetEnvs();
     std::shared_ptr<Environment> MakeEnv(std::string, std::shared_ptr<Environment>);
@@ -23,20 +22,13 @@ class StdLib : public util::CppModule<StdLib>
     Value easy(std::shared_ptr<Environment>, Token, std::vector<Value>);
     Value full(std::shared_ptr<Environment>, Token, std::vector<Value>);
 
-    Value title(std::shared_ptr<Environment>, Token, std::vector<Value>);
-    Value chapter(std::shared_ptr<Environment>, Token, std::vector<Value>);
-    Value section(std::shared_ptr<Environment>, Token, std::vector<Value>);
-    Value subsection(std::shared_ptr<Environment>, Token, std::vector<Value>);
-    Value subsubsection(std::shared_ptr<Environment>, Token, std::vector<Value>);
-
     Value textbf(std::shared_ptr<Environment>, Token, std::vector<Value>);
     Value textit(std::shared_ptr<Environment>, Token, std::vector<Value>);
     Value textul(std::shared_ptr<Environment>, Token, std::vector<Value>);
     Value textsc(std::shared_ptr<Environment>, Token, std::vector<Value>);
+    Value textms(std::shared_ptr<Environment>, Token, std::vector<Value>);
 
     Value ref(std::shared_ptr<Environment>, Token, std::vector<Value>);
-    Value label(std::shared_ptr<Environment>, Token, std::vector<Value>);
-    Value labeling(std::shared_ptr<Environment>, Token, std::vector<Value>);
     Value newline(std::shared_ptr<Environment>, Token, std::vector<Value>);
 
     Value command(std::shared_ptr<Environment>, Token, std::vector<Value>);
@@ -44,6 +36,4 @@ class StdLib : public util::CppModule<StdLib>
     Value define(std::shared_ptr<Environment>, Token, std::vector<Value>);
 
     Value colour(std::shared_ptr<Environment>, Token, std::vector<Value>);
-
-    Value mono(std::shared_ptr<Environment>, Token, std::vector<Value>);
 };

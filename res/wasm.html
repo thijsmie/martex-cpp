@@ -14,7 +14,7 @@
                 var rp = document.getElementById("response");
                 var txt = dt.value;
                 var t1 = performance.now();
-                var out = Module._compile(dt.value);
+                var out = Module._compile("\\begin{document}" + dt.value + "\\end{document}");
                 var t2 = performance.now();
                 rp.innerHTML = out;
 
@@ -27,7 +27,7 @@
 <body>
     <h2>Live MarTex</h2>
     Powered by WebAssembly. View the <a href="documentation.html">docs</a>.
-    <textarea width="100%" rows="20" id="data" onchange="update();" oninput="update();"></textarea>
+    <textarea style="width: 100%;" rows="20" id="data" onchange="update();" oninput="update();"></textarea>
     <div id="response"></div>
 </body>
 

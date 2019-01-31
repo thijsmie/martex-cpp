@@ -1,105 +1,26 @@
+#pragma once
+
 #include "core/util/cppenvironment.hpp"
 #include <string>
 #include <memory>
 
-class ParagraphEnvironment : public util::CppEnvironment<ParagraphEnvironment>
-{
-  public:
-    ParagraphEnvironment(std::shared_ptr<Environment> parent) : util::CppEnvironment<ParagraphEnvironment>(parent)
-    {
-    }
-    
-    void StartEnvironment(Token, Value){}
-    Value EndEnvironment(Token, Value content)
-    {
-        return Value("p", Value::asString(content));
-    }
-};
-
-class PageEnvironment : public util::CppEnvironment<PageEnvironment>
-{
-  public:
-    PageEnvironment(std::shared_ptr<Environment> parent) : util::CppEnvironment<PageEnvironment>(parent)
-    {
-        AddMethod("link", &PageEnvironment::link);
-        AddMethod("meta", &PageEnvironment::meta);
-    }
-
-
-    Value link(Token, std::vector<Value> arguments)
-    {
-        std::vector<Value> attr;
-        attr.emplace_back("href", arguments[0].GetContent());
-        attr.emplace_back("rel", arguments[1].GetContent());
-        attr.emplace_back("type", arguments[2].GetContent());
-
-        return Value("link", std::move(attr));
-    }
-    
-    Value meta(Token, std::vector<Value> arguments)
-    {
-        std::vector<Value> attr;
-        attr.emplace_back("name", arguments[0].GetContent());
-        attr.emplace_back("content", arguments[1].GetContent());
-
-        return Value("meta", std::move(attr));
-    }
-
-    void StartEnvironment(Token, Value){}
-    Value EndEnvironment(Token, Value content)
-    {
-        std::vector<Value> ret;
-
-        std::vector<Value> html;
-        std::vector<Value> head;
-
-        for (Value &v : content.multicontent)
-        {
-            if (v.GetType() == t_html && v.GetTag() == "body")
-            {
-                html.push_back(std::move(v));
-                break;
-            }
-            else
-            {
-                head.push_back(std::move(v));
-            }
-        }
-
-        html.emplace(html.begin(), "head", std::move(head));
-
-        ret.push_back(Value(t_string, "<!DOCTYPE html>"));
-        ret.push_back(Value("html", Value::asString(html)));
-        return Value(std::move(ret));
-    }
-};
-
 class DocumentEnvironment : public util::CppEnvironment<DocumentEnvironment>
 {
+  private:
+    bool m_adminmode;
+    int m_labeling, m_chapter, m_section, m_subsection, m_subsubsection;
+
   public:
-    DocumentEnvironment(std::shared_ptr<Environment> parent): util::CppEnvironment<DocumentEnvironment>(parent)
-    {
-    }
-
-    void StartEnvironment(Token, Value){}
-    Value EndEnvironment(Token, Value content)
-    {
-        return Value("body", Value::asString(content));
-    }
-};
-
-class CodeEnvironment : public util::CppEnvironment<CodeEnvironment>
-{
-    public:
-    CodeEnvironment(std::shared_ptr<Environment> parent) : util::CppEnvironment<CodeEnvironment>(parent)
-    {
-    }
-    
+    DocumentEnvironment(std::shared_ptr<Environment> parent, bool adminmode);
     void StartEnvironment(Token, Value) {}
-    Value EndEnvironment(Token, Value content)
-    {
-        content.multicontent.emplace(content.multicontent.begin(), "class", "martex-mono");
-        
-        return Value("pre", std::move(content.multicontent));
-    }
+    Value EndEnvironment(Token, Value content);
+
+    Value title(Token, std::vector<Value>);
+    Value chapter(Token, std::vector<Value>);
+    Value section(Token, std::vector<Value>);
+    Value subsection(Token, std::vector<Value>);
+    Value subsubsection(Token, std::vector<Value>);
+    
+    Value label(Token, std::vector<Value>);
+    Value labeling(Token, std::vector<Value>);
 };

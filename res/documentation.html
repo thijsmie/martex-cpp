@@ -6,13 +6,7 @@
 
 
 
-</head><body>
-<table width="100%" class="martex"><tr><td rowspan="2" class="a-l b-b"><h1>MarTeX-Cpp</h1></td><td class="a-r"/></tr><tr><td class="a-r b-b"> By Thijs Miedema </td></tr></table>
-		MarTeX-Cpp is a flexable, extendable and fast <i>TeX-to-HTML</i> converter by fully tokenizing-lexing-parsing-interpreting the TeX source. It can be compiled to serve as a module for different languages, like PHP or JavaScript. It's goal is to provide a way to allow users to write TeX they are familiar with to produce nice looking pages like this one, but without allowing code injection.
-        
-<h3>Styling</h3>
-
-<ul><li>Headings
+</head><body><h1>MarTeX-Cpp</h1><p>MarTeX-Cpp is a flexable, extendable and fast <i>TeX-to-HTML</i> converter by fully tokenizing-lexing-parsing-interpreting the TeX source. It can be compiled to serve as a module for different languages, like PHP or JavaScript. It's goal is to provide a way to allow users to write TeX they are familiar with to produce nice looking pages like this one, but without allowing code injection.</p><h3>Styling</h3><p><ul><li>Headings
     <ul><li>
 <b><span class="martex-mono">&#92;title&#123;Title&#125;</span></b>
 <p>Make a big fancy title.</p>
@@ -82,11 +76,7 @@
 <p>Change the colour of a piece of text. <span style="color: #ff00ff"><span class="martex-mono">&#92;colour&#123;ff00ff&#125;&#123;text&#125;</span></span></p>
 
     </li></ul>
-</li></ul>
-
-<h3>Special Characters</h3>
-
-<table width="100%" class="martex"><tr><td class="a-l b-l b-t"> 
+</li></ul></p><h3>Special Characters</h3><p><table width="100%" class="martex"><tr><td class="a-l b-l b-t"> 
 
 <b>Command</b>  </td><td class="a-l b-l b-t">  <b>Result</b> </td><td class="b-l b-t"/><td class="a-l b-l b-t"> <b>Command</b> </td><td class="a-l b-l b-r b-t"> <b>Result</b> </td></tr><tr><td class="a-l b-l b-tt">
 
@@ -102,15 +92,11 @@
 <span class="martex-mono">&#92;euro</span>      </td><td class="a-l b-l"> &euro;</td><td class="b-l"/><td class="a-l b-l"> <span class="martex-mono">&#92;Alpha</span><span class="martex-mono">&#92;alpha</span>   </td><td class="a-l b-l b-r"> &Alpha;&alpha;</td></tr><tr><td class="a-l b-l">
 <span class="martex-mono">&#92;pound</span>     </td><td class="a-l b-l"> &pound;</td><td class="b-l"/><td class="a-l b-l"> <span class="martex-mono">&#92;Beta</span><span class="martex-mono">&#92;beta</span>     </td><td class="a-l b-l b-r"> &Beta;&beta;</td></tr><tr><td class="a-l b-l">
 <span class="martex-mono">&#92;deg</span>	    </td><td class="a-l b-l"> &deg;</td><td class="b-l"/><td class="a-l b-l">  ...                             </td><td class="a-l b-l b-r">                           </td></tr><tr><td class="a-l b-l b-b">
-<span class="martex-mono">&#92;backslash</span> </td><td class="a-l b-l b-b"> &#92;</td><td class="b-l b-b"/><td class="a-l b-l b-b"> <span class="martex-mono">&#92;Omega</span><span class="martex-mono">&#92;omega</span>   </td><td class="a-l b-l b-r b-b"> &Omega;&omega;</td></tr></table>
-
-<h3>Images</h3>
-<p>
+<span class="martex-mono">&#92;backslash</span> </td><td class="a-l b-l b-b"> &#92;</td><td class="b-l b-b"/><td class="a-l b-l b-b"> <span class="martex-mono">&#92;Omega</span><span class="martex-mono">&#92;omega</span>   </td><td class="a-l b-l b-r b-b"> &Omega;&omega;</td></tr></table></p><h3>Images</h3><p/><p>
     Images are pretty. Normally the images try to fill the page width, you can control this behaviour with the provided
     sizing options. If you add a caption to an image it will put "Figure 1: caption" under it. You can change "Figure" to
     , for example, "Picture" by setting the header with a <span class="martex-mono">&#92;define&#123;header&#125;&#123;Picture &#125;</span>.
-</p>
-<ul><li>
+</p><p><ul><li>
 <b><span class="martex-mono">&#92;includegraphics&#123;url&#125;</span></b>
 <p>Use to display an image.</p>
 
@@ -137,9 +123,7 @@
 <b><span class="martex-mono">&#92;alttext&#123;alt text&#125;</span></b>
 <p>Set the alt text, also called hovertext, of your image.</p>
 
-</li></ul>
-
-<pre class="martex-mono">
+</li></ul></p><p><pre class="martex-mono">
 <span class="martex-mono">&#92;begin&#123;figure&#125;</span>
     <span class="martex-mono">&#92;includegraphics&#123;test.png&#125;</span>
     <span class="martex-mono">&#92;caption&#123;This is a test image&#125;</span>
@@ -148,13 +132,9 @@
     <span class="martex-mono">&#92;height&#123;30&#125;</span>
     <span class="martex-mono">&#92;alttext&#123;A mouse!&#125;</span>
 <span class="martex-mono">&#92;end&#123;figure&#125;</span> 
-</pre>
-
-<h3>Lists</h3>
-<p>
+</pre></p><h3>Lists</h3><p/><p>
     Note that there are two different list environments: <span class="martex-mono">enumerate</span> and <span class="martex-mono">itemize</span> with a different default markers, respectively numbers and bullets.
-</p>
-<ul><li>
+</p><p><ul><li>
 <b><span class="martex-mono">&#92;item</span></b>
 <p>Mark the start of the next item in the list.</p>
 
@@ -162,9 +142,7 @@
 <b><span class="martex-mono">&#92;setmarker&#123;type&#125;</span></b>
 <p>Set the marker type. Valid types are: square, bullet, circle, none, numbers, letters, LETTERS, roman, ROMAN.</p>
 
-</li></ul>
-
-<pre class="martex-mono">
+</li></ul></p><p><pre class="martex-mono">
 <span class="martex-mono">&#92;begin&#123;itemize&#125;</span>
     <span class="martex-mono">&#92;setmarker&#123;square&#125;</span>
     <span class="martex-mono">&#92;item</span> Apple
@@ -172,15 +150,9 @@
     <span class="martex-mono">&#92;item</span> Kiwi 
     <span class="martex-mono">&#92;item</span> Pear
 <span class="martex-mono">&#92;end&#123;itemize&#125;</span>
-</pre>
-
-<h3>Tables</h3>
-
-<p>
+</pre></p><h3>Tables</h3><p/><p>
     Tables are a good way to represent content in a neat way. In MarTeX they behave pretty similar to the LaTeX tabulars. The tabular format accepts '|' for vertical lines, 'l' for left aligned column, 'c' for a centered column and 'r' for a right aligned column.
-</p>
-
-<ul><li>
+</p><p><ul><li>
 <b><span class="martex-mono">&#92;hline</span></b>
 <p>Add a horizontal line at this position in the table. Maximum of two lines per row.</p>
 
@@ -192,9 +164,7 @@
 <b><span class="martex-mono">&#92;multirow&#123;N&#125;&#123;text&#125;</span></b>
 <p>Make a cell span over N rows</p>
 
-</li></ul>
-
-<pre class="martex-mono">
+</li></ul></p><p><pre class="martex-mono">
 <span class="martex-mono">&#92;begin&#123;tabular&#125;</span>[|| l | c | r ||]
     <span class="martex-mono">&#92;hline</span> <span class="martex-mono">&#92;hline</span>
     1 &amp; 2 &amp; 3 &#92;&#92;<span class="martex-mono">&#92;hline</span>
@@ -203,59 +173,17 @@
     <span class="martex-mono">&#92;multicolumn&#123;3&#125;&#123;| c |&#125;&#123;0&#125;</span> &#92;&#92;
     <span class="martex-mono">&#92;hline</span>
 <span class="martex-mono">&#92;end&#123;tabular&#125;</span>
-</pre>
-
-<h3>Development</h3>
-<h4>Getting Started</h4>
-<h5>Prerequisites</h5>
-
-MarTeX-Cpp can be built as a module for several other languages. Currently supported are <i>PHP</i> and <i>WebAssembly</i> and an option to build as a simple utility using standard i/o.
-<br /> <br />
-A common dependencies for all module options is a C++ compiler with full C++11 support (gcc 4.9 or higher, clang 3.3). The makefile is set up to work with gcc but this can be easily changed in the config files.
-<br /> <br /> 
-MarTeX-Cpp's <i>PHP</i> module was tested with <i>PHP</i> versions 7 and higher. To build it you first need your relevant php development package and then you need to install the <a href="http://www.php-cpp.com/">PHP-CPP</a> library. 
-<br /> <br />
-MarTeX-Cpp's <i>WebAssembly</i> module uses the <a href="https://kripken.github.io/emscripten-site/">emscripten</a> compiler. Make sure the <i>em++</i> command is on your PATH by sourcing emsdk_env.sh.
-<br /> <br />
-The simple MarTeX-Cpp utility program has no further dependencies.
-<br /> <br />
-<h5>Installing</h5>
-
-If you have obtained a clone of the repository you can build the project:
-<br /> <br />
-<b>As <i>PHP</i> module</b>
-<pre class="martex-mono">
+</pre></p><h3>Development</h3><p/><h4>Getting Started</h4><p/><h5>Prerequisites</h5><p>MarTeX-Cpp can be built as a module for several other languages. Currently supported are <i>PHP</i> and <i>WebAssembly</i> and an option to build as a simple utility using standard i/o.<br /><br />A common dependencies for all module options is a C++ compiler with full C++11 support (gcc 4.9 or higher, clang 3.3). The makefile is set up to work with gcc but this can be easily changed in the config files.<br /><br />MarTeX-Cpp's <i>PHP</i> module was tested with <i>PHP</i> versions 7 and higher. To build it you first need your relevant php development package and then you need to install the <a href="http://www.php-cpp.com/">PHP-CPP</a> library. <br /><br />MarTeX-Cpp's <i>WebAssembly</i> module uses the <a href="https://kripken.github.io/emscripten-site/">emscripten</a> compiler. Make sure the <i>em++</i> command is on your PATH by sourcing emsdk_env.sh.<br /><br />The simple MarTeX-Cpp utility program has no further dependencies.<br /><br /></p><h5>Installing</h5><p>If you have obtained a clone of the repository you can build the project:<br /><br /><b>As <i>PHP</i> module</b><pre class="martex-mono">
 make target=php
-</pre>
-this will result in a php extension called martex.so in the bin folder. You can find out where to put it by typing:
-<pre class="martex-mono">
+</pre>this will result in a php extension called martex.so in the bin folder. You can find out where to put it by typing:<pre class="martex-mono">
 php-config --extension-dir
-</pre>
-Now you need to add <span class="martex-mono">"extension=martex.so"</span> to your php.ini file or add it as separate .ini (example in res/martex.ini) in the php loading process. Your milage may vary but the location of these .ini's is <span class="martex-mono">/etc/php/7.1/mods-available</span> on my system. You should then be able to use:
-<pre class="martex-mono">
+</pre>Now you need to add <span class="martex-mono">"extension=martex.so"</span> to your php.ini file or add it as separate .ini (example in res/martex.ini) in the php loading process. Your milage may vary but the location of these .ini's is <span class="martex-mono">/etc/php/7.1/mods-available</span> on my system. You should then be able to use:<pre class="martex-mono">
 phpenmod martex
-</pre>
-to activate the module.
-<br /> <br />
-<b>As <b>WebAssembly</b> module</b>
-<pre class="martex-mono">
+</pre>to activate the module.<br /><br /><b>As <b>WebAssembly</b> module</b><pre class="martex-mono">
 make target=wasm
-</pre>
-This will yield a martex.wasm and a martex.js file in the bin folder. Host these with a webserver to run MarTeX-Cpp directly in a browser. The file res/wasm.html demonstrates the usage.
-<br /> <br />
-<b>As simple utility</b>
-<pre class="martex-mono">
+</pre>This will yield a martex.wasm and a martex.js file in the bin folder. Host these with a webserver to run MarTeX-Cpp directly in a browser. The file res/wasm.html demonstrates the usage.<br /><br /><b>As simple utility</b><pre class="martex-mono">
 make target=cpp
-</pre>
-This will yield a file martex in the bin folder. It takes TeX over standard input, will output the result over standard output and report errors over standard error.
-
-<h4>Tests</h4>
-
-You might complain that my test file format is weird and is annoying to parse. I like it however, because it allows you to describe tests in however much detail you want and is also language independant, which is important because I would like to be able to run the tests in whatever module form I desire. 
-
-<h4>Project structure</h4>
-
-<ul><li><b>bin</b>: build output
+</pre>This will yield a file martex in the bin folder. It takes TeX over standard input, will output the result over standard output and report errors over standard error.</p><h4>Tests</h4><p>You might complain that my test file format is weird and is annoying to parse. I like it however, because it allows you to describe tests in however much detail you want and is also language independant, which is important because I would like to be able to run the tests in whatever module form I desire. </p><h4>Project structure</h4><p><ul><li><b>bin</b>: build output
 </li><li><b>config</b>: makefile environment variables for different targets
 </li><li><b>obj</b>: object and dependency files
 </li><li><b>res</b>: resources
@@ -270,30 +198,5 @@ You might complain that my test file format is weird and is annoying to parse. I
   </li><li><b>wasm</b>: Webassembly module source.
 </li></ul>
 </li><li><b>tests</b>: Tests in TeX input/HTML output style.
-</li></ul>
-
-<h4>Contributing</h4>
-
-Please feel free to submit anything! The only thing I ask is that you include at least one test that verifies the behaviour of your change.
-
-<h5>Bug Bounty Program</h5>
-
-If you find a way insert arbitrary html tags and/or get javascript execution from a certain input string then first I'd like to congratualate you on a job well done! Please contact me privately with said input and we'll work on pushing out a fix as quickly as possible. Because I'm still a student there is unfortunately no hard cash to be made here, but certainly there is coffee and cake in it for you!
-
-<h4>Authors</h4>
-
-<ul><li><b>Thijs Miedema</b> - <i>Initial work</i> - <a href="https://github.com/thijsmie">thijsmie</a>
-</li></ul>
-
-<h4>Acknowledgments</h4>
-
-Thanks to my committee for their endless patience and enthusiasm while listening to me whining on about this.
-<br />
-Thanks to <a href="http://www.iport.it"><i>Diego Perini</i></a> for writing a nifty regex-based URL validator.
-
-<h3>License</h3>
-
-This project is licensed under the MIT License - see the <a href="LICENSE.md">LICENSE.md</a> file for details
-
-
-</body></html>
+</li></ul></p><h4>Contributing</h4><p>Please feel free to submit anything! The only thing I ask is that you include at least one test that verifies the behaviour of your change.</p><h5>Bug Bounty Program</h5><p>If you find a way insert arbitrary html tags and/or get javascript execution from a certain input string then first I'd like to congratualate you on a job well done! Please contact me privately with said input and we'll work on pushing out a fix as quickly as possible. Because I'm still a student there is unfortunately no hard cash to be made here, but certainly there is coffee and cake in it for you!</p><h4>Authors</h4><p><ul><li><b>Thijs Miedema</b> - <i>Initial work</i> - <a href="https://github.com/thijsmie">thijsmie</a>
+</li></ul></p><h4>Acknowledgments</h4><p>Thanks to my committee for their endless patience and enthusiasm while listening to me whining on about this.<br />Thanks to <a href="http://www.iport.it"><i>Diego Perini</i></a> for writing a nifty regex-based URL validator.</p><h3>License</h3><p>This project is licensed under the MIT License - see the <a href="LICENSE.md">LICENSE.md</a> file for details</p><p/></body></html>

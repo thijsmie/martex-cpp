@@ -1,8 +1,11 @@
 #include "stdlib.hpp"
-#include "itemize.hpp"
+
 #include "document.hpp"
-#include "tabular.hpp"
 #include "figure.hpp"
+#include "itemize.hpp"
+#include "page.hpp"
+#include "tabular.hpp"
+#include "textual.hpp"
 
 #include "core/util/regex_util.hpp"
 
@@ -29,16 +32,11 @@ static const std::map<std::string, std::string> full_replace(
      {"newline", "<br>"},
      {"backslash", "&#92;"}});
 
-StdLib::StdLib(bool allow_page)
+StdLib::StdLib(bool adminmode)
 {
-    _chapter = 0;
-    _section = 0;
-    _subsection = 0;
-    _subsubsection = 0;
-    _labeling = false;
-
-    _haspage = !allow_page;
-    _hasdocument = !allow_page;
+    m_haspage = false;
+    m_hasdocument = false;
+    m_adminmode = adminmode;
 
     // Easy
     for (const auto &s : easy_replace)
@@ -49,27 +47,19 @@ StdLib::StdLib(bool allow_page)
         AddMethod(s.first, &StdLib::full);
 
     // Functions
-    AddMethod("title", &StdLib::title);
-    AddMethod("chapter", &StdLib::chapter);
-    AddMethod("section", &StdLib::section);
-    AddMethod("subsection", &StdLib::subsection);
-    AddMethod("subsubsection", &StdLib::subsubsection);
-
     AddMethod("textbf", &StdLib::textbf);
     AddMethod("textit", &StdLib::textit);
     AddMethod("textul", &StdLib::textul);
     AddMethod("textsc", &StdLib::textsc);
-    AddMethod("textms", &StdLib::mono);
+    AddMethod("textms", &StdLib::textms);
     
     AddMethod("bold", &StdLib::textbf);
     AddMethod("italic", &StdLib::textit);
     AddMethod("underline", &StdLib::textul);
     AddMethod("smallcaps", &StdLib::textsc);
-    AddMethod("mono", &StdLib::mono);
+    AddMethod("mono", &StdLib::textms);
 
     AddMethod("ref", &StdLib::ref);
-    AddMethod("label", &StdLib::label);
-    AddMethod("labeling", &StdLib::labeling);
     AddMethod("newline", &StdLib::newline);
 
     AddMethod("command", &StdLib::command);
@@ -100,14 +90,14 @@ std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<E
     if (name == "code")
         return std::make_shared<CodeEnvironment>(parent);
         
-    if (!_hasdocument && name == "document")
+    if (!m_hasdocument && name == "document")
     {
-        _hasdocument = true;
-        return std::make_shared<DocumentEnvironment>(parent);
+        m_hasdocument = true;
+        return std::make_shared<DocumentEnvironment>(parent, m_adminmode);
     }
-    if (!_haspage && name == "page")
+    if (!m_haspage && m_adminmode && name == "page")
     {
-        _haspage = true;
+        m_haspage = true;
         return std::make_shared<PageEnvironment>(parent);
     }
     throw RuntimeError(Token(BEGIN_ENV, "", -1), "Env not allowed");
@@ -132,57 +122,6 @@ Value StdLib::full(std::shared_ptr<Environment>, Token cmd, std::vector<Value> a
 }
 
 /// full commands
-Value StdLib::title(std::shared_ptr<Environment>, Token, std::vector<Value> args)
-{
-    return Value("h1", std::move(args));
-}
-
-Value StdLib::chapter(std::shared_ptr<Environment>, Token, std::vector<Value> args)
-{
-    _chapter++;
-    _section = 0;
-    _subsection = 0;
-    _subsubsection = 0;
-
-    if (_labeling)
-        args.emplace(args.begin(), t_string, std::to_string(_chapter) + "&emsp;");
-
-    return Value("h2", std::move(args));
-}
-
-Value StdLib::section(std::shared_ptr<Environment>, Token, std::vector<Value> args)
-{
-    _section++;
-    _subsection = 0;
-    _subsubsection = 0;
-    if (_labeling)
-        args.emplace(args.begin(), t_string, std::to_string(_section) + "&emsp;");
-
-    return Value("h3", std::move(args));
-}
-
-Value StdLib::subsection(std::shared_ptr<Environment>, Token, std::vector<Value> args)
-{
-    _subsection++;
-    _subsubsection = 0;
-    if (_labeling)
-        args.emplace(args.begin(), t_string,
-                     std::to_string(_section) + "." + std::to_string(_subsection) + "&emsp;");
-
-    return Value("h4", std::move(args));
-}
-
-Value StdLib::subsubsection(std::shared_ptr<Environment>, Token, std::vector<Value> args)
-{
-    _subsubsection++;
-    if (_labeling)
-        args.emplace(args.begin(), t_string,
-                     std::to_string(_section) + "." + std::to_string(_subsection) +
-                         std::to_string(_subsubsection) + "&emsp;");
-
-    return Value("h5", std::move(args));
-}
-
 Value StdLib::textbf(std::shared_ptr<Environment>, Token, std::vector<Value> args)
 {
     return Value("b", std::move(args));
@@ -204,45 +143,24 @@ Value StdLib::textsc(std::shared_ptr<Environment>, Token, std::vector<Value> arg
     return Value("span", std::move(args[0]));
 }
 
+Value StdLib::textms(std::shared_ptr<Environment>, Token cmd, std::vector<Value> args)
+{
+    if (args.size() != 1)
+        throw RuntimeError(cmd, "takes one argument");
+
+    args.emplace(args.begin(), "class", "martex-mono");
+
+    return Value("span", std::move(args));
+}
+
 Value StdLib::newline(std::shared_ptr<Environment>, Token, std::vector<Value>)
 {
     return Value("br", std::vector<Value>());
 }
 
-Value StdLib::labeling(std::shared_ptr<Environment>, Token, std::vector<Value> args)
-{
-    std::string a = args[0].GetContent();
-
-    if (a == "true" || a == "1")
-        _labeling = true;
-    else
-        _labeling = false;
-
-    return Value();
-}
-
 Value StdLib::ref(std::shared_ptr<Environment> runenv, Token cmd, std::vector<Value> args)
 {
     return Value(t_string, runenv->Get(Token(WORD, std::move(args)[0].GetContent(), cmd.GetLine())).GetContent());
-}
-
-Value StdLib::label(std::shared_ptr<Environment> runenv, Token, std::vector<Value> args)
-{
-    std::string l = "";
-    if (_subsubsection > 0)
-        l = std::to_string(_section) + "." + std::to_string(_subsection) + "." + std::to_string(_subsubsection);
-    else if (_subsection > 0)
-        l = std::to_string(_section) + "." + std::to_string(_subsection);
-    else if (_section > 0)
-        l = std::to_string(_section);
-    else
-        l = std::to_string(_chapter);
-
-    while (!runenv->IsRoot())
-        runenv = runenv->GetEnclosing();
-
-    runenv->Set(args[0].GetContent(), Value(t_string, l));
-    return Value();
 }
 
 Value StdLib::command(std::shared_ptr<Environment>, Token, std::vector<Value> args)
@@ -315,12 +233,3 @@ Value StdLib::colour(std::shared_ptr<Environment>, Token cmd, std::vector<Value>
     return Value("span", std::move(args));
 }
 
-Value StdLib::mono(std::shared_ptr<Environment>, Token cmd, std::vector<Value> args)
-{
-    if (args.size() != 1)
-        throw RuntimeError(cmd, "takes one argument");
-
-    args.emplace(args.begin(), "class", "martex-mono");
-
-    return Value("span", std::move(args));
-}
