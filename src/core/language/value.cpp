@@ -77,7 +77,7 @@ std::string Value::GetContent() const
         return r_content;
     case t_html:
     {
-        r_content = "\n<" + tag;
+        r_content = "<" + tag;
 
         bool hascontent = false;
         for (const Value &v : multicontent)
