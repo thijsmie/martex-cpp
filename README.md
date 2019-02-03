@@ -2,7 +2,7 @@
 
 Once upon a time the website committee of Marie-Curie decided it would be nice to have a __TeX-to-HTML__ converter because all physics students must be familiar with LaTeX. The first version was a [horrible regex-based monstrosity](https://github.com/thijsmie/MarTeXPHP) that you can go and look at and shiver in horror. This version, however, is actually practical to use!
 
-Go to the [in-browser preview](http://tmiedema.com/martex) to try it!
+Go to the [in-browser preview](https://tmiedema.com/martex) to try it!
 
 ## Getting Started
 
@@ -12,7 +12,7 @@ MarTeX-Cpp can be built as a module for several other languages. Currently suppo
 
 A common dependencies for all module options is a C++ compiler with full C++11 support (gcc 4.8.1 or higher, clang 3.3). The makefile is set up to work with gcc but this can be easily changed in the config files.
 
-MarTeX-Cpp's _PHP_ module was tested with _PHP_ versions 7 and higher. To build it you first need your relevant php development package and then you need to install the [PHP-CPP](http://www.php-cpp.com/) library. 
+MarTeX-Cpp's _PHP_ module was tested with _PHP_ versions 7 and higher. To build it you first need your relevant php development package and then you need to install the [PHP-CPP](https://www.php-cpp.com/) library. 
 
 MarTeX-Cpp's _WebAssembly_ module uses the [emscripten](https://kripken.github.io/emscripten-site/) compiler. Make sure the _em++_ command is on your PATH by sourcing emsdk_env.sh.
 
@@ -88,7 +88,7 @@ If you find a way insert arbitrary html tags and/or get javascript execution fro
 
 Thanks to my committee for their endless patience and enthusiasm while listening to me whining on about this.
 
-Thanks to [**Diego Perini**](http://www.iport.it) for writing a nifty regex-based URL validator.
+Thanks to [**Diego Perini**](https://www.iport.it) for writing a nifty regex-based URL validator.
 
 ## License
 
