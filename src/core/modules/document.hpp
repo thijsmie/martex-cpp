@@ -25,16 +25,3 @@ class DocumentEnvironment : public util::CppEnvironment<DocumentEnvironment>
     Value labeling(Token, std::vector<Value>);
 };
 
-class CodeEnvironment : public util::CppEnvironment<CodeEnvironment>
-{
-    public:
-        CodeEnvironment(std::shared_ptr<Environment> parent) :
-            util::CppEnvironment<CodeEnvironment>(parent) {}
-
-    void StartEnvironment(Token, Value){};
-    Value EndEnvironment(Token, Value content)
-    {
-        content.multicontent.emplace(content.multicontent.begin(), "class", "martex-mono");
-        return Value("pre", std::move(content.multicontent));
-    }
-};
