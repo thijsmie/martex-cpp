@@ -1,4 +1,5 @@
 #include "core/language/environment.hpp"
+#include "core/util/cppenvironment.hpp"
 #include <string>
 #include <memory>
 
@@ -99,5 +100,19 @@ class DocumentEnvironment : public Environment
     Value EndEnvironment(Token, Value content)
     {
         return Value("body", Value::asString(content));
+    }
+};
+
+class CodeEnvironment : public util::CppEnvironment<CodeEnvironment>
+{
+    public:
+        CodeEnvironment(std::shared_ptr<Environment> parent) :
+            util::CppEnvironment<CodeEnvironment>(parent) {}
+
+    void StartEnvironment(Token, Value){};
+    Value EndEnvironment(Token, Value content)
+    {
+        content.multicontent.emplace(content.multicontent.begin(), "class", "martex-mono");
+        return Value("pre", std::move(content.multicontent));
     }
 };

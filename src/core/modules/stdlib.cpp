@@ -79,7 +79,7 @@ StdLib::StdLib(bool allow_page)
 
 std::vector<std::string> StdLib::GetEnvs()
 {
-    return std::vector<std::string>{"itemize", "enumerate", "paragraph", "page", "document", "tabular", "figure"};
+    return std::vector<std::string>{"itemize", "enumerate", "paragraph", "page", "document", "tabular", "figure", "code"};
 }
 
 std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<Environment> parent)
@@ -94,6 +94,8 @@ std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<E
         return std::make_shared<TabularEnvironment>(parent);
     if (name == "figure")
         return std::make_shared<FigureEnvironment>(parent);
+    if (name == "code")
+        return std::make_shared<CodeEnvironment>(parent);
     if (!_hasdocument && name == "document")
     {
         _hasdocument = true;

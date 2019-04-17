@@ -168,7 +168,16 @@ MarTeX has some special characters you need to escape to render:
 </p>
 
 <h5>Example</h5>
-
+<pre class="martex-mono"><span class="martex-mono">&#92;define&#123;figureheader&#125;&#123;image&#125;</span>
+<span class="martex-mono">&#92;begin&#123;figure&#125;</span>
+    <span class="martex-mono">&#92;includegraphics&#123;test.png&#125;</span>
+    <span class="martex-mono">&#92;caption&#123;This is a test image&#125;</span>
+    <span class="martex-mono">&#92;label&#123;testimage&#125;</span>
+    <span class="martex-mono">&#92;width&#123;120px&#125;</span>
+    <span class="martex-mono">&#92;height&#123;30&#125;</span>
+    <span class="martex-mono">&#92;alttext&#123;A mouse!&#125;</span>
+<span class="martex-mono">&#92;end&#123;figure&#125;</span> 
+</pre>
 
 <h4>Module Itemize</h4>
 
@@ -206,7 +215,41 @@ The itemize module implements two environments. They are equivalent, but have a 
 <table class="martex"><tr><td class="a-l">
 Code </td><td class="a-l b-l"> Rendered </td></tr><tr><td class="a-l b-t">
 
-
+<pre class="martex-mono">
+<span class="martex-mono">&#92;begin&#123;itemize&#125;</span>
+    <span class="martex-mono">&#92;item&#123;Akcie&#125;</span>
+    <span class="martex-mono">&#92;item&#123;Ambicie&#125;</span>
+    <span class="martex-mono">&#92;item&#123;Batavieren&#125;</span>
+    <span class="martex-mono">&#92;item&#123;Boson&#125;</span>
+<span class="martex-mono">&#92;end&#123;itemize&#125;</span>
+<span class="martex-mono">&#92;begin&#123;itemize&#125;</span>
+    <span class="martex-mono">&#92;setmarker&#123;square&#125;</span>
+    <span class="martex-mono">&#92;item</span> Brouwcommissie
+    <span class="martex-mono">&#92;item</span> Colloquiumcommissie
+    <span class="martex-mono">&#92;item</span> Excurcie
+<span class="martex-mono">&#92;end&#123;itemize&#125;</span>
+<span class="martex-mono">&#92;begin&#123;enumerate&#125;</span>
+    <span class="martex-mono">&#92;item&#123;Impuls&#125;</span>
+    <span class="martex-mono">&#92;item&#123;Lustrumcie&#125;</span>
+    <span class="martex-mono">&#92;item&#123;M&uuml;nchencie&#125;</span>
+<span class="martex-mono">&#92;end&#123;enumerate&#125;</span>
+<span class="martex-mono">&#92;begin&#123;enumerate&#125;</span>
+    <span class="martex-mono">&#92;setmarker&#123;letters&#125;</span>
+    <span class="martex-mono">&#92;item&#123;Ouderdagcie&#125;</span>
+    <span class="martex-mono">&#92;item&#123;Particie&#125;</span>
+    <span class="martex-mono">&#92;item&#123;PR-cie&#125;</span>
+    <span class="martex-mono">&#92;item&#123;Reunistencie&#125;</span>
+<span class="martex-mono">&#92;end&#123;enumerate&#125;</span>
+<span class="martex-mono">&#92;begin&#123;enumerate&#125;</span>
+    <span class="martex-mono">&#92;setmarker&#123;ROMAN&#125;</span>
+    <span class="martex-mono">&#92;item</span> Sponsorcommissie
+    <span class="martex-mono">&#92;item</span> Symposiumcie
+    <span class="martex-mono">&#92;item</span> Vakancie
+    <span class="martex-mono">&#92;item</span> Weekendcommissie
+    <span class="martex-mono">&#92;item</span> WWW-cie
+    <span class="martex-mono">&#92;item</span> Co&ouml;rdinatiecommissie
+<span class="martex-mono">&#92;end&#123;enumerate&#125;</span>
+</pre>
 </td><td class="a-l b-l b-t">
 <ul><li>Akcie</li><li>Ambicie</li><li>Batavieren</li><li>Boson</li></ul>
 <ul style="list-style-type: square;"><li>Brouwcommissie</li><li>Colloquiumcommissie</li><li>Excurcie</li></ul>
