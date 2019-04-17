@@ -17,24 +17,6 @@ class FigureEnvironment : public util::CppEnvironment<FigureEnvironment>
     std::string width_;
     std::string height_;
 
-    void setLabel(std::shared_ptr<Environment> env)
-    {
-        if (label_ != "")
-            return;
-
-        int ind = 1;
-        try
-        {
-            ind = std::stoi(env->Get("figurecounter").GetContent());
-        }
-        catch (RuntimeError e)
-        {
-            // no figures yet, this is 1
-        }
-        env->Set("figurecounter", Value(t_string, std::to_string(ind + 1)));
-        label_ = std::to_string(ind);
-    }
-
   public:
     FigureEnvironment(std::shared_ptr<Environment> parent) : util::CppEnvironment<FigureEnvironment>(parent)
     {
@@ -46,10 +28,8 @@ class FigureEnvironment : public util::CppEnvironment<FigureEnvironment>
         AddMethod("label", &FigureEnvironment::label);
     }
 
-    Value includegraphics(std::shared_ptr<Environment> env, Token cmd, std::vector<Value> args)
+    Value includegraphics(Token cmd, std::vector<Value> args)
     {
-        setLabel(env);
-
         if (args.size() != 1)
             throw RuntimeError(cmd, "takes one arguments");
 
@@ -63,10 +43,8 @@ class FigureEnvironment : public util::CppEnvironment<FigureEnvironment>
         return Value();
     }
 
-    Value width(std::shared_ptr<Environment> env, Token cmd, std::vector<Value> args)
+    Value width(Token cmd, std::vector<Value> args)
     {
-        setLabel(env);
-
         if (args.size() != 1)
             throw RuntimeError(cmd, "takes one arguments");
 
@@ -83,10 +61,8 @@ class FigureEnvironment : public util::CppEnvironment<FigureEnvironment>
         return Value();
     }
 
-    Value height(std::shared_ptr<Environment> env, Token cmd, std::vector<Value> args)
+    Value height(Token cmd, std::vector<Value> args)
     {
-        setLabel(env);
-
         if (args.size() != 1)
             throw RuntimeError(cmd, "takes one arguments");
 
@@ -103,10 +79,8 @@ class FigureEnvironment : public util::CppEnvironment<FigureEnvironment>
         return Value();
     }
 
-    Value caption(std::shared_ptr<Environment> env, Token cmd, std::vector<Value> args)
+    Value caption(Token cmd, std::vector<Value> args)
     {
-        setLabel(env);
-
         if (args.size() != 1)
             throw RuntimeError(cmd, "takes one arguments");
 
@@ -114,10 +88,8 @@ class FigureEnvironment : public util::CppEnvironment<FigureEnvironment>
         return Value();
     }
 
-    Value alttext(std::shared_ptr<Environment> env, Token cmd, std::vector<Value> args)
+    Value alttext(Token cmd, std::vector<Value> args)
     {
-        setLabel(env);
-
         if (args.size() != 1)
             throw RuntimeError(cmd, "takes one arguments");
 
@@ -125,18 +97,30 @@ class FigureEnvironment : public util::CppEnvironment<FigureEnvironment>
         return Value();
     }
 
-    Value label(std::shared_ptr<Environment> env, Token cmd, std::vector<Value> args)
+    Value label(Token cmd, std::vector<Value> args)
     {
-        setLabel(env);
-
         if (args.size() != 1)
             throw RuntimeError(cmd, "takes one arguments");
 
-        env->SetGlobal(args[0].GetContent(), Value(t_string, label_));
+        SetGlobal(args[0].GetContent(), Value(t_string, label_));
         return Value();
     }
 
-    void StartEnvironment(Token, Value){};
+    void StartEnvironment(Token, Value)
+    {
+        int ind = 1;
+        try
+        {
+            ind = std::stoi(Get("<figurecounter>").GetContent());
+        }
+        catch (RuntimeError e)
+        {
+            // no figures yet, this is 1
+        }
+        Set("<figurecounter>", Value(t_string, std::to_string(ind + 1)));
+        label_ = std::to_string(ind);
+    }
+    
     Value EndEnvironment(Token, Value)
     {
         /// Attributes

@@ -1,0 +1,173 @@
+\begin{page}
+%
+\link{martex-page.css}{stylesheet}{text/css}
+\link{martex.css}{stylesheet}{text/css}
+\meta{viewport}{width=device-width, initial-scale=1.0}
+%
+\newcommand\descriptor[2]{
+\textbf{#1}
+\begin{paragraph}#2\end{paragraph}%
+}%
+%
+\begin{document}
+\title{MarTeX-Cpp}
+
+MarTeX-Cpp is a flexable, extendable and fast \textit{TeX-to-HTML} converter by fully tokenizing-lexing-parsing-interpreting the TeX source. It can be compiled to serve as a module for different languages, like PHP or JavaScript. It's goal is to provide a way to allow users to write TeX they are familiar with to produce nice looking pages like this one, but without allowing code injection.
+        
+\section{Styling}
+
+\begin{itemize}
+    \item Headings
+    \begin{itemize}
+    \item \descriptor{\command{title}{Title}}{Make a big fancy title.}
+    \item \descriptor{\command{chapter}{Title}}{Make a chapter title.}
+    \item \descriptor{\command{section}{Title}}{Make a section title.}
+    \item \descriptor{\command{subsection}{Title}}{Make a subsection title.}
+    \item \descriptor{\command{subsubsection}{Title}}{Make a subsubsection title.}
+    \end{itemize}
+    \item Markup
+    \begin{itemize}
+    \item \descriptor{\command{textbf}{Text} or \command{bold}{Text}}{Render Text in \textbf{bold}.}
+    \item \descriptor{\command{textit}{Text} or \command{italic}{Text}}{Render Text in \textit{italics}.}
+    \item \descriptor{\command{textul}{Text} or \command{underline}{Text}}{Render Text \underline{underlined}.}
+    \item \descriptor{\command{textsc}{Text} or \command{smallcaps}{Text}}{Render Text \smallcaps{smallcaps}.}
+    \item \descriptor{\command{textms}{Text} or \command{mono}{Text}}{Render Text \mono{monospaced}.}
+    \end{itemize}
+    \item Elements
+    \begin{itemize}
+    \item \descriptor{\command{hline}}{Make a horizontal line.}
+    \item \descriptor{\command{newline}}{Line break, equivalent to a double backslash.}
+    \item \descriptor{\command{ref}{label}}{Reference a label (from an image, for example). Works with both forward and backwards declaration (The label can be both above and below the ref command). Outputs a question mark when the label is undefined.}
+    \item \descriptor{\command{define}{Variable}{Value}}{Set the global Variable to Value. Often used to change module behaviour.}
+    \item \descriptor{\command{href}{URL}{Text}}{Make a hyperlink to URL with text Text}
+    \item \descriptor{\command{colo(u)r}{type}{definition}{text}}{Change the colour of a piece of text. \colour{ff00ff}{\command{colour}{ff00ff}{text}}}
+    \end{itemize}
+\end{itemize}
+
+\section{Special Characters}
+
+\begin{tabular}[|l | l |c| l |l |] \width{100}
+\hline
+\textbf{Command}  &  \textbf{Result} && \textbf{Command} & \textbf{Result} \\
+\hline \hline
+\command{\&}        & \&        && \command{"}AaEeIiOoUuy   & \"A\"a\"E\"e\"I\"i\"O\"o\"U\"u\"y \\
+\command{\%}        & \%        && \command{'}AaEeIiOoUuZ   & \'A\'a\'E\'e\'I\'i\'O\'o\'U\'u\'Z \\
+\command{\$}        & \$        && \command{`}AaEeIiOoUu    & \`A\`a\`E\`e\`I\`i\`O\`o\`U\`u    \\
+\command{copy}      & \copy     && \command{^}AaEeIiOoUu    & \^A\^a\^E\^e\^I\^i\^O\^o\^U\^u    \\
+\command{\>}        & \>        && \command{^}AaEeIiOoUu    & \^A\^a\^E\^e\^I\^i\^O\^o\^U\^u    \\
+\command{\<}        & \<        && \command{~}AaIiOoNnUu    & \~A\~a\~I\~i\~O\~o\~N\~n\~U\~u    \\
+\command{\}}        & \}        && \command{.}AaUu          & \.A\.a\.U\.u                      \\
+\command{\{}        & \{        && \command{-O}o            & \-O\-o                            \\
+\command{cdot}      & \cdot     && \command{ss}             & \ss                               \\
+\command{euro}      & \euro     && \command{Alpha}\command{alpha}   & \Alpha\alpha              \\
+\command{pound}     & \pound    && \command{Beta}\command{beta}     & \Beta\beta                \\
+\command{deg}	    & \deg      &&  ...                             &                           \\
+\command{backslash} & \backslash&& \command{Omega}\command{omega}   & \Omega\omega              \\
+\hline
+\end{tabular}
+
+\section{Images}
+\begin{paragraph}
+    Images are pretty. Normally the images try to fill the page width, you can control this behaviour with the provided
+    sizing options. If you add a caption to an image it will put "Figure 1: caption" under it. You can change "Figure" to
+    , for example, "Picture" by setting the header with a \command{define}{header}{Picture }.
+\end{paragraph}
+\begin{itemize}
+    \item \descriptor{\command{includegraphics}{url}}{Use to display an image.}
+    \item \descriptor{\command{caption}{caption text}}{Use to display text under your image.}
+    \item \descriptor{\command{label}{label text}}{Use to give your image a label, 
+                                            so you can use \command{ref}{label} to reference it.}
+    \item \descriptor{\command{width}{Width}}{ Set the width of your image. 
+                    Width can have the following formats: 10 (this is a percentage), 10px, 10cm, 10em.}
+    \item \descriptor{\command{height}{Height}}{ Set the height of your image. 
+                    Height can have the following formats: 10 (this is a percentage), 10px, 10cm, 10em. }
+    \item \descriptor{\command{alttext}{alt text}}{Set the alt text, also called hovertext, of your image.}
+\end{itemize}
+
+\begin{code}[latex]
+\command{begin}{figure}
+    \command{includegraphics}{test.png}
+    \command{caption}{This is a test image}
+    \command{label}{testimage}
+    \command{width}{120px}
+    \command{height}{30}
+    \command{alttext}{A mouse!}
+\command{end}{figure} 
+\end{code}
+
+\section{Lists}
+\begin{paragraph}
+    Note that there are two different list environments: \mono{enumerate} and \mono{itemize} with a different default markers, respectively numbers and bullets.
+\end{paragraph}
+\begin{itemize}
+    \item \descriptor{\command{item}}{Mark the start of the next item in the list.}
+    \item \descriptor{\command{setmarker}{type}}{Set the marker type. Valid types are: square, bullet, circle, none, numbers, letters, LETTERS, roman, ROMAN.}
+\end{itemize}
+
+\begin{code}[latex]
+\command{begin}{itemize}
+    \command{setmarker}{square}
+    \command{item} Apple
+    \command{item} Banana
+    \command{item} Kiwi 
+    \command{item} Pear
+\command{end}{itemize}
+\end{code}
+
+\section{Tables}
+
+\begin{paragraph}
+    Tables are a good way to represent content in a neat way. In MarTeX they behave pretty similar to the LaTeX tabulars. The tabular format accepts '|' for vertical lines, 'l' for left aligned column, 'c' for a centered column and 'r' for a right aligned column.
+\end{paragraph}
+
+\begin{itemize}
+    \item \descriptor{\command{hline}}{Add a horizontal line at this position in the table. Maximum of two lines per row.}
+    \item \descriptor{\command{multicolumn}{N}{format}{text}}{Make a cell span over N columns. You can add special formatting to this cell (so just like your table formatting).}
+    \item \descriptor{\command{multirow}{N}{text}}{Make a cell span over N rows}
+\end{itemize}
+
+\begin{code}[latex]
+\command{begin}{tabular}\[|| l | c | r ||\]
+    \command{hline} \command{hline}
+    1 & 2 & 3 \backslash\backslash \command{hline}
+    4 & 5 & 6 \backslash\backslash \command{hline}
+    7 & 8 & 9 \backslash\backslash \command{hline}
+    \command{multicolumn}{3}{| c |}{0} \backslash\backslash
+    \command{hline}
+\command{end}{tabular}
+\end{code}
+
+\section{Contributing}
+
+Please feel free to submit anything! The only thing I ask is that you include at least one test that verifies the behaviour of your change.
+
+\subsection{Bug Bounty Program}
+
+If you find a way insert arbitrary html tags and/or get javascript execution from a certain input string then first I'd like to congratualate you on a job well done! Please contact me privately with said input and we'll work on pushing out a fix as quickly as possible. Because I'm still a student there is unfortunately no hard cash to be made here, but certainly there is coffee and cake in it for you!
+
+\section{links}
+
+\begin{itemize}
+   \item \href{http://tmiedema.com/martex}{Live MarTeX interpreter}
+   \item \href{http://tmiedema.com/martex/development.html}{Development Guide}
+\end{itemize}
+
+\section{Authors}
+
+\begin{itemize}
+  \item \bold{Thijs Miedema} - \italic{Initial work} - \href{https://github.com/thijsmie}{thijsmie}
+\end{itemize}
+
+\section{Acknowledgments}
+
+Thanks to my committee for their endless patience and enthusiasm while listening to me whining on about this.
+\\
+Thanks to \href{http://www.iport.it}{\textit{Diego Perini}} for writing a nifty regex-based URL validator.
+
+\section{License}
+
+This project is licensed under the MIT License - see the \href{LICENSE.md}{LICENSE.md} file for details
+
+
+\end{document}
+\end{page}

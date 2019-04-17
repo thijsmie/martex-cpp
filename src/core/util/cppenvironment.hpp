@@ -16,7 +16,7 @@ template <typename T> /// T is the implementing environment
 class CppEnvironment : public Environment
 {
   private:
-    typedef Value (T::*module_method_t)(std::shared_ptr<Environment>, Token, std::vector<Value>);
+    typedef Value (T::*module_method_t)(Token, std::vector<Value>);
     typedef std::map<const std::string, module_method_t> module_method_map_t;
     module_method_map_t funcs;
 
@@ -46,7 +46,7 @@ class CppEnvironment : public Environment
             /// So okay, this is complicated:
             // (T*)this: convert the base class pointer to a derived class pointer
             // ->*(x->second): get the method address from the map and call it
-            return (((T *)this)->*(x->second))(env, cmd, std::move(args));
+            return (((T *)this)->*(x->second))(cmd, std::move(args));
         }
         throw RuntimeError(cmd, "Command does not exist but should, internal error");
     }

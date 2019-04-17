@@ -1,5 +1,5 @@
 body {
-    max-width: 38em;
+    max-width: 45em;
     margin: auto;
     padding: 1em 0.7em;
     background-color: #f2f0e8;
@@ -17,4 +17,12 @@ pre {
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
+}
+
+pre {
+  border-top: 5px solid #afac9e;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #d6d3c7;
 }
