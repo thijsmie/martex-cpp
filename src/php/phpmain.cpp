@@ -23,7 +23,7 @@ extern "C"
         static Php::Extension extension("martex", "0.2");
 
         // Create MarTeX namespace
-        Php::Namespace texspace("MarTeX");
+        Php::Namespace texspace("MarTeXcpp");
 
         // Register the MarTeX object and expose methods
         Php::Class<MarTeX> martex("MarTeX");

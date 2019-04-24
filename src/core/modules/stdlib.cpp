@@ -92,7 +92,6 @@ std::shared_ptr<Environment> StdLib::MakeEnv(std::string name, std::shared_ptr<E
         return std::make_shared<CodeEnvironment>(parent);
     if (name == "center")
         return std::make_shared<CenterEnvironment>(parent);
-        
     if (!m_hasdocument && name == "document")
     {
         m_hasdocument = true;

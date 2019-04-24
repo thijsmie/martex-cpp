@@ -24,3 +24,4 @@ class DocumentEnvironment : public util::CppEnvironment<DocumentEnvironment>
     Value label(Token, std::vector<Value>);
     Value labeling(Token, std::vector<Value>);
 };
+
