@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/util/cppenvironment.hpp"
+#include "core/util/value_util.hpp"
 #include <string>
 #include <memory>
 
@@ -20,17 +21,52 @@ class ParagraphEnvironment : public util::CppEnvironment<ParagraphEnvironment>
 
 class CodeEnvironment : public util::CppEnvironment<CodeEnvironment>
 {
+  private:
+    std::string language;
+
   public:
-    CodeEnvironment(std::shared_ptr<Environment> parent) : util::CppEnvironment<CodeEnvironment>(parent)
+    void StartEnvironment(Token, Value v)
     {
+        if (v.GetContent() != "" && v.IsPlain())
+            language = v.GetContent();
     }
 
-    void StartEnvironment(Token, Value) {}
     Value EndEnvironment(Token, Value content)
     {
-        content.multicontent.emplace(content.multicontent.begin(), "class", "martex-mono");
+        std::vector<Value> &cnt = content.multicontent;
+        util::trimws(cnt);
 
-        return Value("pre", std::move(content.multicontent));
+        cnt.emplace(cnt.begin(), "class", "language-" + language);
+
+        return Value("pre", Value("code", std::move(cnt)));
+    }
+
+    Value command(Token, std::vector<Value> args)
+    {
+        /// normal commands screws with the markup, override in local env
+        if (args.size() == 1)
+        {
+            args.emplace(args.begin(), t_string, "&#92;");
+            return Value(std::move(args));
+        }
+        else
+        {
+            args.reserve(args.size() + (args.size() - 1) * 2 + 1);
+
+            for (int i = args.size() - 1; i > 0; i--)
+            {
+                args.emplace(args.begin() + i + 1, t_string, "&#125;");
+                args.emplace(args.begin() + i, t_string, "&#123;");
+            }
+
+            args.emplace(args.begin(), t_string, "&#92;");
+            return Value(std::move(args));
+        }
+    }
+
+    CodeEnvironment(std::shared_ptr<Environment> parent) : util::CppEnvironment<CodeEnvironment>(parent)
+    {
+        AddMethod("command", &CodeEnvironment::command);
     }
 };
 

@@ -30,7 +30,8 @@ static const std::map<std::string, std::string> full_replace(
      {"hline", "<hr>"},
      {"ss", "&szlig;"},
      {"newline", "<br>"},
-     {"backslash", "&#92;"}});
+     {"backslash", "&#92;"},
+     {"reg", "&#174;"}});
 
 StdLib::StdLib(bool adminmode)
 {
@@ -142,7 +143,7 @@ Value StdLib::textul(std::shared_ptr<Environment>, Token, std::vector<Value> arg
 Value StdLib::textsc(std::shared_ptr<Environment>, Token, std::vector<Value> args)
 {
     args.emplace(args.begin(), "style", "font-variant: small-caps;");
-    return Value("span", std::move(args[0]));
+    return Value("span", std::move(args));
 }
 
 Value StdLib::textms(std::shared_ptr<Environment>, Token cmd, std::vector<Value> args)
