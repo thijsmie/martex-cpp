@@ -36,4 +36,7 @@ class StdLib : public util::CppModule<StdLib>
     Value define(std::shared_ptr<Environment>, Token, std::vector<Value>);
 
     Value colour(std::shared_ptr<Environment>, Token, std::vector<Value>);
+    
+    Value sizew(std::shared_ptr<Environment>, Token, std::vector<Value>);
+    Value sizeh(std::shared_ptr<Environment>, Token, std::vector<Value>);
 };
