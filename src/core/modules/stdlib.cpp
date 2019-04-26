@@ -30,7 +30,8 @@ static const std::map<std::string, std::string> full_replace(
      {"hline", "<hr>"},
      {"ss", "&szlig;"},
      {"newline", "<br>"},
-     {"backslash", "&#92;"}});
+     {"backslash", "&#92;"},
+     {"reg", "&#174;"}});
 
 StdLib::StdLib(bool adminmode)
 {
@@ -68,6 +69,9 @@ StdLib::StdLib(bool adminmode)
 
     AddMethod("colour", &StdLib::colour);
     AddMethod("color", &StdLib::colour);
+    
+    AddMethod("sizew", &StdLib::sizew);
+    AddMethod("sizeh", &StdLib::sizeh);
 }
 
 std::vector<std::string> StdLib::GetEnvs()
@@ -141,7 +145,7 @@ Value StdLib::textul(std::shared_ptr<Environment>, Token, std::vector<Value> arg
 Value StdLib::textsc(std::shared_ptr<Environment>, Token, std::vector<Value> args)
 {
     args.emplace(args.begin(), "style", "font-variant: small-caps;");
-    return Value("span", std::move(args[0]));
+    return Value("span", std::move(args));
 }
 
 Value StdLib::textms(std::shared_ptr<Environment>, Token cmd, std::vector<Value> args)
@@ -234,3 +238,32 @@ Value StdLib::colour(std::shared_ptr<Environment>, Token cmd, std::vector<Value>
     return Value("span", std::move(args));
 }
 
+Value StdLib::sizew(std::shared_ptr<Environment>, Token cmd, std::vector<Value> args)
+{
+    if (args.size() != 1)
+        throw RuntimeError(cmd, "takes one argument");
+        
+    std::string width = args[0].GetContent();
+        
+    if (!util::is_valid_sizing(width))
+        throw RuntimeError(cmd, width + " is not a valid size");
+    else if (util::dgonly(width))
+        width += "%";
+        
+    return Value("width", width);
+}
+
+Value StdLib::sizeh(std::shared_ptr<Environment>, Token cmd, std::vector<Value> args)
+{
+    if (args.size() != 1)
+        throw RuntimeError(cmd, "takes one argument");
+        
+    std::string height = args[0].GetContent();
+        
+    if (!util::is_valid_sizing(height))
+        throw RuntimeError(cmd, height + " is not a valid size");
+    else if (util::dgonly(height))
+        height += "%";
+        
+    return Value("height", height);
+}

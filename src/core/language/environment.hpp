@@ -11,18 +11,26 @@ class Environment
   protected:
     bool is_root;
     std::map<std::string, Value> values;
+    std::map<std::string, std::string> stringvalues;
     std::shared_ptr<Environment> enclosing;
 
   public:
-    Environment() {}
+    Environment() {} 
     Environment(std::shared_ptr<Environment> p) : is_root(false), enclosing(p) {}
 
     bool IsRoot() { return is_root; }
     std::shared_ptr<Environment> GetEnclosing() { return enclosing; }
+
     void Set(std::string, Value);
     void SetGlobal(std::string, Value);
     Value& Get(Token);
     Value& Get(std::string);
+
+    void SetString(std::string, std::string);
+    void SetGlobalString(std::string, std::string);
+    std::string GetString(std::string);
+    bool HasString(std::string);
+
     Value RunCommand(std::shared_ptr<Environment>, Token, std::vector<Value>);
 
     virtual bool HasCommand(std::string) = 0;
