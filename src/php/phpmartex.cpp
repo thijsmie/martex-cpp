@@ -11,7 +11,7 @@ using std::shared_ptr;
 using std::string;
 using std::vector;
 
-MarTeX::MarTeX() : has_error(false), allow_page(false), last_result(""), error_log(""), t(nullptr) {}
+MarTeX::MarTeX() : has_error(false), allow_page(false), error_log(""), t(nullptr) {}
 
 void MarTeX::RegisterModule(Php::Parameters &params)
 {
@@ -27,7 +27,6 @@ void MarTeX::AllowPage()
 void MarTeX::Parse(Php::Parameters &params)
 {
     // New parse, clear last result
-    last_result = "";
     error_log = "";
 
     // Obtain text from php call
@@ -53,10 +52,10 @@ void MarTeX::Parse(Php::Parameters &params)
         free(t);
 
     t = new Transpiler(module_inst);
-    transpiler.Parse(text);
+    t->Parse(text);
 
-    has_error = transpiler.HasError();
-    error_log = transpiler.GetErrors();
+    has_error = t->HasError();
+    error_log = t->GetErrors();
 }
 
 Php::Value MarTeX::HasError()
