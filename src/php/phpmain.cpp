@@ -33,6 +33,7 @@ extern "C"
         martex.method<&MarTeX::HasError>("hasError");
         martex.method<&MarTeX::GetErrors>("getError");
         martex.method<&MarTeX::GetResult>("getResult");
+        martex.method<&MarTeX::GetPlainResult>("getPlainResult");
 
         Php::Class<PhpModuleBase> base1("Module");
         base1.method<&PhpModuleBase::globals>("globals");
