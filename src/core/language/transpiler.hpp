@@ -22,6 +22,6 @@ class Transpiler
     bool HasError();
     std::string GetErrors();
     std::string GetResult();
-    const &Value GetResultRaw();
+    const Value& GetResultRaw();
     std::string GetResultBytes();
 };
