@@ -21,11 +21,10 @@ std::string ToPlain(const Value &v)
 
         case t_multi:
         {
-            std::string ret = ""
+            std::string ret = "";
             for (const Value &vi : v.multicontent)
                 ret += ToPlain(vi);
             return ret;
-            break;
         }
 
         case t_html:
@@ -52,7 +51,7 @@ std::string ToPlain(const Value &v)
                 res += ToPlain(vi);
 
             if (tag == "img" || tag == "p" || tag == "br")
-                res += "\n"
+                res += "\n";
 
             return res;
         }
