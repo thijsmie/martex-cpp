@@ -117,7 +117,7 @@ class FigureEnvironment : public util::CppEnvironment<FigureEnvironment>
         {
             // no figures yet, this is 1
         }
-        Set("<figurecounter>", Value(t_string, std::to_string(ind + 1)));
+        SetGlobal("<figurecounter>", Value(t_string, std::to_string(ind + 1)));
         label_ = std::to_string(ind);
     }
     
