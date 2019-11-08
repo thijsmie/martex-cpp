@@ -8,7 +8,15 @@ void Environment::Set(std::string name, Value value)
 void Environment::SetGlobal(std::string name, Value value)
 {
     if (is_root)
+    {
+        auto i = values.find(name);
+        if (i != values.end())
+        {
+            values.erase(i);
+        }
+        
         values.insert(std::make_pair(name, std::move(value)));
+    }
     else
         enclosing->SetGlobal(name, std::move(value));
 }
