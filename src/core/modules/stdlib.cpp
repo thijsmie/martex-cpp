@@ -10,7 +10,7 @@
 #include "core/util/regex_util.hpp"
 
 static const std::vector<std::string> easy_replace(
-    {"func", "ss", "copy", "euro",
+    {"copy", "euro",
      "pound", "deg",
      "Alpha", "alpha", "Beta", "beta",
      "Gamma", "gamma", "Delta", "delta",
@@ -25,6 +25,7 @@ static const std::vector<std::string> easy_replace(
      "Phi", "phi", "Omega", "omega"});
 static const std::map<std::string, std::string> full_replace(
     {{"func", "&fnof;"},
+     {"pm", "&plusmn;"},
      {"cdot", "&middot;"},
      {"tm", "&trade;"},
      {"hline", "<hr>"},
