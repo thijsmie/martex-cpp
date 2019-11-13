@@ -48,9 +48,26 @@ std::string ToPlain(const Value &v)
             }
 
             for (const Value &vi : v.multicontent)
-                res += ToPlain(vi) + " ";
+            {
+                std::string plain = ToPlain(vi);
+                auto last = plain.back();
+                if (last != ' ' && last != '\n' && last != '\t')
+                    plain += " ";
+                res += plain;
+            }
 
-            if (tag == "img" || tag == "p" || tag == "br" || tag == "li" || tag == "ul" || tag == "ol")
+            if (tag == "img"
+             || tag == "p"
+             || tag == "br"
+             || tag == "li"
+             || tag == "ul"
+             || tag == "ol"
+             || tag == "h1"
+             || tag == "h2"
+             || tag == "h3"
+             || tag == "h4"
+             || tag == "h5"
+             || tag == "h6")
                 res += "\n";
 
             return res;
