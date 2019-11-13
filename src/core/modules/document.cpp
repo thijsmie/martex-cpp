@@ -20,7 +20,7 @@ DocumentEnvironment::DocumentEnvironment(std::shared_ptr<Environment> parent, bo
     AddMethod("labeling", &DocumentEnvironment::labeling);
 }
 
-const std::set<std::string> sectiontags{"h1", "h2", "h3", "h4", "h5", "h6", "p", 
+const std::set<std::string> sectiontags{"h1", "h2", "h3", "h4", "h5", "h6", "p",
     "table", "ul", "ol", "div", "img", "figure", "pre"};
 Value DocumentEnvironment::EndEnvironment(Token, Value content)
 {
@@ -95,7 +95,7 @@ Value DocumentEnvironment::EndEnvironment(Token, Value content)
             {
                 multicontent.erase(multicontent.begin() + i);
             }
-            else 
+            else
             {
                 i++;
             }
@@ -120,7 +120,7 @@ Value DocumentEnvironment::EndEnvironment(Token, Value content)
 
 
     if (m_adminmode)
-        return Value("body", Value::asString(content));
+        return Value("body", std::move(content));
     else
         return content;
 }

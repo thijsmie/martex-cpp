@@ -82,7 +82,7 @@ class PageEnvironment : public util::CppEnvironment<PageEnvironment>
         html.emplace(html.begin(), "head", std::move(head));
 
         ret.push_back(Value(t_string, "<!DOCTYPE html>"));
-        ret.push_back(Value("html", Value::asString(html)));
+        ret.push_back(Value("html", std::move(html)));
         return Value(std::move(ret));
     }
 };

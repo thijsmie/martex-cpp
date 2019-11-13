@@ -169,14 +169,13 @@ class ItemizeEnvironment : public ParentItemize
         }
 
         if (attr == nullptr)
-            return Value(mytag, Value::asString(items));
+        {
+            return Value(mytag, std::move(items));
+        }
         else
         {
-            std::vector<Value> ret;
-            ret.reserve(2);
-            ret.insert(ret.begin(), std::move(*attr));
-            ret.insert(ret.begin() + 1, Value::asString(items));
-            return Value(mytag, std::move(ret));
+            items.emplace_back(attr->GetTag(), attr->GetRawContent());
+            return Value(mytag, std::move(items));
         }
     }
 };

@@ -15,7 +15,7 @@ class ParagraphEnvironment : public util::CppEnvironment<ParagraphEnvironment>
     void StartEnvironment(Token, Value) {}
     Value EndEnvironment(Token, Value content)
     {
-        return Value("p", Value::asString(content));
+        return Value("p", std::move(content));
     }
 };
 
