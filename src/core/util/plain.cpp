@@ -48,7 +48,7 @@ std::string ToPlain(const Value &v)
             }
 
             for (const Value &vi : v.multicontent)
-                res += ToPlain(vi);
+                res += ToPlain(vi) + " ";
 
             if (tag == "img" || tag == "p" || tag == "br" || tag == "li" || tag == "ul" || tag == "ol")
                 res += "\n";
@@ -59,9 +59,9 @@ std::string ToPlain(const Value &v)
         {
             std::string tag = v.GetTag();
 
-            if (tag == "href" || tag == "src")
+            if (tag == "href" || tag == "src" || tag == "href")
             {
-                return v.GetRawContent();
+                return "(" + v.GetRawContent() + ") ";
             }
 
             return "";
