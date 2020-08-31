@@ -8,21 +8,24 @@ Go to the [in-browser preview](http://tmiedema.com/martex) to try it!
 
 ### Prerequisites
 
-MarTeX-Cpp can be built as a module for several other languages. Currently supported are _PHP_ and _WebAssembly_ and an option to build as a simple utility using standard i/o.
+MarTeX-Cpp can be built as a module for several other languages. Currently supported are _PHP_, _FFI_ and _WebAssembly_ and an option to build as a simple utility using standard i/o.
 
 A common dependencies for all module options is a C++ compiler with full C++11 support (gcc 4.8.1 or higher, clang 3.3). The makefile is set up to work with gcc but this can be easily changed in the config files.
 
-MarTeX-Cpp's _PHP_ module was tested with _PHP_ versions 7 and higher. To build it you first need your relevant php development package and then you need to install the [PHP-CPP](http://www.php-cpp.com/) library. 
+MarTeX-Cpp's _PHP_ module was tested with _PHP_ versions 7 and higher. To build it you first need your relevant php development package and then you need to install the [PHP-CPP](http://www.php-cpp.com/) library. Please checkout the repository of php-cpp with commit hash 7b975bd1df65174d79241e555ef82c7f9c3538a2 to ensure matching versions.
 
 MarTeX-Cpp's _WebAssembly_ module uses the [emscripten](https://kripken.github.io/emscripten-site/) compiler. Make sure the _em++_ command is on your PATH by sourcing emsdk_env.sh.
 
-The simple MarTeX-Cpp utility program has no further dependencies.
+MarTeX-FFI and the simple MarTeX-Cpp utility program have no further dependencies.
 
 ### Installing
 
 If you have obtained a clone of the repository you can build the project:
 
 #### As _PHP_ module:
+
+If you are running PHP version 7.4 it is recommended you use the MarTeX FFI version instead. Find an example way to call into the FFI system in res/martex.php and res/martex_ffi_c.h. For older versions use this method:
+
 ```
 make target=php
 ```
@@ -41,6 +44,14 @@ to activate the module.
 make target=wasm
 ```
 This will yield a martex.wasm and a martex.js file in the bin folder. Host these with a webserver to run MarTeX-Cpp directly in a browser. The file res/wasm.html demonstrates the usage.
+
+#### As _FFI_ module:
+
+Call into MarTeX as a standard C library. Compile the .so file using:
+```
+make target=ffi
+```
+Use the resulting libmartexffi.so together with martex_ffi_c.h from the res folder. A php ffi wrapper is already available. To use the library system-wide put in a folder like /usr/lib.
 
 #### As simple utility
 ```
@@ -68,13 +79,14 @@ martex-cpp
 │   │   └── util        # utility functions, mostly string checks
 │   ├── cpp             # simple utility source
 │   ├── php             # Php module source. Most code has to do with conversion of values.
+│   ├── ffi             # FFI module source.
 │   └── wasm            # Webassembly module source.
-└── tests               # Tests in TeX input/HTML output style.
+└── tests               # Tests in old php style.
 ```
 
 ## Contributing
 
-Please feel free to submit anything! The only thing I ask is that you include at least one test that verifies the behaviour of your change.
+Please feel free to submit anything!
 
 ### Bug Bounty Program
 
@@ -82,7 +94,7 @@ If you find a way insert arbitrary html tags and/or get javascript execution fro
 
 ## Authors
 
-* **Thijs Miedema** - *Initial work* - [thijsmie](https://github.com/thijsmie)
+* **Thijs Miedema** - [thijsmie](https://github.com/thijsmie)
 
 ## Acknowledgments
 
