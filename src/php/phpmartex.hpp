@@ -8,12 +8,16 @@
 #include <memory>
 #include <string>
 
+#include "core/language/transpiler.hpp"
+#include "core/language/value.hpp"
+
 class MarTeX : public Php::Base
 {
   private:
     bool has_error;
     bool allow_page;
-    std::string last_result;
+
+    Transpiler* t;
     std::string error_log;
     std::vector<std::string> modules;
 
@@ -26,4 +30,5 @@ class MarTeX : public Php::Base
     Php::Value HasError();
     Php::Value GetErrors();
     Php::Value GetResult();
+    Php::Value GetPlainResult();
 };

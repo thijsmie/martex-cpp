@@ -52,6 +52,11 @@ std::string Transpiler::GetResult()
     return result.GetContent();
 }
 
+const Value& Transpiler::GetResultRaw()
+{
+    return result;
+}
+
 std::string Transpiler::GetResultBytes()
 {
     uint32_t size = result.ByteSize();

@@ -91,4 +91,9 @@ static inline bool hexonly(const std::string &s)
     return std::all_of(s.begin(), s.end(), f);
 }
 
+static inline bool startswith(const std::string &string, const std::string &prefix)
+{
+    return (string.rfind(prefix, 0) == 0);
+}
+
 } // namespace util

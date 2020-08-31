@@ -1,0 +1,148 @@
+\begin{page}
+%
+\link{martex-page.css}{stylesheet}{text/css}
+\link{martex.css}{stylesheet}{text/css}
+\meta{viewport}{width=device-width, initial-scale=1.0}
+%
+\begin{document}
+\title{MarTeX-Cpp Development}
+
+\section{Getting Started}
+\subsection{Prerequisites}
+
+MarTeX-Cpp can be built as a module for several other languages. Currently supported are \textit{PHP} and \textit{WebAssembly} and an option to build as a simple utility using standard i/o.
+
+A common dependencies for all module options is a C++ compiler with full C++11 support (gcc 4.9 or higher, clang 3.3). The makefile is set up to work with gcc but this can be easily changed in the config files.
+
+MarTeX-Cpp's \textit{PHP} module was tested with \textit{PHP} versions 7 and higher. To build it you first need your relevant php development package and then you need to install the \href{http://www.php-cpp.com/}{PHP-CPP} library. 
+
+MarTeX-Cpp's \textit{WebAssembly} module uses the \href{https://kripken.github.io/emscripten-site/}{emscripten} compiler. Make sure the \textit{em++} command is on your PATH by sourcing emsdk_env.sh.
+
+The simple MarTeX-Cpp utility program has no further dependencies.
+
+\subsection{Installing}
+
+If you have obtained a clone of the repository you can build the project:
+
+\textbf{As \textit{PHP} module}
+\begin{code}
+make target=php
+\end{code}
+this will result in a php extension called martex.so in the bin folder. You can find out where to put it by typing:
+\begin{code}
+php-config --extension-dir
+\end{code}
+Now you need to add \textms{"extension=martex.so"} to your php.ini file or add it as separate .ini (example in res/martex.ini) in the php loading process. Your milage may vary but the location of these .ini's is \textms{/etc/php/7.1/mods-available} on my system. You should then be able to use:
+\begin{code}
+phpenmod martex
+\end{code}
+to activate the module.
+
+\textbf{As \textbf{WebAssembly} module}
+\begin{code}
+make target=wasm
+\end{code}
+This will yield a martex.wasm and a martex.js file in the bin folder. Host these with a webserver to run MarTeX-Cpp directly in a browser. The file res/wasm.html demonstrates the usage.
+
+\textbf{As simple utility}
+\begin{code}
+make target=cpp
+\end{code}
+This will yield a file martex in the bin folder. It takes TeX over standard input, will output the result over standard output and report errors over standard error.
+
+\section{Tests}
+
+You might complain that my test file format is weird and is annoying to parse. I like it however, because it allows you to describe tests in however much detail you want and is also language independant, which is important because I would like to be able to run the tests in whatever module form I desire. 
+
+\section{Project structure}
+
+\begin{itemize}
+\item \bold{bin}: build output
+\item \bold{config}: makefile environment variables for different targets
+\item \bold{obj}: object and dependency files
+\item \bold{res}: resources
+\item \bold{src}: source code
+\begin{itemize}
+  \item \bold{core}: the common core code for all targets
+  \begin{itemize}
+    \item \bold{language}: implementation of the TeX language parser
+    \item \bold{modules}: standard library of commands and environments
+    \item \bold{util}: utility functions, mostly string checks
+  \end{itemize}
+  \item \bold{cpp}: simple utility source
+  \item \bold{php}: Php module source. Most code has to do with conversion of values.
+  \item \bold{wasm}: Webassembly module source.
+\end{itemize}
+\item \bold{tests}: Tests in TeX input/HTML output style.
+\end{itemize}
+
+\section{Making a module}
+
+There is more than one way to make a module. The one I will describe here is  for making modules for C++. This is the way to produce the fastest modules, but the disadvantage is that you need them available at compile time. For PHP there are tools available to make modules pluggable at runtime, these could be made available for other languages too.
+
+In C++ you inherit from the virtual class \mono{CppModule}. It allows you to register your MarTeX commands quickly. You also have to implement methods to tell MarTeX which environments your module provides. We'll implement a basic module here that can print "hello world" with the command \command{hello}. The header looks as follows:
+
+\begin{code}
+\#pragma once
+\#include "core/util/cppmodule.hpp"
+
+class TestModule : public util::CppModule\<TestModule\>
+\{
+  public:
+    /// constructor
+    TestModule();
+
+    /// methods used to register Environments
+    /// We won't use them here
+    std::vector\<std::string\> GetEnvs();
+    std::shared_ptr\<Environment\> MakeEnv(std::string, 
+        std::shared_ptr\<Environment\>);
+
+    /// command to implement
+    Value hello(std::shared_ptr\<Environment\>, Token,
+        std::vector\<Value\>);
+\};
+\end{code}
+
+Now in the matching .cpp file we register and implement the command. Registering happens in the constructor:
+
+\begin{code}
+\#include "testmodule.hpp"
+\#include "core/language/runtime_error.hpp"
+
+TestModule::TestModule()
+\{
+    AddMethod("hello", &TestModule::hello);
+\}
+\end{code}
+
+This maps \command{hello} in TeX input to the \mono{TestModule::hello} method. It will get called with a reference to the environment it gets called it, the token so you can throw errors with a line number for the users convenience and any arguments to the command. Our \command{hello} command will not take any arguments.
+
+We also need to quickly implement that we don't have any environments:
+\begin{code}
+std::vector\<std::string\> TestModule::GetEnvs()
+\{
+    return \{\};
+\}
+
+std::shared_ptr\<Environment\> TestModule::MakeEnv(
+    std::string name, std::shared_ptr\<Environment\> parent)
+\{
+    return nullptr;
+\}
+\end{code}
+
+Now we can finally implement our actual command. It constructs a Value object with the "hello, world!" text in it. The Value objects are pretty flexible and you can create any html construct you like. However, for performance reasons Value objects cannot be copied, only moved. You'll need to rely on std::move to get any of your input arguments into the output. Several examples of this exist throughout the codebase, take a peek!
+
+\begin{code}
+Value TestModule::hello(std::shared_ptr\<Environment\>, Token cmd,
+        std::vector\<Value\> args)
+\{
+   if (args.size() \> 0)
+       throw RuntimeError(cmd, "takes no arguments");
+   
+   return Value(t_string, "Hello, world!");
+\}
+\end{code}
+\end{document}
+\end{page}

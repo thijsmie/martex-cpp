@@ -20,7 +20,8 @@ DocumentEnvironment::DocumentEnvironment(std::shared_ptr<Environment> parent, bo
     AddMethod("labeling", &DocumentEnvironment::labeling);
 }
 
-const std::set<std::string> sectiontags{"h1", "h2", "h3", "h4", "h5", "h6", "p"};
+const std::set<std::string> sectiontags{"h1", "h2", "h3", "h4", "h5", "h6", "p",
+    "table", "ul", "ol", "div", "img", "figure", "pre"};
 Value DocumentEnvironment::EndEnvironment(Token, Value content)
 {
     std::vector<Value> &multicontent = content.multicontent;
@@ -94,7 +95,7 @@ Value DocumentEnvironment::EndEnvironment(Token, Value content)
             {
                 multicontent.erase(multicontent.begin() + i);
             }
-            else 
+            else
             {
                 i++;
             }
@@ -107,16 +108,19 @@ Value DocumentEnvironment::EndEnvironment(Token, Value content)
                     break;
             }
             
-            std::vector<Value> current_paragraph;
-            std::move(multicontent.begin() + i, multicontent.begin() + j, std::back_inserter(current_paragraph));
-            multicontent.erase(multicontent.begin() + i, multicontent.begin() + j);
-            multicontent.emplace(multicontent.begin() + i, "p", std::move(current_paragraph));
+            if (i != j)
+            {
+                std::vector<Value> current_paragraph;
+                std::move(multicontent.begin() + i, multicontent.begin() + j, std::back_inserter(current_paragraph));
+                multicontent.erase(multicontent.begin() + i, multicontent.begin() + j);
+                multicontent.emplace(multicontent.begin() + i, "p", std::move(current_paragraph));
+            }
         }
     }
 
 
     if (m_adminmode)
-        return Value("body", Value::asString(content));
+        return Value("body", std::move(content));
     else
         return content;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/util/cppenvironment.hpp"
+#include "core/util/value_util.hpp"
 #include "core/util/string_util.hpp"
 #include "core/language/runtime_error.hpp"
 
@@ -134,6 +135,7 @@ class ItemizeEnvironment : public ParentItemize
                 {
                     if (in_item)
                     {
+                        util::trimws(current_item);
                         items.emplace_back("li", std::move(current_item));
                         current_item.clear();
                         in_item = false;
@@ -148,6 +150,7 @@ class ItemizeEnvironment : public ParentItemize
             case t_ampersand:
                 if (in_item)
                 {
+                    util::trimws(current_item);
                     items.emplace_back("li", std::move(current_item));
                     current_item.clear();
                 }
@@ -160,17 +163,19 @@ class ItemizeEnvironment : public ParentItemize
         }
 
         if (in_item && current_item.size() > 0)
+        {
+            util::trimws(current_item);
             items.emplace_back("li", std::move(current_item));
+        }
 
         if (attr == nullptr)
-            return Value(mytag, Value::asString(items));
+        {
+            return Value(mytag, std::move(items));
+        }
         else
         {
-            std::vector<Value> ret;
-            ret.reserve(2);
-            ret.insert(ret.begin(), std::move(*attr));
-            ret.insert(ret.begin() + 1, Value::asString(items));
-            return Value(mytag, std::move(ret));
+            items.emplace_back(attr->GetTag(), attr->GetRawContent());
+            return Value(mytag, std::move(items));
         }
     }
 };

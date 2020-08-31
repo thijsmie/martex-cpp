@@ -6,6 +6,7 @@
 #include <cstdlib>
 
 #include "core/modules/stdlib.hpp"
+#include "core/modules/polyfill.hpp"
 #include "core/language/transpiler.hpp"
 
 std::string do_replace(std::string const &in, std::string const &from, std::string const &to)
@@ -16,8 +17,11 @@ std::string do_replace(std::string const &in, std::string const &from, std::stri
 std::string _compile(std::string text)
 {
     std::vector<std::shared_ptr<Module>> module_inst;
-    module_inst.reserve(1);
+    module_inst.reserve(2);
+    // Add stdlib
     module_inst.push_back(std::make_shared<StdLib>(false));
+    // Add polyfill
+    module_inst.push_back(std::make_shared<PolyfillLib>());
 
     // Run the transpiler
     Transpiler transpiler(module_inst);

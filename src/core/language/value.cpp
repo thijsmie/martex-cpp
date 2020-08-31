@@ -3,12 +3,14 @@
 
 void Value::SanitizeMulti()
 {
-    for (unsigned int i = 0; i < multicontent.size(); i++)
+    for (int i = multicontent.size()-1; i >= 0; i--)
         if (multicontent[i].GetType() == t_multi)
         {
-            // dissallow nested multi's
-            std::string content = multicontent[i].GetContent();
-            multicontent[i] = Value(t_string, content);
+            multicontent.insert(multicontent.begin() + i + 1,
+                std::make_move_iterator(multicontent[i].multicontent.begin()),
+                std::make_move_iterator(multicontent[i].multicontent.end()) 
+            );
+            multicontent.erase(multicontent.begin() + i);
         }
 }
 
@@ -50,7 +52,7 @@ Value::Value(std::string tag, std::vector<Value> multicontent) : type(t_html), t
 //info
 Value::Value(ValueType type, std::string tag, std::vector<Value> multicontent) : type(type), tag(tag), multicontent(std::move(multicontent))
 {
-    SanitizeMulti();
+    //SanitizeMulti();
 }
 
 Value::Value(std::string tag, Value cnt) : type(t_html), tag(tag), multicontent()
@@ -77,7 +79,7 @@ std::string Value::GetContent() const
         return r_content;
     case t_html:
     {
-        r_content = "\n<" + tag;
+        r_content = "<" + tag;
 
         bool hascontent = false;
         for (const Value &v : multicontent)

@@ -1,0 +1,139 @@
+Basic tests
+
+This test makes sure we can actually feed in data and get it out again
+
+- io.1 -
+a
+--------
+a
+--------
+
+Ampersand handling is important. We don't enforce ampersand escaping but
+we silently escape it.
+
+- &.1 -
+&
+-------
+&amp;
+-------
+
+- &.2 -
+&
+-------
+&amp;&amp;
+-------
+
+- &.3 -
+\&
+-------
+&amp;
+-------
+
+- &.4 -
+\&\&
+-------
+&amp;&amp;
+-------
+
+We have a bunch of symbols and markup stuff in the standard library.
+
+- std.1 -
+\Alpha\alpha
+---------
+&Alpha;&alpha;
+---------
+
+- std.2 -
+\section{test}
+---------
+<h3>test</h3>
+---------
+
+- std.3 -
+\euro\euro\euro a \subsection{Eyyyy}
+---------
+&euro;&euro;&euro;a <h4>Eyyyy</h4>
+---------
+
+Some chars can never end up in the output unescaped, so let's make sure they don't.
+
+- esc.1 -
+{
+!!!!!!!!!
+
+---------
+
+- esc.2 -
+<
+!!!!!!!!!
+
+---------
+
+- esc.3 -
+\{
+---------
+&#123;
+---------
+
+- esc.4 -
+\<
+---------
+&lt;
+---------
+
+You can use \" \' \` \- \^ \~ and \. to modify the character after them. However, it is required
+that they are followed by a letter and should result in a syntax error otherwise.
+
+- esc.5 -
+\"
+!!!!!!!!!
+
+---------
+
+- esc.6 -
+\"e\'A
+---------
+&euml;&Aacute;
+---------
+
+- esc.7 -
+\hline
+---------
+<hr>
+---------
+
+Whitespace control is always tricky
+
+- ws.1 -
+\pound a
+--------
+&pound;a
+--------
+
+- ws.2 -
+\euro\ a
+--------
+&euro; a
+--------
+
+- ws.3 -
+\euro\euro\ a -
+--------
+&euro;&euro; a
+--------
+
+- ws.4 -
+\'ea
+--------
+&eacute;a
+--------
+
+Variables in TeX are not clearly defined on a language level, you just use \newcommand and
+global scope everything or you use some package that defines it for you. In MarTeX Variables
+are first-class citizens. The syntax is based on the argument syntax for \newcommand.
+
+- var.1 -
+\define{a}{b}#a
+---------
+b
+---------

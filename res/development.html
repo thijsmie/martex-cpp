@@ -1,0 +1,80 @@
+<!DOCTYPE html><html><head>
+
+<link href="martex-page.css" rel="stylesheet" type="text/css"/>
+<link href="martex.css" rel="stylesheet" type="text/css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+</head><body><h1>MarTeX-Cpp Development</h1><h3>Getting Started</h3><h4>Prerequisites</h4><p>MarTeX-Cpp can be built as a module for several other languages. Currently supported are <i>PHP</i> and <i>WebAssembly</i> and an option to build as a simple utility using standard i/o.</p><p>A common dependencies for all module options is a C++ compiler with full C++11 support (gcc 4.9 or higher, clang 3.3). The makefile is set up to work with gcc but this can be easily changed in the config files.</p><p>MarTeX-Cpp's <i>PHP</i> module was tested with <i>PHP</i> versions 7 and higher. To build it you first need your relevant php development package and then you need to install the <a href="http://www.php-cpp.com/">PHP-CPP</a> library. </p><p>MarTeX-Cpp's <i>WebAssembly</i> module uses the <a href="https://kripken.github.io/emscripten-site/">emscripten</a> compiler. Make sure the <i>em++</i> command is on your PATH by sourcing emsdk_env.sh.</p><p>The simple MarTeX-Cpp utility program has no further dependencies.</p><h4>Installing</h4><p>If you have obtained a clone of the repository you can build the project:</p><p><b>As <i>PHP</i> module</b></p><pre class="martex-mono">
+make target=php
+</pre><p>this will result in a php extension called martex.so in the bin folder. You can find out where to put it by typing:</p><pre class="martex-mono">
+php-config --extension-dir
+</pre><p>Now you need to add <span class="martex-mono">"extension=martex.so"</span> to your php.ini file or add it as separate .ini (example in res/martex.ini) in the php loading process. Your milage may vary but the location of these .ini's is <span class="martex-mono">/etc/php/7.1/mods-available</span> on my system. You should then be able to use:</p><pre class="martex-mono">
+phpenmod martex
+</pre><p>to activate the module.</p><p><b>As <b>WebAssembly</b> module</b></p><pre class="martex-mono">
+make target=wasm
+</pre><p>This will yield a martex.wasm and a martex.js file in the bin folder. Host these with a webserver to run MarTeX-Cpp directly in a browser. The file res/wasm.html demonstrates the usage.</p><p><b>As simple utility</b></p><pre class="martex-mono">
+make target=cpp
+</pre><p>This will yield a file martex in the bin folder. It takes TeX over standard input, will output the result over standard output and report errors over standard error.</p><h3>Tests</h3><p>You might complain that my test file format is weird and is annoying to parse. I like it however, because it allows you to describe tests in however much detail you want and is also language independant, which is important because I would like to be able to run the tests in whatever module form I desire. </p><h3>Project structure</h3><ul><li><b>bin</b>: build output
+</li><li><b>config</b>: makefile environment variables for different targets
+</li><li><b>obj</b>: object and dependency files
+</li><li><b>res</b>: resources
+</li><li><b>src</b>: source code
+<ul><li><b>core</b>: the common core code for all targets
+  <ul><li><b>language</b>: implementation of the TeX language parser
+    </li><li><b>modules</b>: standard library of commands and environments
+    </li><li><b>util</b>: utility functions, mostly string checks
+  </li></ul>
+  </li><li><b>cpp</b>: simple utility source
+  </li><li><b>php</b>: Php module source. Most code has to do with conversion of values.
+  </li><li><b>wasm</b>: Webassembly module source.
+</li></ul>
+</li><li><b>tests</b>: Tests in TeX input/HTML output style.
+</li></ul><h3>Making a module</h3><p>There is more than one way to make a module. The one I will describe here is  for making modules for C++. This is the way to produce the fastest modules, but the disadvantage is that you need them available at compile time. For PHP there are tools available to make modules pluggable at runtime, these could be made available for other languages too.</p><p>In C++ you inherit from the virtual class <span class="martex-mono">CppModule</span>. It allows you to register your MarTeX commands quickly. You also have to implement methods to tell MarTeX which environments your module provides. We'll implement a basic module here that can print "hello world" with the command <span class="martex-mono">&#92;hello</span>. The header looks as follows:</p><pre class="martex-mono">
+#pragma once
+#include "core/util/cppmodule.hpp"
+
+class TestModule : public util::CppModule&lt;TestModule&gt;
+&#123;
+  public:
+    /// constructor
+    TestModule();
+
+    /// methods used to register Environments
+    /// We won't use them here
+    std::vector&lt;std::string&gt; GetEnvs();
+    std::shared_ptr&lt;Environment&gt; MakeEnv(std::string, 
+        std::shared_ptr&lt;Environment&gt;);
+
+    /// command to implement
+    Value hello(std::shared_ptr&lt;Environment&gt;, Token,
+        std::vector&lt;Value&gt;);
+&#125;;
+</pre><p>Now in the matching .cpp file we register and implement the command. Registering happens in the constructor:</p><pre class="martex-mono">
+#include "testmodule.hpp"
+#include "core/language/runtime_error.hpp"
+
+TestModule::TestModule()
+&#123;
+    AddMethod("hello", &amp;TestModule::hello);
+&#125;
+</pre><p>This maps <span class="martex-mono">&#92;hello</span> in TeX input to the <span class="martex-mono">TestModule::hello</span> method. It will get called with a reference to the environment it gets called it, the token so you can throw errors with a line number for the users convenience and any arguments to the command. Our <span class="martex-mono">&#92;hello</span> command will not take any arguments.</p><p>We also need to quickly implement that we don't have any environments:</p><pre class="martex-mono">
+std::vector&lt;std::string&gt; TestModule::GetEnvs()
+&#123;
+    return &#123;&#125;;
+&#125;
+
+std::shared_ptr&lt;Environment&gt; TestModule::MakeEnv(
+    std::string name, std::shared_ptr&lt;Environment&gt; parent)
+&#123;
+    return nullptr;
+&#125;
+</pre><p>Now we can finally implement our actual command. It constructs a Value object with the "hello, world!" text in it. The Value objects are pretty flexible and you can create any html construct you like. However, for performance reasons Value objects cannot be copied, only moved. You'll need to rely on std::move to get any of your input arguments into the output. Several examples of this exist throughout the codebase, take a peek!</p><pre class="martex-mono">
+Value TestModule::hello(std::shared_ptr&lt;Environment&gt;, Token cmd,
+        std::vector&lt;Value&gt; args)
+&#123;
+   if (args.size() &gt; 0)
+       throw RuntimeError(cmd, "takes no arguments");
+   
+   return Value(t_string, "Hello, world!");
+&#125;
+</pre></body></html>

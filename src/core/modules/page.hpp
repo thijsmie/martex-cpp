@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/util/cppenvironment.hpp"
+#include "core/language/runtime_error.hpp"
 #include <string>
 #include <memory>
 
@@ -11,10 +12,15 @@ class PageEnvironment : public util::CppEnvironment<PageEnvironment>
     {
         AddMethod("link", &PageEnvironment::link);
         AddMethod("meta", &PageEnvironment::meta);
+        AddMethod("script", &PageEnvironment::script);
+        AddMethod("script_inline", &PageEnvironment::script_inline);
     }
 
-    Value link(Token, std::vector<Value> arguments)
+    Value link(Token cmd, std::vector<Value> arguments)
     {
+        if (arguments.size() != 3)
+            throw RuntimeError(cmd, "takes three arguments");
+            
         std::vector<Value> attr;
         attr.emplace_back("href", arguments[0].GetContent());
         attr.emplace_back("rel", arguments[1].GetContent());
@@ -23,13 +29,33 @@ class PageEnvironment : public util::CppEnvironment<PageEnvironment>
         return Value("link", std::move(attr));
     }
 
-    Value meta(Token, std::vector<Value> arguments)
+    Value meta(Token cmd, std::vector<Value> arguments)
     {
+        if (arguments.size() != 2)
+            throw RuntimeError(cmd, "takes two arguments");
+
         std::vector<Value> attr;
         attr.emplace_back("name", arguments[0].GetContent());
         attr.emplace_back("content", arguments[1].GetContent());
 
         return Value("meta", std::move(attr));
+    }
+
+    Value script(Token cmd, std::vector<Value> arguments)
+    {
+
+        if (arguments.size() != 1)
+            throw RuntimeError(cmd, "takes one argument");
+
+        std::vector<Value> attr;
+        attr.emplace_back("src", arguments[0].GetContent());
+        attr.emplace_back(t_string, "");
+        return Value("script", std::move(attr));
+    }
+
+    Value script_inline(Token, std::vector<Value> arguments)
+    {
+        return Value("script", std::move(arguments));
     }
 
     void StartEnvironment(Token, Value) {}
@@ -56,7 +82,7 @@ class PageEnvironment : public util::CppEnvironment<PageEnvironment>
         html.emplace(html.begin(), "head", std::move(head));
 
         ret.push_back(Value(t_string, "<!DOCTYPE html>"));
-        ret.push_back(Value("html", Value::asString(html)));
+        ret.push_back(Value("html", std::move(html)));
         return Value(std::move(ret));
     }
 };

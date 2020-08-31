@@ -5,12 +5,13 @@
 
 #include "core/language/transpiler.hpp"
 #include "core/modules/stdlib.hpp"
+#include "core/util/plain.hpp"
 
 using std::shared_ptr;
 using std::string;
 using std::vector;
 
-MarTeX::MarTeX() : has_error(false), allow_page(false), last_result(""), error_log("") {}
+MarTeX::MarTeX() : has_error(false), allow_page(false), error_log(""), t(nullptr) {}
 
 void MarTeX::RegisterModule(Php::Parameters &params)
 {
@@ -26,7 +27,6 @@ void MarTeX::AllowPage()
 void MarTeX::Parse(Php::Parameters &params)
 {
     // New parse, clear last result
-    last_result = "";
     error_log = "";
 
     // Obtain text from php call
@@ -48,12 +48,14 @@ void MarTeX::Parse(Php::Parameters &params)
     }
 
     // Run the transpiler
-    Transpiler transpiler(module_inst);
-    transpiler.Parse(text);
+    if (t != nullptr)
+        free(t);
 
-    has_error = transpiler.HasError();
-    error_log = transpiler.GetErrors();
-    last_result = transpiler.GetResult();
+    t = new Transpiler(module_inst);
+    t->Parse(text);
+
+    has_error = t->HasError();
+    error_log = t->GetErrors();
 }
 
 Php::Value MarTeX::HasError()
@@ -68,5 +70,10 @@ Php::Value MarTeX::GetErrors()
 
 Php::Value MarTeX::GetResult()
 {
-    return last_result;
+    return t->GetResult();
+}
+
+Php::Value MarTeX::GetPlainResult()
+{
+    return ToPlain(t->GetResultRaw());
 }
